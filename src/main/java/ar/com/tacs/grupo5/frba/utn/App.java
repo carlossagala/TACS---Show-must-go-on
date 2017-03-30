@@ -1,8 +1,12 @@
 package ar.com.tacs.grupo5.frba.utn;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.path;
+import static spark.Spark.port;
+import static spark.Spark.post;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.AdminController;
+import ar.com.tacs.grupo5.frba.utn.controllers.UserController;
 
 
 public class App 
@@ -24,6 +28,11 @@ public class App
             post("/example", AdminController.postExample);
         });
         
+        path("/user", () -> {
+        	post("/register", UserController.register);
+        });
+        
     });
+    System.out.println("La aplicación levantó correctamente");
     }
 }
