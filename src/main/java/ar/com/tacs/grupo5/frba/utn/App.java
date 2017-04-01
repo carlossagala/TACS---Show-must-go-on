@@ -1,38 +1,62 @@
 package ar.com.tacs.grupo5.frba.utn;
 
+import static spark.Spark.delete;
 import static spark.Spark.get;
 import static spark.Spark.path;
 import static spark.Spark.port;
 import static spark.Spark.post;
+import static spark.Spark.put;
 
-import ar.com.tacs.grupo5.frba.utn.controllers.AdminController;
-import ar.com.tacs.grupo5.frba.utn.controllers.UserController;
+import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 
+public class App {
+	private static final int PORT = 8080;
 
-public class App 
-{
-    public static void main( String[] args )
-    {
-    
-    port(7117);
+	public static void main(String[] args) {
 
-    path("/api", () -> {
-        
-        path("/admin", () -> {
-            get("/user/:name",       AdminController.getUser);
-            get("/users",     AdminController.getAllUsers);
-            
-            //it is a example, i dont like very long method names
-            get("/intersaction",  AdminController.getIntersactionBetweenListOfUsers);
-            
-            post("/example", AdminController.postExample);
-        });
-        
-        path("/user", () -> {
-        	post("/register", UserController.register);
-        });
-        
-    });
-    System.out.println("La aplicación levantó correctamente");
-    }
+		port(PORT);
+
+		path("/api", () -> {
+
+			path("/users", () -> {
+				get("/", ApiController.getGenericResponse);
+				get("/:id/", ApiController.getGenericResponse);
+				get("/:id/favmovies/", ApiController.getGenericResponse);
+				get("/:id/favactors/", ApiController.getGenericResponse);
+				get("/:id/intersection/:id2/", ApiController.getGenericResponse);
+				get("/ranking/actor/", ApiController.getGenericResponse);
+			});
+			path("/user", () -> {
+				post("/register/", ApiController.getGenericResponse);
+				post("/login/", ApiController.getGenericResponse);
+				post("/logout/", ApiController.getGenericResponse);
+			});
+			path("/search", () -> {
+				get("/:type/", ApiController.getGenericResponse);
+			});
+			path("/favmovies", () -> {
+				post("/", ApiController.getGenericResponse);
+				get("/:id/", ApiController.getGenericResponse);
+				put("/:id/", ApiController.getGenericResponse);
+				delete("/:id/", ApiController.getGenericResponse);
+				post("/:id/movies/", ApiController.getGenericResponse);
+				delete("/:id/movies/:movie_id/", ApiController.getGenericResponse);
+				get("/:id/intersection/:id2/", ApiController.getGenericResponse);
+				get("/:id/ranking/", ApiController.getGenericResponse);
+
+			});
+			path("/favactors", () -> {
+				post("/", ApiController.getGenericResponse);
+				delete("/:id/", ApiController.getGenericResponse);
+			});
+			path("/movie", () -> {
+				get("/:id/", ApiController.getGenericResponse);
+				get("/recommended/", ApiController.getGenericResponse);
+			});
+			path("/actor", () -> {
+				get("/:id/", ApiController.getGenericResponse);
+			});
+		});
+		System.out.println("La aplicación levantó correctamente y escucha en el puerto " + PORT);
+	}
 }
