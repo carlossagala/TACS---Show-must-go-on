@@ -1,7 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn.models;
 
 public class User {
-
+	
 	private String firstName;
 	private String lastName;
 

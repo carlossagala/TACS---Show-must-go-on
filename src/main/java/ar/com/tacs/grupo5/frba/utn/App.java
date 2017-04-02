@@ -7,13 +7,17 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 
 public class App {
 	private static final int PORT = 8080;
 
 	public static void main(String[] args) {
-
+		config();
 		port(PORT);
 
 		path("/api", () -> {
@@ -51,6 +55,8 @@ public class App {
 			});
 			path("/movie", () -> {
 				get("/:id/", ApiController.getMovieById);
+			});
+			path("/movies", () -> {
 				get("/recommended/", ApiController.getRecommendedMovies);
 			});
 			path("/actor", () -> {
@@ -58,5 +64,12 @@ public class App {
 			});
 		});
 		System.out.println("La aplicación levantó correctamente y escucha en el puerto " + PORT);
+	}
+
+	private static void config() {
+		Gson gson = new GsonBuilder()
+			    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			    .create();
+		ApiController.gson = gson;
 	}
 }
