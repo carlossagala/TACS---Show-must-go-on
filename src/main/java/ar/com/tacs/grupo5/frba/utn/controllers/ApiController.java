@@ -10,6 +10,7 @@ import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
+import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import spark.Route;
 
@@ -42,7 +43,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		List<User> users = new ArrayList<User>();
+		List<User> users = new ArrayList<>();
 		users.add(new User("Kun","Aguero"));
 		users.add(new User("Lio", "Messi"));
 		resp.setData(users);
@@ -78,7 +79,7 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		
-		List<Movie> favMovies = new ArrayList<Movie>();
+		List<Movie> favMovies = new ArrayList<>();
 		favMovies.add(new Movie("1", "the fight club", "image.jpg","", "",Arrays.asList("")));
 		favMovies.add(new Movie("2", "300", "image.jpg","", "",Arrays.asList("")));
 		
@@ -133,7 +134,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-        List <Actor> favActors = new ArrayList<Actor>();
+        List <Actor> favActors = new ArrayList<>();
 		
 		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
 		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
@@ -202,7 +203,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new Actor("45", "Mark Wahlberg", "image.png", "", Arrays.asList("")));
+		resp.setData(Arrays.asList(new Search("123","actor","Emma Stone")));
 		return gson.toJson(resp);
 	};
 
@@ -231,7 +232,7 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		
-		List<Movie> favMovies = new ArrayList<Movie>();
+		List<Movie> favMovies = new ArrayList<>();
 		favMovies.add(new Movie("1", "the fight club", "image.jpg","", "",Arrays.asList("")));
 		favMovies.add(new Movie("2", "300", "image.jpg","", "",Arrays.asList("")));
 		
@@ -300,7 +301,7 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		
-List <Actor> favActors = new ArrayList<Actor>();
+		List<Actor> favActors = new ArrayList<>();
 		
 		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
 		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));

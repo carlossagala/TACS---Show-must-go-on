@@ -6,6 +6,12 @@ public class Search {
 	private String type;
 	private String name;
 	
+	public Search(String id, String type, String name) {
+		super();
+		this.id = id;
+		this.type = type;
+		this.name = name;
+	}
 	public String getId() {
 		return id;
 	}
