@@ -14,7 +14,7 @@ public class AdminController {
 		Gson gson = new Gson();
 		   response.status(200);
            response.type("application/json");
-		return gson.toJson(new User(nameUser));
+		return gson.toJson(new User(nameUser,nameUser));
 		
 	};
 	
@@ -29,7 +29,7 @@ public class AdminController {
 		User aUser;
 		aUser = gson.fromJson(body, User.class);
 		
-		return "Hello " + aUser.getName();
+		return "Hello " + aUser.getFirstName() + aUser.getLastName();
 		
 		
 	};

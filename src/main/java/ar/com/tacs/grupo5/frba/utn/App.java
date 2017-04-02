@@ -19,42 +19,42 @@ public class App {
 		path("/api", () -> {
 
 			path("/users", () -> {
-				get("/", ApiController.getGenericResponse);
-				get("/:id/", ApiController.getGenericResponse);
-				get("/:id/favmovies/", ApiController.getGenericResponse);
-				get("/:id/favactors/", ApiController.getGenericResponse);
-				get("/:id/intersection/:id2/", ApiController.getGenericResponse);
-				get("/ranking/actor/", ApiController.getGenericResponse);
+				get("/", ApiController.getUsers);
+				get("/:id/", ApiController.getUser);
+				get("/:id/favmovies/", ApiController.getUserFavMovies);
+				get("/:id/favactors/", ApiController.getserFavActors);
+				get("/:id/intersection/:id2/", ApiController.getUserIntersection);
+				get("/ranking/actor/", ApiController.getRankingActor);
 			});
 			path("/user", () -> {
-				post("/register/", ApiController.getGenericResponse);
-				post("/login/", ApiController.getGenericResponse);
-				post("/logout/", ApiController.getGenericResponse);
+				post("/register/", ApiController.registerUser);
+				post("/login/", ApiController.login);
+				post("/logout/", ApiController.logout);
 			});
 			path("/search", () -> {
-				get("/:type/", ApiController.getGenericResponse);
+				get("/:type/", ApiController.searchBy);
 			});
 			path("/favmovies", () -> {
-				post("/", ApiController.getGenericResponse);
-				get("/:id/", ApiController.getGenericResponse);
-				put("/:id/", ApiController.getGenericResponse);
-				delete("/:id/", ApiController.getGenericResponse);
-				post("/:id/movies/", ApiController.getGenericResponse);
-				delete("/:id/movies/:movie_id/", ApiController.getGenericResponse);
-				get("/:id/intersection/:id2/", ApiController.getGenericResponse);
-				get("/:id/ranking/", ApiController.getGenericResponse);
+				post("/", ApiController.createNewList);
+				get("/:id/", ApiController.getFavMovies);
+				put("/:id/", ApiController.updateFavMoviesList);
+				delete("/:id/", ApiController.deleteFavMoviesList);
+				post("/:id/movies/", ApiController.addMovieToList);
+				delete("/:id/movies/:movie_id/", ApiController.deleteMovieFromList);
+				get("/:id/intersection/:id2/", ApiController.getUserIntersection);
+				get("/:id/ranking/", ApiController.getRankingFromList);
 
 			});
 			path("/favactors", () -> {
-				post("/", ApiController.getGenericResponse);
-				delete("/:id/", ApiController.getGenericResponse);
+				post("/", ApiController.addActorToList);
+				delete("/:id/", ApiController.deleteActorFromList);
 			});
 			path("/movie", () -> {
-				get("/:id/", ApiController.getGenericResponse);
-				get("/recommended/", ApiController.getGenericResponse);
+				get("/:id/", ApiController.getMovieById);
+				get("/recommended/", ApiController.getRecommendedMovies);
 			});
 			path("/actor", () -> {
-				get("/:id/", ApiController.getGenericResponse);
+				get("/:id/", ApiController.getActorById);
 			});
 		});
 		System.out.println("La aplicación levantó correctamente y escucha en el puerto " + PORT);
