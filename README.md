@@ -8,3 +8,4 @@ Ejecutar la aplicación por linea de comando:
 
 mvn clean install -DskipTests && java -jar target/ShowMustGoOn-1.0-SNAPSHOT.jar
 
+Documentación Swagger en http://localhost:8080/api-doc.html

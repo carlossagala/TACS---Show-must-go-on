@@ -6,6 +6,7 @@ import static spark.Spark.path;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
+import static spark.Spark.staticFiles;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -19,7 +20,8 @@ public class App {
 	public static void main(String[] args) {
 		config();
 		port(PORT);
-
+		
+		staticFiles.location("/public");
 		path("/api", () -> {
 
 			path("/users", () -> {
