@@ -13,7 +13,7 @@ import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import spark.Route;
-
+import ar.com.tacs.grupo5.frba.utn.models.*;
 public class ApiController {
 
 	public static Gson gson;
@@ -74,14 +74,20 @@ public class ApiController {
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		resp.setTotalResults(2);
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
 		
-		List<Movie> favMovies = new ArrayList<>();
-		favMovies.add(new Movie("1", "the fight club", "image.jpg","", "",Arrays.asList("")));
-		favMovies.add(new Movie("2", "300", "image.jpg","", "",Arrays.asList("")));
+		List<FavMovie> favMovies= new ArrayList<>();
+		FavMovie f1 = new FavMovie();
+		f1.setId("1");
+		f1.setName("Top 10 Horror Movies");
+		favMovies.add(f1);
+		FavMovie f2 = new FavMovie();
+		f2.setId("2");
+		f2.setName("Best Kubrik Movies");
+		favMovies.add(f2);
 		
 		resp.setData(favMovies);
 		return gson.toJson(resp);
@@ -222,28 +228,25 @@ public class ApiController {
 	/**
 	 * Returns the favourite movies
 	 */
-	public static Route getFavMovies = (request, response) -> {
+	public static Route getFavMovieDetail = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
-		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		Response resp = new Response();
 		resp.setStatusCode(0);
-		resp.setPage(1);
 		resp.setMessage("ok");
 		
-		List<Movie> favMovies = new ArrayList<>();
-		favMovies.add(new Movie("1", "the fight club", "image.jpg","", "",Arrays.asList("")));
-		favMovies.add(new Movie("2", "300", "image.jpg","", "",Arrays.asList("")));
+		FavMovie f1 = new FavMovie();
+		f1.setId("1");
+		f1.setName("Top 10 Horror Movies");
 		
-		resp.setData(favMovies);
+		resp.setData(f1);
 		return gson.toJson(resp);
 	};
 
 	/**
 	 * Updates a list information
 	 */
-	public static Route updateFavMoviesList = (request, response) -> {
+	public static Route updateFavMoviesDetail = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();

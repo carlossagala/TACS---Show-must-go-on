@@ -42,8 +42,8 @@ public class App {
 			});
 			path("/favmovies", () -> {
 				post("/", ApiController.createNewList);
-				get("/:id/", ApiController.getFavMovies);
-				put("/:id/", ApiController.updateFavMoviesList);
+				get("/:id/", ApiController.getFavMovieDetail);
+				put("/:id/", ApiController.updateFavMoviesDetail);
 				delete("/:id/", ApiController.deleteFavMoviesList);
 				post("/:id/movies/", ApiController.addMovieToList);
 				delete("/:id/movies/:movie_id/", ApiController.deleteMovieFromList);
