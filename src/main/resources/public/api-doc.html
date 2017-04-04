@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: Esta es la documentacion de la API propuesta para el TP grupal de la materia TACS - 1C2017 - Grupo 5, confirmado por Guillermo Grillo, Alejandro Hierro, Maximiliano Broinsky, Carlos Sagala y Matias Rios.
+  description: Esta es la documentacion de la API propuesta para el TP grupal de la materia TACS - 1C2017 - Grupo 5, conformado por Guillermo Grillo, Alejandro Hierro, Maximiliano Broinsky, Carlos Sagala y Matias Rios.
   version: 1.0.0
   title: Show must go on API
   # put the contact info for your development or API team
@@ -26,7 +26,7 @@ paths:
     get:
       tags:
       - admins
-      summary: listados de usuarios
+      summary: listado de usuarios
       operationId: searchUsers
       description: |
         Como administrador quiero ver los usuarios registrados
@@ -43,7 +43,7 @@ paths:
     get:
       tags:
       - admins
-      summary: resumen por usuario
+      summary: consulta un usuario
       operationId: searchUserById
       description: |
         Como administrador quiero ver los datos de un usuario en particular. User, cantidad de listas creadas, cantidad de actores favoritos, ultimo acceso
@@ -57,9 +57,63 @@ paths:
         type: string
       responses:
         200:
-          description: Users list
+          description: User details
           schema:
             $ref: '#/definitions/UserSummary'
+        403:
+          description: Forbidden access
+        404:
+          description: Resource not found
+  /users/{id}/favmovies/:
+    get:
+      tags:
+      - admins
+      summary: consulta las listas de peliculas favoritas de un usuario
+      operationId: searchFavmoviesByUserById
+      description: |
+        Como administrador quiero ver los datos de un usuario en particular. Llistas creadas
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: User id to fetch
+        required: true
+        type: string
+      responses:
+        200:
+          description: User details
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/FavMoviesSimple'
+        403:
+          description: Forbidden access
+        404:
+          description: Resource not found
+  /users/{id}/favactors/:
+    get:
+      tags:
+      - admins
+      summary: consulta la lista de actores favoritos de un usuario
+      operationId: searchFavactorsUserById
+      description: |
+        Como administrador quiero ver los datos de un usuario en particular. Actores favoritos
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: User id to fetch
+        required: true
+        type: string
+      responses:
+        200:
+          description: Favorite actors form an user
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Actor'
         403:
           description: Forbidden access
         404:
@@ -68,7 +122,7 @@ paths:
     get:
       tags:
       - admins
-      summary: interseccion entre listas
+      summary: interseccion entre listas de 2 usuarios
       operationId: intersectionUsers
       description: |
         Como administrador quiero seleccionar 2 listas de usuarios diferentes y mostrar la intersección de películas
@@ -92,11 +146,11 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Movie'
-  /users/ranking/actor/:
+  /users/ranking/actors/:
     get:
       tags:
       - admins
-      summary: ranking de actores favoritos
+      summary: ranking de actores favoritos de todos los usuarios
       operationId: rankingUsers
       description: |
         Como administrador quiero ver el ranking de actores favoritos de todos mis usuarios (los actores que han sido más veces elegidos como favoritos)
@@ -234,7 +288,7 @@ paths:
           description: Successfully favmovie created
         400:
           description: Invalid input, object invalid
-  /favmovies/{id}/:
+  /favmovies/{id}//:
     get:
       tags:
       - developers
@@ -252,28 +306,35 @@ paths:
       responses:
         200:
           description: Successfully favmovie found
+          schema:
+            $ref: '#/definitions/FavMovies'
         404:
           description: Resource not found
-  #/favmovies/{id}:
-  #  put:
-  #    tags:
-  #    - developers
-  #    summary: modifica una favmovie
-  #    operationId: updateFavmovie
-  #    description: Como usuario quiero modificar la lista
-  #    produces:
-  #    - application/json
-  #    parameters:
-  #    - name: id
-  #      in: path
-  #      description: Id of the favorite list of movies
-  #      required: true
-  #      type: string
-  #    responses:
-  #      200:
-  #        description: Successfully favmovie found
-  #      404:
-  #        description: Resource not found
+  /favmovies/{id}/:
+    put:
+      tags:
+      - developers
+      summary: modifica una favmovie
+      operationId: updateFavmovie
+      description: Como usuario quiero modificar una lista de peliculas favoritas
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of movies
+        required: true
+        type: string
+      - in: body
+        name: name
+        description: Name of the list
+        schema:
+          $ref: '#/definitions/FavMovie'
+      responses:
+        200:
+          description: Successfully favmovie updated
+        404:
+          description: Resource not found
   # NOTA: swagger no permite duplicar las url para distintos metodos, al menos con PUT
   /favmovies/{id}:
     delete:
@@ -371,6 +432,10 @@ paths:
       responses:
         200:
           description: Successfully intersection found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Movie'
         404:
           description: Resource not found
   /favmovies/{id}/ranking/:
@@ -391,85 +456,82 @@ paths:
       responses:
         200:
           description: Successfully ranking by favmovie found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Actor'
         404:
           description: Resource not found
+  #/favactors/:
+  #  post:
+  #    tags:
+  #    - developers
+  #    summary: crea una lista de actores favoritos
+  #    operationId: createFavactor
+  #    description: Como usuario quiero crear una lista de actores con un nombre
+  #    consumes:
+  #    - application/json
+  #    produces:
+  #    - application/json
+  #    parameters:
+  #    - in: body
+  #      name: name
+  #      description: Name of the new favorite list of actors
+  #      schema:
+  #        $ref: '#/definitions/FavActor'
+  #    responses:
+  #      201:
+  #        description: Successfully favmovie created
+  #      400:
+  #        description: Invalid input, object invalid
   /favactors/:
-    post:
-      tags:
-      - developers
-      summary: crea una lista de actores favoritos
-      operationId: createFavactor
-      description: Como usuario quiero crear una lista de actores con un nombre
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: body
-        name: name
-        description: Name of the new favorite list of actors
-        schema:
-          $ref: '#/definitions/FavActor'
-      responses:
-        201:
-          description: Successfully favmovie created
-        400:
-          description: Invalid input, object invalid
-  /favactors/{id}/:
     get:
       tags:
       - developers
-      summary: consulta una favactor
+      summary: consulta la favactor
       operationId: getFavactor
-      description: Como usuario quiero consultar la lista
+      description: Como usuario quiero consultar la lista de actores favoritos
       produces:
       - application/json
-      parameters:
-      - name: id
-        in: path
-        description: Id of the favorite list of actors
-        required: true
-        type: string
       responses:
         200:
           description: Successfully favactor found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/FavActors'
         404:
           description: Resource not found
-  /favactors/{id}:
-    delete:
-      tags:
-      - developers
-      summary: elimina una favactor
-      operationId: removeFavactor
-      description: Como usuario quiero eliminar la lista
-      produces:
-      - application/json
-      parameters:
-      - name: id
-        in: path
-        description: Id of the favorite list of actors
-        required: true
-        type: string
-      responses:
-        200:
-          description: Successfully favactor removed
-        404:
-          description: Resource not found
-  /favactors/{id}/actors/:
+  #/favactors/{id}:
+  #  delete:
+  #    tags:
+  #    - developers
+  #    summary: elimina la favactor
+  #    operationId: removeFavactor
+  #    description: Como usuario quiero eliminar la lista
+  #    produces:
+  #    - application/json
+  #    parameters:
+  #    - name: id
+  #      in: path
+  #      description: Id of the favorite list of actors
+  #      required: true
+  #      type: string
+  #    responses:
+  #      200:
+  #        description: Successfully favactor removed
+  #      404:
+  #        description: Resource not found
+  /favactors:
     post:
       tags:
       - developers
-      summary: añade un actor a una favactor
+      summary: añade un actor a la favactor
       operationId: addActorToFavactor
-      description: Como usuario quiero agregar un actor a la lista
+      description: Como usuario quiero agregar un actor a la lista (Marcar un actor como favorito)
       produces:
       - application/json
       parameters:
-      - name: id
-        in: path
-        description: Id of the favorite list of actors
-        required: true
-        type: string
       - in: body
         name: movieId
         description: Actor id to add
@@ -483,22 +545,17 @@ paths:
           description: Operation failed
         404:
           description: Resource not found
-  /favactors/{id}/actors/{actorId}/:
+  /favactors/{id}/:
     delete:
       tags:
       - developers
-      summary: elimina un actor de una favactor
+      summary: elimina un actor la favactor
       operationId: removeActorFromFavactor
-      description: Como usuario quiero eliminar un actor de la lista
+      description: Como usuario quiero eliminar un actor de la lista (Desmarcar un actor como favorito)
       produces:
       - application/json
       parameters:
       - name: id
-        in: path
-        description: Id of the favorite list of actors
-        required: true
-        type: string
-      - name: actorId
         in: path
         description: Id of the actor to remove from the favactor
         required: true
@@ -526,6 +583,8 @@ paths:
       responses:
         200:
           description: Successfully movie found
+          schema:
+            $ref: '#/definitions/Movie'
         404:
           description: Resource not found
   /movies/recommended/:
@@ -541,6 +600,10 @@ paths:
       responses:
         200:
           description: Successfully recommended movies found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Movie'
         404:
           description: Resource not found
   /actors/{id}/:
@@ -561,6 +624,8 @@ paths:
       responses:
         200:
           description: Successfully actor found
+          schema:
+            $ref: '#/definitions/Actor'
         404:
           description: Resource not found
 # models
@@ -569,8 +634,6 @@ definitions:
     type: object
     required:
     - user
-    - favmovies
-    - favactors
     - last_access
     properties:
       user:
@@ -579,20 +642,12 @@ definitions:
         type: string
         format: date-time
         example: 2016-08-29 12:33:00 UTC
-      favmovies:
-        type: array
-        xml:
-          name: movie
-          wrapped: true
-        items:
-          $ref: '#/definitions/FavMovies'
-      favactors:
-        type: array
-        xml:
-          name: actor
-          wrapped: true
-        items:
-          $ref: '#/definitions/FavActors'
+#      favmovies_count:
+#        type: integer
+#        example: 2
+#      favactors_count:
+#        type: integer
+#        example: 5
   User:
     type: object
     required:
@@ -622,7 +677,7 @@ definitions:
         example: johndoe@gmail.com
       password:
         type: string
-        example: abracadra
+        example: abracadabra
   UserLogin:
     type: object
     required:
@@ -634,7 +689,7 @@ definitions:
         example: johndoe@gmail.com
       password:
         type: string
-        example: abracadra
+        example: abracadabra
   FavMovies:
     type: object
     required:
@@ -660,6 +715,19 @@ definitions:
           wrapped: true
         items:
           $ref: '#/definitions/Movie'
+  FavMoviesSimple:
+    type: object
+    required:
+    - id
+    - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Top 5 best movies
   FavMovie:
     type: object
     required:
@@ -715,10 +783,15 @@ definitions:
         example: Fight Club
       description:
         type: string
-        example: 
-      image:
-        type: string
-        example: /images/movies/fc_poster.png
+        example: | 
+          Fight Club is a 1999 American film based on the 1996 novel of the same name by Chuck Palahniuk. The film was directed by David Fincher, and stars Brad Pitt, Edward Norton and Helena Bonham Carter. Norton plays the unnamed protagonist, referred to as the narrator, who is discontented with his white-collar job. He forms a "fight club" with soap maker Tyler Durden, played by Pitt, and they are joined by men who also want to fight recreationally. The narrator becomes embroiled in a relationship with Durden and a dissolute woman, Marla Singer, played by Bonham Carter.
+      images:
+        type: array
+        xml:
+          name: movie_image
+          wrapped: true
+        items:
+          $ref: '#/definitions/MovieImage'
       actors:
         type: array
         xml:
@@ -733,6 +806,32 @@ definitions:
           wrapped: true
         items:
           $ref: '#/definitions/Review'
+  MovieImage:
+    type: object
+    required:
+    - id
+    - path
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      path:
+        type: string
+        example: /images/movies/123456/poster.png
+  ActorImage:
+    type: object
+    required:
+    - id
+    - path
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      path:
+        type: string
+        example: /images/actors/123123/profile1.png
   GenericItemById:
     type: object
     required:
@@ -754,12 +853,17 @@ definitions:
       fullname:
         type: string
         example: Edward Norton
-      image:
-        type: string
-        example: /images/movies/fc_poster.png
+      images:
+        type: array
+        xml:
+          name: actor_images
+          wrapped: true
+        items:
+          $ref: '#/definitions/ActorImage'
       biography:
         type: string
-        example: Edward Norton was born in...
+        example: | 
+          Edward Harrison Norton (born August 18, 1969) is an American actor, filmmaker and activist. He has been nominated for three Academy Awards for his work in the films Primal Fear (1996), American History X (1998) and Birdman (2014). He also starred in other roles, such as Everyone Says I Love You (1996), The People vs. Larry Flynt (1996), Fight Club (1999), Red Dragon (2002), 25th Hour (2002), Kingdom of Heaven (2005), The Illusionist (2006), Moonrise Kingdom (2012), The Grand Budapest Hotel (2014) and Sausage Party (2016). He has also directed and co-written films, including his directorial debut, Keeping the Faith (2000). He has done uncredited work on the scripts for The Score (2001), Frida (2002), and The Incredible Hulk (2008).
       movies:
         type: array
         xml:
