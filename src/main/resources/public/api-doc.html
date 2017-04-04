@@ -1,0 +1,825 @@
+swagger: '2.0'
+info:
+  description: Esta es la documentacion de la API propuesta para el TP grupal de la materia TACS - 1C2017 - Grupo 5, confirmado por Guillermo Grillo, Alejandro Hierro, Maximiliano Broinsky, Carlos Sagala y Matias Rios.
+  version: 1.0.0
+  title: Show must go on API
+  # put the contact info for your development or API team
+  contact:
+    email: riosmatias.zarate@gmail.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# all paths will be relative to the basePath specified
+# basePath: /v1
+
+# tags are used for organizing operations
+tags:
+- name: admins
+  description: Operaciones securizadas por verificacion de perfil, solo-administradores
+- name: developers
+  description: Operaciones disponibles para desarrolladores
+paths:
+# admins-only
+  /users/:
+    get:
+      tags:
+      - admins
+      summary: listados de usuarios
+      operationId: searchUsers
+      description: |
+        Como administrador quiero ver los usuarios registrados
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Users registered on the system
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+  /users/{id}/:
+    get:
+      tags:
+      - admins
+      summary: resumen por usuario
+      operationId: searchUserById
+      description: |
+        Como administrador quiero ver los datos de un usuario en particular. User, cantidad de listas creadas, cantidad de actores favoritos, ultimo acceso
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: User id to fetch
+        required: true
+        type: string
+      responses:
+        200:
+          description: Users list
+          schema:
+            $ref: '#/definitions/UserSummary'
+        403:
+          description: Forbidden access
+        404:
+          description: Resource not found
+  /users/{id1}/intersection/{id2}/:
+    get:
+      tags:
+      - admins
+      summary: interseccion entre listas
+      operationId: intersectionUsers
+      description: |
+        Como administrador quiero seleccionar 2 listas de usuarios diferentes y mostrar la intersección de películas
+      produces:
+      - application/json
+      parameters:
+      - name: id1
+        in: path
+        description: User list id to fetch
+        required: true
+        type: string
+      - name: id2
+        in: path
+        description: User list id to fetch
+        required: true
+        type: string
+      responses:
+        200:
+          description: Intersection between 2 user favorite list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Movie'
+  /users/ranking/actor/:
+    get:
+      tags:
+      - admins
+      summary: ranking de actores favoritos
+      operationId: rankingUsers
+      description: |
+        Como administrador quiero ver el ranking de actores favoritos de todos mis usuarios (los actores que han sido más veces elegidos como favoritos)
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: Search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Actor'
+        400:
+          description: Bad input parameter
+
+# developers
+  /user/register/:
+    post:
+      tags:
+      - developers
+      summary: registro de usuario
+      operationId: addUser
+      description: Como usuario quiero poder crear una cuenta con user y pass
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user_credentials
+        description: User to add
+        schema:
+          $ref: '#/definitions/UserRegister'
+      responses:
+        201:
+          description: Successfully user created
+        400:
+          description: Invalid input, object invalid
+        409:
+          description: An existing user already exists
+  /user/login/:
+    post:
+      tags:
+      - developers
+      summary: inicio de sesion
+      operationId: logInUser
+      description: Como usuario quiero hacer log in en la página
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user_credentials
+        description: Credentials to validate
+        schema:
+          $ref: '#/definitions/UserLogin'
+      responses:
+        201:
+          description: Successfully logged in
+        400:
+          description: Invalid input, object invalid
+  /user/logout/:
+    post:
+      tags:
+      - developers
+      summary: cierre de session
+      operationId: logOutUser
+      description: Como usuario quiero hacer log out en la página
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: Successfully logged out
+        400:
+          description: Invalid input, object invalid
+  /search/{type}/:
+    get:
+      tags:
+      - developers
+      summary: buscar por actor, pelicula o ambos
+      operationId: searchByType
+      description: |
+        Como usuario quiero buscar por nombre (películas y actores)
+          Poder elegir si buscar ambos, películas o actores
+      produces:
+      - application/json
+      parameters:
+        - name: type
+          in: path
+          description: Type to fetch, can be `movie`, `actor` or `movie_actor`
+          required: true
+          type: string
+        - name: name
+          in: query
+          description: Name to fetch
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Page selected, default value is 1
+          required: true
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Search result
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Search'
+  /favmovies/:
+    post:
+      tags:
+      - developers
+      summary: crea una lista de peliculas favorita
+      operationId: createFavmovie
+      description: Como usuario quiero crear una lista de películas con un nombre
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: name
+        description: Name of the new favorite list of movies
+        schema:
+          $ref: '#/definitions/FavMovie'
+      responses:
+        201:
+          description: Successfully favmovie created
+        400:
+          description: Invalid input, object invalid
+  /favmovies/{id}/:
+    get:
+      tags:
+      - developers
+      summary: consulta una favmovie
+      operationId: getFavmovie
+      description: Como usuario quiero consultar la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of movies
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully favmovie found
+        404:
+          description: Resource not found
+  #/favmovies/{id}:
+  #  put:
+  #    tags:
+  #    - developers
+  #    summary: modifica una favmovie
+  #    operationId: updateFavmovie
+  #    description: Como usuario quiero modificar la lista
+  #    produces:
+  #    - application/json
+  #    parameters:
+  #    - name: id
+  #      in: path
+  #      description: Id of the favorite list of movies
+  #      required: true
+  #      type: string
+  #    responses:
+  #      200:
+  #        description: Successfully favmovie found
+  #      404:
+  #        description: Resource not found
+  # NOTA: swagger no permite duplicar las url para distintos metodos, al menos con PUT
+  /favmovies/{id}:
+    delete:
+      tags:
+      - developers
+      summary: elimina una favmovie
+      operationId: removeFavmovie
+      description: Como usuario quiero eliminar la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of movies
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully favmovie removed
+        404:
+          description: Favmovie not found
+  /favmovies/{id}/movies/:
+    post:
+      tags:
+      - developers
+      summary: añade una pelicula a una favmovie
+      operationId: addMovieToFavmovie
+      description: Como usuario quiero agregar una pelicula a la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of movies
+        required: true
+        type: string
+      - in: body
+        name: movieId
+        description: Movie id to add
+        required: true
+        schema:
+          $ref: '#/definitions/GenericItemById'
+      responses:
+        200:
+          description: Successfully movie added
+        400:
+          description: Operation failed
+        404:
+          description: Resource not found
+  /favmovies/{id}/movies/{movieId}/:
+    delete:
+      tags:
+      - developers
+      summary: elimina una pelicula de una favmovie
+      operationId: removeMovieFromFavmovie
+      description: Como usuario quiero eliminar una pelicula de la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of movies
+        required: true
+        type: string
+      - name: movieId
+        in: path
+        description: Id of the movie to remove from the favmovie
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully movie removed from favmovie
+        404:
+          description: Resource not found
+  /favmovies/{id1}/intersection/{id2}:
+    get:
+      tags:
+      - developers
+      summary: interseccion entre 2 listas
+      operationId: getIntersection
+      description: Como usuario quiero consultar interseccon entre 2 listas
+      produces:
+      - application/json
+      parameters:
+      - name: id1
+        in: path
+        description: Id1 of the favorite list of movies
+        required: true
+        type: string
+      - name: id2
+        in: path
+        description: Id2 of the favorite list of movies
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully intersection found
+        404:
+          description: Resource not found
+  /favmovies/{id}/ranking/:
+    get:
+      tags:
+      - developers
+      summary: ranking de actores repetidos en una lista
+      operationId: getRankingByFavmovie
+      description: Como usuario quiero un ranking de actores que se repitan en las películas de una lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of movies
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully ranking by favmovie found
+        404:
+          description: Resource not found
+  /favactors/:
+    post:
+      tags:
+      - developers
+      summary: crea una lista de actores favoritos
+      operationId: createFavactor
+      description: Como usuario quiero crear una lista de actores con un nombre
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: name
+        description: Name of the new favorite list of actors
+        schema:
+          $ref: '#/definitions/FavActor'
+      responses:
+        201:
+          description: Successfully favmovie created
+        400:
+          description: Invalid input, object invalid
+  /favactors/{id}/:
+    get:
+      tags:
+      - developers
+      summary: consulta una favactor
+      operationId: getFavactor
+      description: Como usuario quiero consultar la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of actors
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully favactor found
+        404:
+          description: Resource not found
+  /favactors/{id}:
+    delete:
+      tags:
+      - developers
+      summary: elimina una favactor
+      operationId: removeFavactor
+      description: Como usuario quiero eliminar la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of actors
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully favactor removed
+        404:
+          description: Resource not found
+  /favactors/{id}/actors/:
+    post:
+      tags:
+      - developers
+      summary: añade un actor a una favactor
+      operationId: addActorToFavactor
+      description: Como usuario quiero agregar un actor a la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of actors
+        required: true
+        type: string
+      - in: body
+        name: movieId
+        description: Actor id to add
+        required: true
+        schema:
+          $ref: '#/definitions/GenericItemById'
+      responses:
+        200:
+          description: Successfully actor added
+        400:
+          description: Operation failed
+        404:
+          description: Resource not found
+  /favactors/{id}/actors/{actorId}/:
+    delete:
+      tags:
+      - developers
+      summary: elimina un actor de una favactor
+      operationId: removeActorFromFavactor
+      description: Como usuario quiero eliminar un actor de la lista
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the favorite list of actors
+        required: true
+        type: string
+      - name: actorId
+        in: path
+        description: Id of the actor to remove from the favactor
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully actor removed from favactor
+        404:
+          description: Resource not found
+  /movies/{id}/:
+    get:
+      tags:
+      - developers
+      summary: consulta una pelicula
+      operationId: getMovie
+      description: Como usuario quiero consultar una pelicula
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the movie
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully movie found
+        404:
+          description: Resource not found
+  /movies/recommended/:
+    get:
+      tags:
+      - developers
+      summary: consulta peliculas recomendadas
+      operationId: getRecommendedMovies
+      description: Como usuario quiero consultar peliculas recomendadas
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: Successfully recommended movies found
+        404:
+          description: Resource not found
+  /actors/{id}/:
+    get:
+      tags:
+      - developers
+      summary: consulta un actor
+      operationId: getActor
+      description: Como usuario quiero consultar un actor
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Id of the actor
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successfully actor found
+        404:
+          description: Resource not found
+# models
+definitions:
+  UserSummary:
+    type: object
+    required:
+    - user
+    - favmovies
+    - favactors
+    - last_access
+    properties:
+      user:
+        $ref: '#/definitions/User'
+      last_access:
+        type: string
+        format: date-time
+        example: 2016-08-29 12:33:00 UTC
+      favmovies:
+        type: array
+        xml:
+          name: movie
+          wrapped: true
+        items:
+          $ref: '#/definitions/FavMovies'
+      favactors:
+        type: array
+        xml:
+          name: actor
+          wrapped: true
+        items:
+          $ref: '#/definitions/FavActors'
+  User:
+    type: object
+    required:
+    - id
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      username:
+        type: string
+        example: johndoe@gmail.com
+      name:
+        type: string
+        example: John Doe
+      nick:
+        type: string
+        example: jonhnnyd77
+  UserRegister:
+    type: object
+    required:
+    - username
+    - password
+    properties:
+      username:
+        type: string
+        example: johndoe@gmail.com
+      password:
+        type: string
+        example: abracadra
+  UserLogin:
+    type: object
+    required:
+    - username
+    - password
+    properties:
+      username:
+        type: string
+        example: johndoe@gmail.com
+      password:
+        type: string
+        example: abracadra
+  FavMovies:
+    type: object
+    required:
+    - id
+    - name
+    - count
+    - movies
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Top 5 best movies
+      count:
+        type: integer
+        example: 1
+      movies:
+        type: array
+        xml:
+          name: movie
+          wrapped: true
+        items:
+          $ref: '#/definitions/Movie'
+  FavMovie:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        example: Top 5 best movies
+  FavActors:
+    type: object
+    required:
+    - id
+    - name
+    - count
+    - actors
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Top 5 best actors
+      count:
+        type: integer
+        example: 3
+      actors:
+        type: array
+        xml:
+          name: movie
+          wrapped: true
+        items:
+          $ref: '#/definitions/Actor'
+  FavActor:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        example: Top 5 best actors
+  Movie:
+    type: object
+    required:
+    - id
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      title:
+        type: string
+        example: Fight Club
+      description:
+        type: string
+        example: 
+      image:
+        type: string
+        example: /images/movies/fc_poster.png
+      actors:
+        type: array
+        xml:
+          name: actor
+          wrapped: true
+        items:
+          $ref: '#/definitions/Actor'
+      reviews:
+        type: array
+        xml:
+          name: review
+          wrapped: true
+        items:
+          $ref: '#/definitions/Review'
+  GenericItemById:
+    type: object
+    required:
+    - id
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+  Actor:
+    type: object
+    required:
+    - id
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      fullname:
+        type: string
+        example: Edward Norton
+      image:
+        type: string
+        example: /images/movies/fc_poster.png
+      biography:
+        type: string
+        example: Edward Norton was born in...
+      movies:
+        type: array
+        xml:
+          name: actor_movies
+          wrapped: true
+        items:
+          $ref: '#/definitions/Movie'
+  Review:
+    type: object
+    required:
+    - id
+    - title
+    - ranking
+    - description
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      title:
+        type: string
+        example: As good as cold beer
+      ranking:
+        type: number
+        example: 4.5
+      description:
+        type: string
+        example: This is a movie...
+      date_post:
+        type: string
+        format: date-time
+        example: 2016-08-29 12:33:00 UTC
+      user_post:
+        $ref: '#/definitions/User'
+  Search:
+    type: object
+    required:
+      - page
+      - total_pages
+      - total_result
+      - data
+    properties:
+      page:
+        type: integer
+        example: 1
+      total_pages:
+        type: integer
+        example: 10
+      total_result:
+        type: integer
+        example: 100
+      data:
+        type: array
+        xml:
+          name: movie
+          wrapped: true
+        items:
+          $ref: '#/definitions/Movie'
+# Added by API Auto Mocking Plugin
+host: localhost:8080
+basePath: /api
+schemes:
+ - http
