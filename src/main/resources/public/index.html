@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Show must go on</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!--Import Google Icon Font-->
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+
+        <!--Import jQuery before materialize.js-->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/theaterjs/latest/theater.min.js"></script>
+        
+        <link rel="stylesheet" href="css/app.css">
+
+        <link href="https://fonts.googleapis.com/css?family=Bangers|Titillium+Web" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Cutive" rel="stylesheet">
+    </head>
+    <body ng-app="mainApp" class="dark-theme">
+
+        <!-- Navbar goes here -->
+        
+        <div ng-include="'views/navbar.html'"></div>
+        
+        <!-- Page Layout here -->
+        <div id="main-wrapper" class="row grey darken-3" >
+
+            <div id="panelLeft" class="col s3 hide">
+                <div class="section-wrapper" ng-include="'views/theater.html'"></div>
+            </div>
+            
+            <div ng-include="'/views/form.html'"></div>
+
+            <div id="panelRight" class="col s12" ng-controller="MainController as main">
+            <!-- Teal page content  -->
+            
+            <!-- Page Content goes here -->
+            
+
+                <div ng-include="'views/list.html'"></div>
+            
+            </div>
+
+
+        </div>
+        <div class="col s12 nested-top-wrapper">
+            <div ng-include="'views/footer.html'"></div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/controllers/MainController.js"></script>
+    </body>
+</html>

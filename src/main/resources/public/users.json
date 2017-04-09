@@ -1,0 +1,27 @@
+[
+    {
+        "id": "1",
+        "username":"ggrillo@tacs-utn.com.ar",
+        "nickname":"ggrillo"
+    },
+    {
+        "id": "2",
+        "username":"ahierro@tacs-utn.com.ar",
+        "nickname":"ahierro"
+    },
+    {
+        "id": "3",
+        "username":"mbroinsky@tacs-utn.com.ar",
+        "nickname":"mbroinsky"
+    },
+    {
+        "id": "4",
+        "username":"csagala@tacs-utn.com.ar",
+        "nickname":"csagala"
+    },
+    {
+        "id": "5",
+        "username":"mrios@tacs-utn.com.ar",
+        "nickname":"mrios"
+    }
+]

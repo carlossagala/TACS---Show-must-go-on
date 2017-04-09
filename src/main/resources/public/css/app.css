@@ -1,0 +1,157 @@
+/* SHOW MUST GO ON STYLES */
+
+html {
+	font-family: 'Titillium web', Roboto;
+}
+
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    font-size: 14px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+main {
+    font-family: "Cutive", serif;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: #222;
+    background-color: #ededed;
+    -webkit-transition: background-color 150ms ease-out, color 150ms ease-out;
+    transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.dark {
+    color: #ededed;
+    background-color: #222;
+}
+
+p {
+    opacity: .6;
+    margin: 0 0 .6rem 0;
+    -webkit-transition: opacity 300ms ease-out;
+    transition: opacity 300ms ease-out;
+}
+p:hover {
+    opacity: 1;
+}
+
+.scene {
+    padding: .5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.actor {
+    font-size: 1.8rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 1rem;
+}
+.actor:last-of-type {
+    margin-bottom: 0rem;
+}
+
+.actor__content {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+@-webkit-keyframes blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.actor__content--typing::after {
+    content: '|';
+    -webkit-animation: blink 500ms infinite;
+          animation: blink 500ms infinite;
+}
+
+.section-wrapper {
+    padding-top: 20px;
+}
+
+.nested-top-wrapper {
+    margin-top: -20px;
+}
+
+.form-wrapper {
+    border-bottom: 1px solid #ccc !important;
+    box-sizing: border-box;
+}
+
+/* DARK THEME - DESKTOP - BEGIN  */
+
+.dark-theme .form-wrapper {
+    border-bottom: 1px solid #212121 !important;
+    box-sizing: border-box;
+}
+
+.dark-theme .form-wrapper {
+    color: #ccc;
+}
+
+/* DARK THEME - DESKTOP - END */
+
+
+@media only screen and (min-width: 993px) {
+    .container {
+        width: 85%;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    nav, nav a i {
+        height: 44px !important;
+        line-height: 44px !important;
+    }
+
+    /* DARK THEME - MOBILE - BEGIN */
+
+    .dark-theme .tabs {
+        border: none;
+        border-radius: 2px;
+    }
+
+    /* DARK THEME - MOBILE - END */
+
+    .form-wrapper > .col > .row {
+        margin-bottom: 0;
+    }
+
+    .carousel {
+        height: 700px;
+    }
+
+    .progress-wrapper {
+        height: 450px;
+        padding: 10% 0 !important;
+    }
+}
