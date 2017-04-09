@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
@@ -18,15 +20,20 @@ import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ApiService;
 import spark.Route;
-import ar.com.tacs.grupo5.frba.utn.models.*;
 @Component
 public class ApiController {
 
-	@Autowired
+	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
 	private Gson gson;
-	
-	@Autowired
 	private ApiService apiService;
+
+	@Autowired
+	public ApiController(Gson gson, ApiService apiService) {
+		super();
+		this.gson = gson;
+		this.apiService = apiService;
+	}
+
 
 	public  Route getGenericResponse = (request, response) -> {
 		response.status(200);
@@ -64,6 +71,9 @@ public class ApiController {
 	 * Returns the user with the specified Id
 	 */
 	public  Route getUser = (request, response) -> {
+		logger.info(request.pathInfo());
+		String responseJson = null;
+
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -73,7 +83,9 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(new User("Kun","Aguero"));
-		return gson.toJson(resp);
+		responseJson = gson.toJson(resp);
+		logger.info(responseJson);
+		return responseJson;
 	};
 
 	/**
@@ -387,6 +399,16 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
 		resp.setData(new Actor("1","imagen.jpg","Margot Robbie","",Arrays.asList("123456")));
+		return gson.toJson(resp);
+	};
+	
+	public  Route helloWorld = (request, response) -> {
+		response.status(200);
+		response.type("application/json");
+		Response resp = new Response();
+		resp.setStatusCode(0);
+		resp.setMessage("ok");
+		resp.setData(apiService.helloWorld());
 		return gson.toJson(resp);
 	};
 }

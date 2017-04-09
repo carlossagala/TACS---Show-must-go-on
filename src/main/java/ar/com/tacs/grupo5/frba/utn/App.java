@@ -8,10 +8,14 @@ import static spark.Spark.post;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -19,19 +23,29 @@ import com.google.gson.GsonBuilder;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 
-@Configuration
+@SpringBootApplication
+@PropertySource("classpath:application.properties")
 @ComponentScan({ "ar.com.tacs.grupo5.frba.utn" })
 public class App {
-	private static final int PORT = 8080;
+	private static Logger logger = LoggerFactory.getLogger(App.class);
 
 	public static void main(String[] args) {
-		port(PORT);
+		@SuppressWarnings("resource")
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class);
 		ApiController apiController = ctx.getBean(ApiController.class);
-		ctx.close();
-		staticFiles.location("/public");
-		path("/api", () -> {
+		Environment environment = ctx.getBean(Environment.class);
+		String port = environment.getProperty("server.port");
+		sparkInit(apiController,Integer.valueOf(port));
+		System.out.println("La aplicación levantó correctamente y escucha en el puerto " + port);
+		logger.info("La aplicación levantó correctamente y escucha en el puerto " + port);
+	}
 
+	public static void sparkInit(ApiController apiController,int port) {
+		port(port);
+		staticFiles.location("/public");
+
+		path("/api", () -> {
+			get("/hello/", apiController.helloWorld);
 			path("/users", () -> {
 				get("/", apiController.getUser);
 				get("/:id/", apiController.getUser);
@@ -73,12 +87,12 @@ public class App {
 				get("/:id/", apiController.getActorById);
 			});
 		});
-		System.out.println("La aplicación levantó correctamente y escucha en el puerto " + PORT);
 	}
 
 	@Bean
 	public Gson gson() {
 		return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 	}
+
 
 }

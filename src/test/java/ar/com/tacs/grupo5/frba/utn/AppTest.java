@@ -9,7 +9,10 @@ import org.junit.Test;
 import com.despegar.http.client.GetMethod;
 import com.despegar.http.client.HttpResponse;
 import com.despegar.sparkjava.test.SparkServer;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 
+import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 import spark.servlet.SparkApplication;
 
 /**
@@ -42,7 +45,8 @@ public class AppTest
 class TestController {
 
 	public TestController() {
-		App.main(null);
+		ApiController apiController = new ApiController(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create(), null);
+		App.sparkInit(apiController, 8080);
 	}
 
 }
