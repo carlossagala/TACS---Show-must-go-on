@@ -4,21 +4,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.google.gson.Gson;
 
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.service.ApiService;
 import spark.Route;
-import ar.com.tacs.grupo5.frba.utn.models.*;
+@Component
 public class ApiController {
 
-	public static Gson gson;
+	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
+	private Gson gson;
+	private ApiService apiService;
 
-	public static Route getGenericResponse = (request, response) -> {
+	@Autowired
+	public ApiController(Gson gson, ApiService apiService) {
+		super();
+		this.gson = gson;
+		this.apiService = apiService;
+	}
+
+
+	public  Route getGenericResponse = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -34,7 +51,7 @@ public class ApiController {
 	/**
 	 * Returns all users
 	 */
-	public static Route getUsers = (request, response) -> {
+	public Route getUsers = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -53,7 +70,10 @@ public class ApiController {
 	/**
 	 * Returns the user with the specified Id
 	 */
-	public static Route getUser = (request, response) -> {
+	public  Route getUser = (request, response) -> {
+		logger.info(request.pathInfo());
+		String responseJson = null;
+
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -63,13 +83,15 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(new User("Kun","Aguero"));
-		return gson.toJson(resp);
+		responseJson = gson.toJson(resp);
+		logger.info(responseJson);
+		return responseJson;
 	};
 
 	/**
 	 * Returns the user's favourite movies
 	 */
-	public static Route getUserFavMovies = (request, response) -> {
+	public  Route getUserFavMovies = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -96,7 +118,7 @@ public class ApiController {
 	/**
 	 * Returns the user's favourite actors
 	 */
-	public static Route getserFavActors = (request, response) -> {
+	public  Route getserFavActors = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -117,7 +139,7 @@ public class ApiController {
 	/**
 	 * Returns the intersection between the favourite movies from the two users
 	 */
-	public static Route getUserIntersection = (request, response) -> {
+	public  Route getUserIntersection = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -131,7 +153,7 @@ public class ApiController {
 		return gson.toJson(resp);
 	};
 
-	public static Route getRankingActor = (request, response) -> {
+	public  Route getRankingActor = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -151,7 +173,7 @@ public class ApiController {
 	/**
 	 * Registers a user
 	 */
-	public static Route registerUser = (request, response) -> {
+	public  Route registerUser = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -167,7 +189,7 @@ public class ApiController {
 	/**
 	 * Login
 	 */
-	public static Route login = (request, response) -> {
+	public  Route login = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -183,7 +205,7 @@ public class ApiController {
 	/**
 	 * Logout
 	 */
-	public static Route logout = (request, response) -> {
+	public  Route logout = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -200,7 +222,7 @@ public class ApiController {
 	 * Search for a movie, actor or movie-actor.
 	 * The type must be 'actor', 'movie' and 'movie-actor'
 	 */
-	public static Route searchBy = (request, response) -> {
+	public  Route searchBy = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -216,7 +238,7 @@ public class ApiController {
 	/**
 	 * Creates a new list of favourite movies
 	 */
-	public static Route createNewList = (request, response) -> {
+	public  Route createNewList = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -228,7 +250,7 @@ public class ApiController {
 	/**
 	 * Returns the favourite movies
 	 */
-	public static Route getFavMovieDetail = (request, response) -> {
+	public  Route getFavMovieDetail = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -246,7 +268,7 @@ public class ApiController {
 	/**
 	 * Updates a list information
 	 */
-	public static Route updateFavMoviesDetail = (request, response) -> {
+	public  Route updateFavMoviesDetail = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -258,7 +280,7 @@ public class ApiController {
 	/**
 	 * Deletes a list of movies
 	 */
-	public static Route deleteFavMoviesList = (request, response) -> {
+	public  Route deleteFavMoviesList = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -270,7 +292,7 @@ public class ApiController {
 	/**
 	 * Adds a movie to the list
 	 */
-	public static Route addMovieToList = (request, response) -> {
+	public  Route addMovieToList = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -282,7 +304,7 @@ public class ApiController {
 	/**
 	 * Removes a movie from the list
 	 */
-	public static Route deleteMovieFromList = (request, response) -> {
+	public  Route deleteMovieFromList = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -294,7 +316,7 @@ public class ApiController {
 	/**
 	 * Returns a ranking based on a list
 	 */
-	public static Route getRankingFromList = (request, response) -> {
+	public  Route getRankingFromList = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -316,7 +338,7 @@ public class ApiController {
 	/**
 	 * Marks an actor as favourite
 	 */
-	public static Route addActorToList = (request, response) -> {
+	public  Route addActorToList = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -328,7 +350,7 @@ public class ApiController {
 	/**
 	 * Unmarks an actor as favourite
 	 */
-	public static Route deleteActorFromList = (request, response) -> {
+	public  Route deleteActorFromList = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -340,7 +362,7 @@ public class ApiController {
 	/**
 	 * Returns a movie by its id
 	 */
-	public static Route getMovieById = (request, response) -> {
+	public  Route getMovieById = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
@@ -353,7 +375,7 @@ public class ApiController {
 	/**
 	 * Returns recommendations for the user
 	 */
-	public static Route getRecommendedMovies = (request, response) -> {
+	public  Route getRecommendedMovies = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
@@ -370,13 +392,23 @@ public class ApiController {
 	/**
 	 * Returns an actor by its id
 	 */
-	public static Route getActorById = (request, response) -> {
+	public  Route getActorById = (request, response) -> {
 		response.status(200);
 		response.type("application/json");
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
 		resp.setData(new Actor("1","imagen.jpg","Margot Robbie","",Arrays.asList("123456")));
+		return gson.toJson(resp);
+	};
+	
+	public  Route helloWorld = (request, response) -> {
+		response.status(200);
+		response.type("application/json");
+		Response resp = new Response();
+		resp.setStatusCode(0);
+		resp.setMessage("ok");
+		resp.setData(apiService.helloWorld());
 		return gson.toJson(resp);
 	};
 }
