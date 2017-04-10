@@ -36,7 +36,6 @@ public class App {
 		Environment environment = ctx.getBean(Environment.class);
 		String port = environment.getProperty("server.port");
 		sparkInit(apiController,Integer.valueOf(port));
-		System.out.println("La aplicación levantó correctamente y escucha en el puerto " + port);
 		logger.info("La aplicación levantó correctamente y escucha en el puerto " + port);
 	}
 
