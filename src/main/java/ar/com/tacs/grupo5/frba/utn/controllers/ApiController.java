@@ -19,6 +19,8 @@ import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ApiService;
+import ar.com.tacs.grupo5.frba.utn.service.UserService;
+import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Route;
 @Component
 public class ApiController {
@@ -26,12 +28,14 @@ public class ApiController {
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
 	private Gson gson;
 	private ApiService apiService;
+	private UserServiceImpl userService;
 
 	@Autowired
-	public ApiController(Gson gson, ApiService apiService) {
+	public ApiController(Gson gson, ApiService apiService, UserServiceImpl userService) {
 		super();
 		this.gson = gson;
 		this.apiService = apiService;
+		this.userService = userService;
 	}
 
 
@@ -55,14 +59,15 @@ public class ApiController {
 		response.status(200);
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(2);
+		List<User> users = new ArrayList<>();
+//		users.add(new User("1","Kun","Aguero"));
+//		users.add(new User("2","Lio", "Messi"));
+		users = userService.getAllUsers();
+		resp.setMessage("ok");
 		resp.setStatusCode(0);
 		resp.setPage(1);
-		resp.setMessage("ok");
-		List<User> users = new ArrayList<>();
-		users.add(new User("Kun","Aguero"));
-		users.add(new User("Lio", "Messi"));
+		resp.setTotalPages(1);
+		resp.setTotalResults(users.size());
 		resp.setData(users);
 		return gson.toJson(resp);
 	};
@@ -82,7 +87,8 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new User("Kun","Aguero"));
+//		resp.setData(new User("1","Kun","Aguero"));
+		resp.setData(userService.getUserById(request.attribute("id")));
 		responseJson = gson.toJson(resp);
 		logger.info(responseJson);
 		return responseJson;
@@ -182,7 +188,8 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new User("Kun","Aguero"));
+		resp.setData(userService.saveUser(new User("1","Kun","Aguero")));
+//		resp.setData(new User("1","Kun","Aguero"));
 		return gson.toJson(resp);
 	};
 
@@ -198,7 +205,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new User("Kun","Aguero"));
+		resp.setData(new User("1","Kun","Aguero"));
 		return gson.toJson(resp);
 	};
 
@@ -214,7 +221,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new User("Kun","Aguero"));
+		resp.setData(new User("1","Kun","Aguero"));
 		return gson.toJson(resp);
 	};
 

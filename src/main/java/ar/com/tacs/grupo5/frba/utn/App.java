@@ -46,7 +46,7 @@ public class App {
 		path("/api", () -> {
 			get("/hello/", apiController.helloWorld);
 			path("/users", () -> {
-				get("/", apiController.getUser);
+				get("/", apiController.getUsers);
 				get("/:id/", apiController.getUser);
 				get("/:id/favmovies/", apiController.getUserFavMovies);
 				get("/:id/favactors/", apiController.getserFavActors);
