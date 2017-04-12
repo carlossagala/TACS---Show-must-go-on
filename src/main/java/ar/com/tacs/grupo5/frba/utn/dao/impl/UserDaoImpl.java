@@ -45,8 +45,7 @@ public class UserDaoImpl implements UserDao{
 	{
 		User user = new User();
 		user.setId(userEntity.getId());
-		user.setFirstName(userEntity.getFirstName());
-		user.setLastName(userEntity.getLastName());
+		user.setUserName(userEntity.getUserName());
 		return user;
 	}
 
@@ -54,8 +53,7 @@ public class UserDaoImpl implements UserDao{
 	public User saveUser(User user) {
 		UserEntity userEntity = new UserEntity();
 		userEntity.setId(user.getId());
-		userEntity.setFirstName(user.getFirstName());
-		userEntity.setLastName(user.getLastName());
+		userEntity.setUserName(user.getUserName());
 		return mapUser(userRepository.save(userEntity));
 	}
 

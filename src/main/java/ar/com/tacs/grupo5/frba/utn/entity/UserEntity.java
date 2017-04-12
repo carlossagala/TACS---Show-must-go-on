@@ -8,20 +8,16 @@ public class UserEntity {
 
 	@Id
 	private String id;
-	private String firstName;
-	private String lastName;
-	private String nickname;
+	private String userName;
 
 	public UserEntity() {
 		super();
 	}
 
-	public UserEntity(String id, String firstName, String lastName, String nickname) {
+	public UserEntity(String id, String userName) {
 		super();
 		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.nickname = nickname;
+		this.userName = userName;
 	}
 
 	public String getId() {
@@ -32,28 +28,15 @@ public class UserEntity {
 		this.id = id;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
+	
+	
 
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getNickname() {
-		return nickname;
-	}
-
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
 
 }

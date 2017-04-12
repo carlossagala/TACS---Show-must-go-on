@@ -90,7 +90,9 @@ public class App {
 
 	@Bean
 	public Gson gson() {
-		return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+		return gsonBuilder.create();
 	}
 
 

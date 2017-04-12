@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
@@ -49,7 +50,8 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData("data");
-		return gson.toJson(resp);
+		ObjectMapper oMapper = new ObjectMapper();
+		return oMapper.writeValueAsBytes(resp);
 	};
 
 	/**
@@ -60,8 +62,6 @@ public class ApiController {
 		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
 		List<User> users = new ArrayList<>();
-//		users.add(new User("1","Kun","Aguero"));
-//		users.add(new User("2","Lio", "Messi"));
 		users = userService.getAllUsers();
 		resp.setMessage("ok");
 		resp.setStatusCode(0);
@@ -87,7 +87,6 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-//		resp.setData(new User("1","Kun","Aguero"));
 		resp.setData(userService.getUserById(request.attribute("id")));
 		responseJson = gson.toJson(resp);
 		logger.info(responseJson);
@@ -180,16 +179,12 @@ public class ApiController {
 	 * Registers a user
 	 */
 	public  Route registerUser = (request, response) -> {
-		response.status(200);
-		response.type("application/json");
-		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		Response resp = new Response();
 		resp.setStatusCode(0);
-		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(userService.saveUser(new User("1","Kun","Aguero")));
-//		resp.setData(new User("1","Kun","Aguero"));
+		ObjectMapper oMapper = new ObjectMapper();
+		User userDto = oMapper.readValue(request.body(), User.class);
+		resp.setData(userService.saveUser(userDto));
 		return gson.toJson(resp);
 	};
 
@@ -205,7 +200,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new User("1","Kun","Aguero"));
+		resp.setData(new User("1","Kun"));
 		return gson.toJson(resp);
 	};
 
@@ -221,7 +216,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new User("1","Kun","Aguero"));
+		resp.setData(new User("1","Kun"));
 		return gson.toJson(resp);
 	};
 
