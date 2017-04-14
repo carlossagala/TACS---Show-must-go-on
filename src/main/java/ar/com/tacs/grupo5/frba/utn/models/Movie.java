@@ -5,53 +5,69 @@ import java.util.List;
 public class Movie {
 	private String id;
 	private String title;
-	private String image;
-	private String review;
-	private String description;
-	private List<String> actors;
+	private Images images;
+	private Reviews reviews;
+	private List<Actor> actors;
+	private String overview;
+	
+	
+	public String getOverview() {
+		return overview;
+	}
+
+	public void setOverview(String overview) {
+		this.overview = overview;
+	}
+
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getImage() {
-		return image;
+
+
+	public Images getImages() {
+		return images;
 	}
-	public void setImage(String image) {
-		this.image = image;
+
+	public void setImages(Images images) {
+		this.images = images;
 	}
-	public String getReview() {
-		return review;
+
+	public Reviews getReviews() {
+		return reviews;
 	}
-	public void setReview(String review) {
-		this.review = review;
+
+	public void setReviews(Reviews reviews) {
+		this.reviews = reviews;
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public List<String> getActors() {
-		return actors;
-	}
-	public void setActors(List<String> actors) {
-		this.actors = actors;
-	}
+
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public Movie(String id, String title, String image, String review, String description, List<String> actors) {
+
+	public Movie(String id, String title, String image, String review, String overview, List<String> actors) {
 		super();
 		this.id = id;
 		this.title = title;
-		this.image = image;
-		this.review = review;
-		this.description = description;
+		// this.image = image;
+		// this.review = review;
+		this.overview = overview;
+		//this.actors = actors;
+	}
+
+	public List<Actor> getActors() {
+		return actors;
+	}
+
+	public void setActors(List<Actor> actors) {
 		this.actors = actors;
 	}
 
