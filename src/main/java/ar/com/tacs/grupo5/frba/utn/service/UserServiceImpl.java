@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Component
@@ -39,6 +40,12 @@ public class UserServiceImpl implements UserService {
 		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
 		System.out.println(response.getBody());
 		return userDao.saveUser(user);
+	}
+
+	@Override
+	public List<FavMovie> getUserFavMovies(String id) 
+	{
+		return getUserById(id).getFavMovies();
 	}
 
 }

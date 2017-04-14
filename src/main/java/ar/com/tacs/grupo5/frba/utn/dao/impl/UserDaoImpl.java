@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
+import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDaoImpl;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
@@ -43,9 +45,12 @@ public class UserDaoImpl implements UserDao{
 	
 	private User mapUser(UserEntity userEntity)
 	{
+		FavMoviesDao favMoviesDao = new FavMoviesDaoImpl();
+		
 		User user = new User();
 		user.setId(userEntity.getId());
 		user.setUserName(userEntity.getUserName());
+		user.setFavMovies(favMoviesDao.mapFavMovies(userEntity.getFavMovies()));
 		return user;
 	}
 
@@ -56,5 +61,4 @@ public class UserDaoImpl implements UserDao{
 		userEntity.setUserName(user.getUserName());
 		return mapUser(userRepository.save(userEntity));
 	}
-
 }

@@ -1,9 +1,12 @@
 package ar.com.tacs.grupo5.frba.utn.models;
 
+import java.util.List;
+
 public class User {
 	
 	private String id;
 	private String userName;
+	private List<FavMovie> favMovies;
 	
 	public User()
 	{
@@ -27,6 +30,14 @@ public class User {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public List<FavMovie> getFavMovies() {
+		return favMovies;
+	}
+
+	public void setFavMovies(List<FavMovie> favMovies) {
+		this.favMovies = favMovies;
 	}
 	
 	

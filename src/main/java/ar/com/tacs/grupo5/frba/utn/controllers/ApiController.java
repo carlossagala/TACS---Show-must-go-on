@@ -90,25 +90,15 @@ public class ApiController {
 	 */
 	public  Route getUserFavMovies = (request, response) -> {
 		response.status(200);
-		
 		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(2);
+		List<FavMovie> favMovies = userService.getUserFavMovies(request.attribute("id"));
+		resp.setData(favMovies);
+		//TODO: Cada cuantos resultados paginamos?
+		resp.setTotalPages(favMovies.size()/20);
+		resp.setTotalResults(favMovies.size());
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		
-		List<FavMovie> favMovies= new ArrayList<>();
-		FavMovie f1 = new FavMovie();
-		f1.setId("1");
-		f1.setName("Top 10 Horror Movies");
-		favMovies.add(f1);
-		FavMovie f2 = new FavMovie();
-		f2.setId("2");
-		f2.setName("Best Kubrik Movies");
-		favMovies.add(f2);
-		
-		resp.setData(favMovies);
 		return resp;
 	};
 
