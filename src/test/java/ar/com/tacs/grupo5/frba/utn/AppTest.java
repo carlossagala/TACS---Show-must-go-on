@@ -13,6 +13,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
+import ar.com.tacs.grupo5.frba.utn.controllers.JsonTransformer;
 import spark.servlet.SparkApplication;
 
 /**
@@ -45,8 +46,8 @@ public class AppTest
 class TestController {
 
 	public TestController() {
-		ApiController apiController = new ApiController(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create(), null, null);
-		App.sparkInit(apiController, 8080);
+		ApiController apiController = new ApiController(null, null);
+		App.sparkInit(apiController, 8080, new JsonTransformer(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()));
 	}
 
 }

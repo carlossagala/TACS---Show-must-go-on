@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
@@ -20,21 +19,18 @@ import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ApiService;
-import ar.com.tacs.grupo5.frba.utn.service.UserService;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Route;
 @Component
 public class ApiController {
 
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
-	private Gson gson;
 	private ApiService apiService;
 	private UserServiceImpl userService;
 
 	@Autowired
-	public ApiController(Gson gson, ApiService apiService, UserServiceImpl userService) {
+	public ApiController(ApiService apiService, UserServiceImpl userService) {
 		super();
-		this.gson = gson;
 		this.apiService = apiService;
 		this.userService = userService;
 	}
@@ -42,7 +38,7 @@ public class ApiController {
 
 	public  Route getGenericResponse = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -59,7 +55,7 @@ public class ApiController {
 	 */
 	public Route getUsers = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		List<User> users = new ArrayList<>();
 		users = userService.getAllUsers();
@@ -69,7 +65,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(users.size());
 		resp.setData(users);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -77,10 +73,8 @@ public class ApiController {
 	 */
 	public  Route getUser = (request, response) -> {
 		logger.info(request.pathInfo());
-		String responseJson = null;
 
 		response.status(200);
-		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -88,9 +82,7 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(userService.getUserById(request.attribute("id")));
-		responseJson = gson.toJson(resp);
-		logger.info(responseJson);
-		return responseJson;
+		return resp;
 	};
 
 	/**
@@ -98,7 +90,7 @@ public class ApiController {
 	 */
 	public  Route getUserFavMovies = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(2);
@@ -117,7 +109,7 @@ public class ApiController {
 		favMovies.add(f2);
 		
 		resp.setData(favMovies);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -125,7 +117,7 @@ public class ApiController {
 	 */
 	public  Route getserFavActors = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -138,7 +130,7 @@ public class ApiController {
 		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
 		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
 		resp.setData(favActors);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -146,7 +138,7 @@ public class ApiController {
 	 */
 	public  Route getUserIntersection = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -155,12 +147,12 @@ public class ApiController {
 		resp.setMessage("ok");
 		resp.setData(Arrays.asList(new Movie("1","Matrix","image.jpg","","",Arrays.asList("")),
 				new Movie("2","Back to the Future","image.jpg","","",Arrays.asList(""))));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	public  Route getRankingActor = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -172,7 +164,7 @@ public class ApiController {
 		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
 		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
 		resp.setData(favActors);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -185,7 +177,7 @@ public class ApiController {
 		ObjectMapper oMapper = new ObjectMapper();
 		User userDto = oMapper.readValue(request.body(), User.class);
 		resp.setData(userService.saveUser(userDto));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -193,7 +185,7 @@ public class ApiController {
 	 */
 	public  Route login = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -201,7 +193,7 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(new User("1","Kun"));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -209,7 +201,7 @@ public class ApiController {
 	 */
 	public  Route logout = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -217,7 +209,7 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(new User("1","Kun"));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -226,7 +218,7 @@ public class ApiController {
 	 */
 	public  Route searchBy = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -234,7 +226,7 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(Arrays.asList(new Search("123","actor","Emma Stone")));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -242,11 +234,11 @@ public class ApiController {
 	 */
 	public  Route createNewList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -254,7 +246,7 @@ public class ApiController {
 	 */
 	public  Route getFavMovieDetail = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
@@ -264,7 +256,7 @@ public class ApiController {
 		f1.setName("Top 10 Horror Movies");
 		
 		resp.setData(f1);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -272,11 +264,11 @@ public class ApiController {
 	 */
 	public  Route updateFavMoviesDetail = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -284,11 +276,11 @@ public class ApiController {
 	 */
 	public  Route deleteFavMoviesList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -296,11 +288,11 @@ public class ApiController {
 	 */
 	public  Route addMovieToList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -308,11 +300,11 @@ public class ApiController {
 	 */
 	public  Route deleteMovieFromList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -320,7 +312,7 @@ public class ApiController {
 	 */
 	public  Route getRankingFromList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -334,7 +326,7 @@ public class ApiController {
 		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
 		
 		resp.setData(favActors);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -342,11 +334,11 @@ public class ApiController {
 	 */
 	public  Route addActorToList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -354,11 +346,11 @@ public class ApiController {
 	 */
 	public  Route deleteActorFromList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -366,12 +358,12 @@ public class ApiController {
 	 */
 	public  Route getMovieById = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
 		resp.setData(new Movie("1","Matrix","image.jpg","","",Arrays.asList("")));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -379,7 +371,7 @@ public class ApiController {
 	 */
 	public  Route getRecommendedMovies = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(2);
@@ -388,7 +380,7 @@ public class ApiController {
 		resp.setMessage("ok");
 		resp.setData(Arrays.asList(new Movie("1","Matrix","image.jpg","","",Arrays.asList("")),
 					new Movie("2","Back to the Future","image.jpg","","",Arrays.asList(""))));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
@@ -396,21 +388,21 @@ public class ApiController {
 	 */
 	public  Route getActorById = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
 		resp.setData(new Actor("1","imagen.jpg","Margot Robbie","",Arrays.asList("123456")));
-		return gson.toJson(resp);
+		return resp;
 	};
 	
 	public  Route helloWorld = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+		
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
 		resp.setData(apiService.helloWorld());
-		return gson.toJson(resp);
+		return resp;
 	};
 }
