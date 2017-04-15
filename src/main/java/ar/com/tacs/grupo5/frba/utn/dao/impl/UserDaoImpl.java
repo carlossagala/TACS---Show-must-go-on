@@ -2,6 +2,7 @@ package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
+import ar.com.tacs.grupo5.frba.utn.entity.FavActor;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
@@ -77,6 +79,23 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public User findByUserName(String userName) {
 		return mapUser(userRepository.findByUserName(userName));
+	}
+
+	@Override
+	@Transactional
+	public List<String> getFavActors(String userId) {
+		if(userId==null){
+			return new ArrayList<>();
+		}
+		UserEntity userEntity = userRepository.findOne(userId);
+		if(userEntity==null){
+			return new ArrayList<>();
+		}
+		List<FavActor> favActors= userEntity.getFavActors();
+		if(favActors==null){
+			return new ArrayList<>();
+		}
+		return favActors.stream().map(x->x.getActorId()).collect(Collectors.toList());
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.*;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import ar.com.tacs.grupo5.frba.utn.service.ApiService;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Request;
 import spark.Route;
+import spark.utils.CollectionUtils;
 
 @Component
 public class ApiController {
@@ -116,21 +118,40 @@ public class ApiController {
 	/**
 	 * Returns the user's favourite actors
 	 */
-	public Route getserFavActors = (request, response) -> {
-		response.status(200);
+	public Route getUserFavActors = (request, response) -> {
+		User user = autenticar(request);
+		
+		PagedResponse resp = new PagedResponse();
+
+		List<String> ids = userService.getFavActors(user.getId());
+		if(CollectionUtils.isEmpty(ids)){
+			response.status(404);
+		}else{
+			response.status(200);
+			setPagedResults(resp,ids);
+			resp.setData(ids);
+		}
+		return resp;
+	};
+	/**
+	 * Returns the user's favourite actors
+	 */
+	public Route getAdminUserFavActors = (request, response) -> {
+		User user = autenticar(request);
+		validateAuthorization(user);
+		String idUser = request.params(":id");
 
 		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
-		resp.setStatusCode(0);
-		resp.setPage(1);
-		resp.setMessage("ok");
 
-		List<Actor> favActors = new ArrayList<Actor>();
+		List<String> ids = userService.getFavActors(idUser);
+		if(CollectionUtils.isEmpty(ids)){
+			response.status(404);
+		}else{
+			response.status(200);
+			setPagedResults(resp,ids);
+			resp.setData(ids);
+		}
 
-		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
-		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
-		resp.setData(favActors);
 		return resp;
 	};
 
@@ -417,5 +438,14 @@ public class ApiController {
 			throw new NotAuthorized();
 		}
 		return user;
+	}
+	private void validateAuthorization(User user){
+		if(!"admin".equals(user.getNivel())){
+			throw new NotAuthorized();
+		}
+	}
+	private void setPagedResults(PagedResponse resp, Collection collection) {
+		resp.setTotalPages(collection.size()/PAGE_SIZE);
+		resp.setTotalResults(collection.size());
 	}
 }

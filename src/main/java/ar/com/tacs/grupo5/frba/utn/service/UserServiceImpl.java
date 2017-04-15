@@ -54,4 +54,9 @@ public class UserServiceImpl implements UserService {
 		return getUserById(id).getFavMovies();
 	}
 
+	@Override
+	public List<String> getFavActors(String userId) {
+		return userDao.getFavActors(userId);
+	}
+
 }

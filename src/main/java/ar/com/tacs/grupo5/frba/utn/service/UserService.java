@@ -17,5 +17,6 @@ public interface UserService {
 	User findByUserNameAndPass(String userName, String pass);
 	
 	User findByUserName(String userName);
+	List<String> getFavActors(String userId);
 
 }

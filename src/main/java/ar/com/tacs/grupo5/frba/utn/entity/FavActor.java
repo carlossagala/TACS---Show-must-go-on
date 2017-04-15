@@ -1,16 +1,24 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class FavActor {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String id;
-	private String userId;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "USER_ID")
+	private UserEntity userEntity;
 	private String actorId;
 
 	public String getId() {
@@ -21,13 +29,6 @@ public class FavActor {
 		this.id = id;
 	}
 
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
 
 	public String getActorId() {
 		return actorId;
@@ -37,15 +38,23 @@ public class FavActor {
 		this.actorId = actorId;
 	}
 
-	public FavActor(String id, String userId, String actorId) {
+	public FavActor() {
+		super();
+	}
+
+	public FavActor(String id, UserEntity userEntity, String actorId) {
 		super();
 		this.id = id;
-		this.userId = userId;
+		this.userEntity = userEntity;
 		this.actorId = actorId;
 	}
 
-	public FavActor() {
-		super();
+	public UserEntity getUserEntity() {
+		return userEntity;
+	}
+
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
 	}
 
 }
