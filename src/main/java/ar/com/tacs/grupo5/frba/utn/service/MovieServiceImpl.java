@@ -22,10 +22,6 @@ import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.Images;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.Reviews;
-import ar.com.tacs.grupo5.frba.utn.models.Search;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResult;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResultMovie;
-
 
 @Component
 public class MovieServiceImpl implements MovieService {
