@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -17,11 +18,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import ar.com.tacs.grupo5.frba.utn.models.Search;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResult;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResultActor;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResultMovie;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResult;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultActor;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultMovie;
 
+@Component
 public class SearchServiceImpl implements SearchService {
 
 	private static Logger logger = LoggerFactory.getLogger(SearchServiceImpl.class);

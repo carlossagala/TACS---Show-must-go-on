@@ -17,14 +17,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import ar.com.tacs.grupo5.frba.utn.models.Actor;
-import ar.com.tacs.grupo5.frba.utn.models.Image;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
-import ar.com.tacs.grupo5.frba.utn.models.Reviews;
-import ar.com.tacs.grupo5.frba.utn.models.Search;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResult;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResultActor;
-import ar.com.tacs.grupo5.frba.utn.models.SearchResultMovie;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Image;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Reviews;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResult;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultActor;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultMovie;
 
 public class ActorServiceImpl implements ActorService {
 

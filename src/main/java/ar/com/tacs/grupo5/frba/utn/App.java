@@ -67,8 +67,8 @@ public class App {
 				get("/", MEDIA_TYPE,apiController.getUsers,responseTransformer);
 				get("/:id/",MEDIA_TYPE, apiController.getUser,responseTransformer);
 				get("/:id/favmovies/",MEDIA_TYPE, apiController.getUserFavMovies,responseTransformer);
+				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
 				get("/:id/favactors/",MEDIA_TYPE, apiController.getAdminUserFavActors,responseTransformer);
-				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getUserIntersection,responseTransformer);
 				get("/ranking/actor/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
 			});
 			path("/user", () -> {
@@ -77,7 +77,9 @@ public class App {
 				post("/logout/",MEDIA_TYPE, apiController.logout,responseTransformer);
 			});
 			path("/search", () -> {
-				get("/:type/", MEDIA_TYPE,apiController.searchBy,responseTransformer);
+				get("/movie/:query/", MEDIA_TYPE,apiController.searchByMovie,responseTransformer);
+				get("/actor/:query/", MEDIA_TYPE,apiController.searchByActor,responseTransformer);
+				get("/full/:query/", MEDIA_TYPE,apiController.searchByFull,responseTransformer);
 			});
 			path("/favmovies", () -> {
 				post("/", MEDIA_TYPE,apiController.createNewList,responseTransformer);
@@ -86,7 +88,7 @@ public class App {
 				delete("/:id/",MEDIA_TYPE, apiController.deleteFavMoviesList,responseTransformer);
 				post("/:id/movies/",MEDIA_TYPE, apiController.addMovieToList,responseTransformer);
 				delete("/:id/movies/:movie_id/",MEDIA_TYPE, apiController.deleteMovieFromList,responseTransformer);
-				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getUserIntersection,responseTransformer);
+				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
 				get("/:id/ranking/",MEDIA_TYPE, apiController.getRankingFromList,responseTransformer);
 
 			});

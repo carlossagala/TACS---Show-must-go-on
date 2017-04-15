@@ -18,10 +18,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import ar.com.tacs.grupo5.frba.utn.models.Actor;
-import ar.com.tacs.grupo5.frba.utn.models.Images;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
-import ar.com.tacs.grupo5.frba.utn.models.Reviews;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Images;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Reviews;
 
 @Component
 public class MovieServiceImpl implements MovieService {

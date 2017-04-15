@@ -1,12 +1,12 @@
 package ar.com.tacs.grupo5.frba.utn.controllers;
 
 import java.util.ArrayList;
-
-import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
-import ar.com.tacs.grupo5.frba.utn.models.*;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +16,19 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
+import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
-import ar.com.tacs.grupo5.frba.utn.models.Search;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ApiService;
+import ar.com.tacs.grupo5.frba.utn.service.SearchService;
+import ar.com.tacs.grupo5.frba.utn.service.SearchServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Request;
 import spark.Route;
@@ -35,15 +40,17 @@ public class ApiController {
 	private static final int PAGE_SIZE = 20;
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
 	private ApiService apiService;
+	private SearchService searchService;
 	private Gson gson;
 	private UserServiceImpl userService;
 	private JWTUtils jwtUtils;
 
 	@Autowired
-	public ApiController(ApiService apiService, UserServiceImpl userService, Gson gson, JWTUtils jwtUtils) {
+	public ApiController(ApiService apiService, UserServiceImpl userService,SearchServiceImpl searchService,  Gson gson, JWTUtils jwtUtils) {
 		super();
 		this.apiService = apiService;
 		this.userService = userService;
+		this.searchService = searchService;
 		this.gson = gson;
 		this.jwtUtils = jwtUtils;
 	}
@@ -103,9 +110,9 @@ public class ApiController {
 	 */
 	public Route getUserFavMovies = (request, response) -> {
 		response.status(200);
-
+		String id = request.params(":id");
 		PagedResponse resp = new PagedResponse();
-		List<FavMovie> favMovies = userService.getUserFavMovies(request.attribute("id"));
+		Set<FavMovie> favMovies = userService.getUserFavMovies(id);
 		resp.setData(favMovies);
 		resp.setTotalPages(favMovies.size()/PAGE_SIZE);
 		resp.setTotalResults(favMovies.size());
@@ -158,7 +165,7 @@ public class ApiController {
 	/**
 	 * Returns the intersection between the favourite movies from the two users
 	 */
-	public Route getUserIntersection = (request, response) -> {
+	public Route getListIntersection = (request, response) -> {
 		response.status(200);
 
 		PagedResponse resp = new PagedResponse();
@@ -167,8 +174,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
-				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
+		resp.setData(userService.getListIntersection(request.attribute("id"), request.attribute("id2")));
 		return resp;
 	};
 
@@ -196,8 +202,7 @@ public class ApiController {
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		ObjectMapper oMapper = new ObjectMapper();
-		User userDto = oMapper.readValue(request.body(), User.class);
+		User userDto = (User) gson.fromJson(request.body(), User.class);
 		resp.setData(userService.saveUser(userDto));
 		return resp;
 	};
@@ -234,19 +239,46 @@ public class ApiController {
 	};
 
 	/**
-	 * Search for a movie, actor or movie-actor. The type must be 'actor',
-	 * 'movie' and 'movie-actor'
+	 * Search for a movie
 	 */
-	public Route searchBy = (request, response) -> {
+	public Route searchByMovie = (request, response) -> {
 		response.status(200);
-
+		Search search = searchService.searchByMovie(request.params(":query"));
 		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
-		resp.setStatusCode(0);
-		resp.setPage(1);
-		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Search("123", "actor", "Emma Stone")));
+		resp.setTotalPages(search.getTotal_pages());
+		resp.setTotalResults(search.getTotal_results());
+		resp.setPage(search.getPage());
+		resp.setData(search.getResult());
+		return resp;
+	};
+	
+	/**
+	 * Search for a actor 
+	 */
+	
+	public Route searchByActor = (request, response) -> {
+		response.status(200);
+		Search search = searchService.searchByActor(request.params(":query"));
+		PagedResponse resp = new PagedResponse();
+		resp.setTotalPages(search.getTotal_pages());
+		resp.setTotalResults(search.getTotal_results());
+		resp.setPage(search.getPage());
+		resp.setData(search.getResult());
+		return resp;
+	};
+	
+	
+	/**
+	 * Search for movie-actor.
+	 */
+	public Route searchByFull = (request, response) -> {
+		response.status(200);
+		Search search = searchService.searchMulti(request.params(":query"));
+		PagedResponse resp = new PagedResponse();
+		resp.setTotalPages(0);
+		resp.setTotalResults(search.getTotal_results());
+		resp.setPage(search.getPage());
+		resp.setData(search.getResult());
 		return resp;
 	};
 
@@ -354,24 +386,30 @@ public class ApiController {
 	 * Marks an actor as favourite
 	 */
 	public Route addActorToList = (request, response) -> {
-		response.status(200);
-
-		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		return resp;
+		User user = autenticar(request);
+		String id =null;
+		try{
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			id = (String)requestMap.get("id");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro id en el body es obligatorio";
+		}
+		userService.addFavActor(user.getId(), id);
+		response.status(201);
+		return null;
 	};
 
 	/**
 	 * Unmarks an actor as favourite
 	 */
 	public Route deleteActorFromList = (request, response) -> {
+		User user = autenticar(request);
+		String id = request.params(":id");
+		userService.deleteFavActor(user.getId(), id);
 		response.status(200);
-
-		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		return resp;
+		
+		return null;
 	};
 
 	/**
@@ -383,7 +421,7 @@ public class ApiController {
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		resp.setData(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")));
+		resp.setData(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/));
 		return resp;
 	};
 
@@ -399,8 +437,8 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
-				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
+		resp.setData(Arrays.asList(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/),
+				new Movie("2", "Back to the Future"/*, "image.jpg", "", "", Arrays.asList("")*/)));
 		return resp;
 	};
 

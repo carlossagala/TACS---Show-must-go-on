@@ -2,10 +2,10 @@ package ar.com.tacs.grupo5.frba.utn.service;
 
 import java.util.List;
 
-import ar.com.tacs.grupo5.frba.utn.models.Actor;
-import ar.com.tacs.grupo5.frba.utn.models.Image;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
-import ar.com.tacs.grupo5.frba.utn.models.Search;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Image;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 
 
 

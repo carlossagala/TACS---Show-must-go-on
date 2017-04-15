@@ -50,7 +50,7 @@ class TestController {
 	public TestController() {
 		Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 		JWTUtils jwtUtils = new JWTUtils();
-		ApiController apiController = new ApiController(null, null, gson,jwtUtils);
+		ApiController apiController = new ApiController(null, null,null, gson,jwtUtils);
 		App.sparkInit(apiController, 8080, new JsonTransformer(gson));
 	}
 

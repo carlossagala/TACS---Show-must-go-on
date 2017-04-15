@@ -1,6 +1,6 @@
 package ar.com.tacs.grupo5.frba.utn.service;
 
-import ar.com.tacs.grupo5.frba.utn.models.Search;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 
 public interface SearchService {
 	public Search searchByActor(String query);
