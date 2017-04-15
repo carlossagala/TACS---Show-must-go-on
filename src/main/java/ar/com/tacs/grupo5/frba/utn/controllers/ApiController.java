@@ -6,7 +6,9 @@ import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.*;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -354,24 +356,30 @@ public class ApiController {
 	 * Marks an actor as favourite
 	 */
 	public Route addActorToList = (request, response) -> {
-		response.status(200);
-
-		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		return resp;
+		User user = autenticar(request);
+		String id =null;
+		try{
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			id = (String)requestMap.get("id");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro id en el body es obligatorio";
+		}
+		userService.addFavActor(user.getId(), id);
+		response.status(201);
+		return null;
 	};
 
 	/**
 	 * Unmarks an actor as favourite
 	 */
 	public Route deleteActorFromList = (request, response) -> {
+		User user = autenticar(request);
+		String id = request.params(":id");
+		userService.deleteFavActor(user.getId(), id);
 		response.status(200);
-
-		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		return resp;
+		
+		return null;
 	};
 
 	/**

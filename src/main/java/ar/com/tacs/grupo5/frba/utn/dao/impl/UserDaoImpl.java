@@ -10,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavActorRepository;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
-import ar.com.tacs.grupo5.frba.utn.entity.FavActor;
+import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
@@ -20,12 +21,14 @@ public class UserDaoImpl implements UserDao{
 	
 	private UserRepository userRepository;
 	private FavMoviesDao favMoviesDao;
+	private FavActorRepository favActorRepository;
 	
 	@Autowired
-	public UserDaoImpl(UserRepository userRepository,FavMoviesDao favMoviesDao) {
+	public UserDaoImpl(UserRepository userRepository,FavMoviesDao favMoviesDao,FavActorRepository favActorRepository) {
 		super();
 		this.userRepository = userRepository;
 		this.favMoviesDao = favMoviesDao;
+		this.favActorRepository = favActorRepository;
 	}
 
 	@Override
@@ -91,11 +94,46 @@ public class UserDaoImpl implements UserDao{
 		if(userEntity==null){
 			return new ArrayList<>();
 		}
-		List<FavActor> favActors= userEntity.getFavActors();
+		List<FavActorEntity> favActors= userEntity.getFavActors();
 		if(favActors==null){
 			return new ArrayList<>();
 		}
 		return favActors.stream().map(x->x.getActorId()).collect(Collectors.toList());
 	}
+
+	@Override
+	@Transactional
+	public void addFavActor(String idUser,String idActor) {
+		if(idActor==null){
+			return;
+		}
+		UserEntity userEntity = userRepository.findOne(idUser);
+		List<FavActorEntity> favActors= userEntity.getFavActors();
+		if(favActors==null){
+			favActors = new ArrayList<>();
+		}
+		boolean idExists = favActors.stream().anyMatch(x->x.getActorId().equals(idActor));
+		if(!idExists){
+			favActors.add(new FavActorEntity(userEntity,idActor));
+			userRepository.save(userEntity);
+		}
+	}
+
+	@Override
+	@Transactional
+	public void deleteFavActor(String idUser, String idActor) {
+		UserEntity userEntity = userRepository.findOne(idUser);
+		List<FavActorEntity> favActors= userEntity.getFavActors();
+		if(favActors==null){
+			favActors = new ArrayList<>();
+		}
+		FavActorEntity favActor = favActors.stream().filter(x->x.getActorId().equals(idActor)).findAny().orElse(null);
+		if(favActor!=null){
+			favActors.remove(favActor);
+			favActorRepository.delete(favActor);
+			userRepository.save(userEntity);
+		}
+	}
+	
 
 }

@@ -28,7 +28,7 @@ public class UserEntity {
 	private List<FavMovieEntity> favMovies;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="userEntity")
-	private List<FavActor> favActors;
+	private List<FavActorEntity> favActors;
 
 	public UserEntity() {
 		super();
@@ -83,11 +83,11 @@ public class UserEntity {
 		this.favMovies = fav;
 	}
 
-	public List<FavActor> getFavActors() {
+	public List<FavActorEntity> getFavActors() {
 		return favActors;
 	}
 
-	public void setFavActors(List<FavActor> favActors) {
+	public void setFavActors(List<FavActorEntity> favActors) {
 		this.favActors = favActors;
 	}
 }
