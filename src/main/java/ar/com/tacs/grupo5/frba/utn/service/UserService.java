@@ -14,4 +14,8 @@ public interface UserService {
 	User saveUser(User user);
 	
 	List<FavMovie> getUserFavMovies(String id);	
+	User findByUserNameAndPass(String userName, String pass);
+	
+	User findByUserName(String userName);
+
 }

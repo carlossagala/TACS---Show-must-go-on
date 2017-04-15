@@ -3,9 +3,12 @@ package ar.com.tacs.grupo5.frba.utn.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 
+@Repository
 public class FavMoviesDaoImpl implements FavMoviesDao {
 
 	@Override

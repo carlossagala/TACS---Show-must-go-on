@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
+import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.service.UserService;
 import spark.ResponseTransformer;
 
 @SpringBootApplication
@@ -30,13 +32,17 @@ import spark.ResponseTransformer;
 public class App {
 	private static final String MEDIA_TYPE = "application/json";
 	private static Logger logger = LoggerFactory.getLogger(App.class);
-
 	public static void main(String[] args) {
 		@SuppressWarnings("resource")
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class);
 		ApiController apiController = ctx.getBean(ApiController.class);
 		ResponseTransformer responseTransformer = ctx.getBean(ResponseTransformer.class);
-		
+		UserService userService = ctx.getBean(UserService.class);
+		try{
+			userService.saveUser(new User("test","test1","user"));
+		}catch(Exception e){
+			logger.error("",e);
+		}
 		Environment environment = ctx.getBean(Environment.class);
 		String port = environment.getProperty("server.port");
 		sparkInit(apiController,Integer.valueOf(port),responseTransformer);

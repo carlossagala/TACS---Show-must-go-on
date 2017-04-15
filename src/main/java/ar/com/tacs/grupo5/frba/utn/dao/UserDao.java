@@ -10,4 +10,9 @@ public interface UserDao {
 	User getUserById(String id);
 
 	User saveUser(User user);
+	
+	User findByUserNameAndPass(String userName,String pass);
+	
+	User findByUserName(String userName);
+
 }
