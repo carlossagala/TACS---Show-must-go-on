@@ -14,17 +14,17 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 public class FavMovieEntity {
 	@Id
-	@GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid",
-	  strategy = "uuid")	private String id;
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	private String id;
 	private String name;
-	
-	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY)
+
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	private List<MovieEntity> movies;
 
 	public FavMovieEntity() {
 		super();
-	}	
+	}
 
 	public String getName() {
 		return name;
@@ -45,7 +45,7 @@ public class FavMovieEntity {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
