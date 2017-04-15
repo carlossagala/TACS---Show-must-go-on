@@ -1,18 +1,21 @@
 package ar.com.tacs.grupo5.frba.utn;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+//import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertNotNull;
 
 import org.junit.ClassRule;
-import org.junit.Test;
+//import org.junit.Test;
 
-import com.despegar.http.client.GetMethod;
-import com.despegar.http.client.HttpResponse;
+//import com.despegar.http.client.GetMethod;
+//import com.despegar.http.client.HttpResponse;
 import com.despegar.sparkjava.test.SparkServer;
 import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
+import ar.com.tacs.grupo5.frba.utn.controllers.JWTUtils;
+import ar.com.tacs.grupo5.frba.utn.controllers.JsonTransformer;
 import spark.servlet.SparkApplication;
 
 /**
@@ -45,8 +48,10 @@ public class AppTest
 class TestController {
 
 	public TestController() {
-		ApiController apiController = new ApiController(new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create(), null, null);
-		App.sparkInit(apiController, 8080);
+		Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+		JWTUtils jwtUtils = new JWTUtils();
+		ApiController apiController = new ApiController(null, null, gson,jwtUtils);
+		App.sparkInit(apiController, 8080, new JsonTransformer(gson));
 	}
 
 }

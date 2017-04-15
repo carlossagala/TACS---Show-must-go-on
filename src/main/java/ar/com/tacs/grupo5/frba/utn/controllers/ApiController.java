@@ -1,7 +1,11 @@
 package ar.com.tacs.grupo5.frba.utn.controllers;
 
 import java.util.ArrayList;
+
+import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
+import ar.com.tacs.grupo5.frba.utn.models.*;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,29 +24,33 @@ import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ApiService;
-import ar.com.tacs.grupo5.frba.utn.service.UserService;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
+import spark.Request;
 import spark.Route;
+import spark.utils.CollectionUtils;
+
 @Component
 public class ApiController {
 
+	private static final int PAGE_SIZE = 20;
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
-	private Gson gson;
 	private ApiService apiService;
+	private Gson gson;
 	private UserServiceImpl userService;
+	private JWTUtils jwtUtils;
 
 	@Autowired
-	public ApiController(Gson gson, ApiService apiService, UserServiceImpl userService) {
+	public ApiController(ApiService apiService, UserServiceImpl userService, Gson gson, JWTUtils jwtUtils) {
 		super();
-		this.gson = gson;
 		this.apiService = apiService;
 		this.userService = userService;
+		this.gson = gson;
+		this.jwtUtils = jwtUtils;
 	}
 
-
-	public  Route getGenericResponse = (request, response) -> {
+		
+	public Route getGenericResponse = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -58,8 +66,9 @@ public class ApiController {
 	 * Returns all users
 	 */
 	public Route getUsers = (request, response) -> {
+		User user = autenticar(request);
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
 		List<User> users = new ArrayList<>();
 		users = userService.getAllUsers();
@@ -69,18 +78,16 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(users.size());
 		resp.setData(users);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Returns the user with the specified Id
 	 */
-	public  Route getUser = (request, response) -> {
+	public Route getUser = (request, response) -> {
 		logger.info(request.pathInfo());
-		String responseJson = null;
 
 		response.status(200);
-		response.type("application/json");
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -88,329 +95,357 @@ public class ApiController {
 		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(userService.getUserById(request.attribute("id")));
-		responseJson = gson.toJson(resp);
-		logger.info(responseJson);
-		return responseJson;
+		return resp;
 	};
 
 	/**
 	 * Returns the user's favourite movies
 	 */
-	public  Route getUserFavMovies = (request, response) -> {
+	public Route getUserFavMovies = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(2);
+		List<FavMovie> favMovies = userService.getUserFavMovies(request.attribute("id"));
+		resp.setData(favMovies);
+		resp.setTotalPages(favMovies.size()/PAGE_SIZE);
+		resp.setTotalResults(favMovies.size());
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		
-		List<FavMovie> favMovies= new ArrayList<>();
-		FavMovie f1 = new FavMovie();
-		f1.setId("1");
-		f1.setName("Top 10 Horror Movies");
-		favMovies.add(f1);
-		FavMovie f2 = new FavMovie();
-		f2.setId("2");
-		f2.setName("Best Kubrik Movies");
-		favMovies.add(f2);
-		
-		resp.setData(favMovies);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Returns the user's favourite actors
 	 */
-	public  Route getserFavActors = (request, response) -> {
-		response.status(200);
-		response.type("application/json");
+	public Route getUserFavActors = (request, response) -> {
+		User user = autenticar(request);
+		
 		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
-		resp.setStatusCode(0);
-		resp.setPage(1);
-		resp.setMessage("ok");
-		
-		List <Actor> favActors = new ArrayList<Actor>();
-		
-		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
-		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
-		resp.setData(favActors);
-		return gson.toJson(resp);
+
+		List<String> ids = userService.getFavActors(user.getId());
+		if(CollectionUtils.isEmpty(ids)){
+			response.status(404);
+		}else{
+			response.status(200);
+			setPagedResults(resp,ids);
+			resp.setData(ids);
+		}
+		return resp;
+	};
+	/**
+	 * Returns the user's favourite actors
+	 */
+	public Route getAdminUserFavActors = (request, response) -> {
+		User user = autenticar(request);
+		validateAuthorization(user);
+		String idUser = request.params(":id");
+
+		PagedResponse resp = new PagedResponse();
+
+		List<String> ids = userService.getFavActors(idUser);
+		if(CollectionUtils.isEmpty(ids)){
+			response.status(404);
+		}else{
+			response.status(200);
+			setPagedResults(resp,ids);
+			resp.setData(ids);
+		}
+
+		return resp;
 	};
 
 	/**
 	 * Returns the intersection between the favourite movies from the two users
 	 */
-	public  Route getUserIntersection = (request, response) -> {
+	public Route getUserIntersection = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Movie("1","Matrix","image.jpg","","",Arrays.asList("")),
-				new Movie("2","Back to the Future","image.jpg","","",Arrays.asList(""))));
-		return gson.toJson(resp);
+		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
+				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
+		return resp;
 	};
 
-	public  Route getRankingActor = (request, response) -> {
+	public Route getRankingActor = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-        List <Actor> favActors = new ArrayList<>();
-		
+		List<Actor> favActors = new ArrayList<>();
+
 		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
 		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
 		resp.setData(favActors);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Registers a user
 	 */
-	public  Route registerUser = (request, response) -> {
+	public Route registerUser = (request, response) -> {
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
 		ObjectMapper oMapper = new ObjectMapper();
 		User userDto = oMapper.readValue(request.body(), User.class);
 		resp.setData(userService.saveUser(userDto));
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Login
 	 */
-	public  Route login = (request, response) -> {
+	public Route login = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
-		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
-		resp.setStatusCode(0);
-		resp.setPage(1);
-		resp.setMessage("ok");
-		resp.setData(new User("1","Kun"));
-		return gson.toJson(resp);
+
+		LoginRequest req = (LoginRequest) gson.fromJson(request.body(), LoginRequest.class);
+		User user = userService.findByUserNameAndPass(req.getUserName(), req.getPassword());
+		if (user == null) {
+			response.status(401);
+			return null;
+		}
+		return new LoginResponse(jwtUtils.generateToken(user));
 	};
 
 	/**
 	 * Logout
 	 */
-	public  Route logout = (request, response) -> {
+	public Route logout = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(new User("1","Kun"));
-		return gson.toJson(resp);
+		resp.setData(new User("1", "Kun"));
+		return resp;
 	};
 
 	/**
-	 * Search for a movie, actor or movie-actor.
-	 * The type must be 'actor', 'movie' and 'movie-actor'
+	 * Search for a movie, actor or movie-actor. The type must be 'actor',
+	 * 'movie' and 'movie-actor'
 	 */
-	public  Route searchBy = (request, response) -> {
+	public Route searchBy = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Search("123","actor","Emma Stone")));
-		return gson.toJson(resp);
+		resp.setData(Arrays.asList(new Search("123", "actor", "Emma Stone")));
+		return resp;
 	};
 
 	/**
 	 * Creates a new list of favourite movies
 	 */
-	public  Route createNewList = (request, response) -> {
+	public Route createNewList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Returns the favourite movies
 	 */
-	public  Route getFavMovieDetail = (request, response) -> {
+	public Route getFavMovieDetail = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		
+
 		FavMovie f1 = new FavMovie();
 		f1.setId("1");
 		f1.setName("Top 10 Horror Movies");
-		
+
 		resp.setData(f1);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Updates a list information
 	 */
-	public  Route updateFavMoviesDetail = (request, response) -> {
+	public Route updateFavMoviesDetail = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Deletes a list of movies
 	 */
-	public  Route deleteFavMoviesList = (request, response) -> {
+	public Route deleteFavMoviesList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Adds a movie to the list
 	 */
-	public  Route addMovieToList = (request, response) -> {
+	public Route addMovieToList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Removes a movie from the list
 	 */
-	public  Route deleteMovieFromList = (request, response) -> {
+	public Route deleteMovieFromList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Returns a ranking based on a list
 	 */
-	public  Route getRankingFromList = (request, response) -> {
+	public Route getRankingFromList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		
+
 		List<Actor> favActors = new ArrayList<>();
-		
+
 		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
 		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
-		
+
 		resp.setData(favActors);
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Marks an actor as favourite
 	 */
-	public  Route addActorToList = (request, response) -> {
+	public Route addActorToList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Unmarks an actor as favourite
 	 */
-	public  Route deleteActorFromList = (request, response) -> {
+	public Route deleteActorFromList = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		return gson.toJson(resp);
+		return resp;
 	};
 
 	/**
 	 * Returns a movie by its id
 	 */
-	public  Route getMovieById = (request, response) -> {
+	public Route getMovieById = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		resp.setData(new Movie("1","Matrix","image.jpg","","",Arrays.asList("")));
-		return gson.toJson(resp);
+		resp.setData(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")));
+		return resp;
 	};
 
 	/**
 	 * Returns recommendations for the user
 	 */
-	public  Route getRecommendedMovies = (request, response) -> {
+	public Route getRecommendedMovies = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(2);
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Movie("1","Matrix","image.jpg","","",Arrays.asList("")),
-					new Movie("2","Back to the Future","image.jpg","","",Arrays.asList(""))));
-		return gson.toJson(resp);
+		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
+				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
+		return resp;
 	};
 
 	/**
 	 * Returns an actor by its id
 	 */
-	public  Route getActorById = (request, response) -> {
+	public Route getActorById = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
+
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		resp.setData(new Actor("1","imagen.jpg","Margot Robbie","",Arrays.asList("123456")));
-		return gson.toJson(resp);
+		resp.setData(new Actor("1", "imagen.jpg", "Margot Robbie", "", Arrays.asList("123456")));
+		return resp;
 	};
-	
-	public  Route helloWorld = (request, response) -> {
+
+	public Route helloWorld = (request, response) -> {
 		response.status(200);
-		response.type("application/json");
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
 		resp.setData(apiService.helloWorld());
-		return gson.toJson(resp);
+		return resp;
 	};
+
+	private User autenticar(Request request) {
+		String token = request.headers(jwtUtils.getHeader());
+
+		if (token == null || jwtUtils.isTokenExpired(token)) {
+			throw new NotAuthorized();
+		}
+		User user = userService.findByUserName(jwtUtils.getUsernameFromToken(token));
+
+		if (user == null) {
+			throw new NotAuthorized();
+		}
+		return user;
+	}
+	private void validateAuthorization(User user){
+		if(!"admin".equals(user.getNivel())){
+			throw new NotAuthorized();
+		}
+	}
+	private void setPagedResults(PagedResponse resp, Collection collection) {
+		resp.setTotalPages(collection.size()/PAGE_SIZE);
+		resp.setTotalResults(collection.size());
+	}
 }

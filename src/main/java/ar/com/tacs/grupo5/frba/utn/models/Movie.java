@@ -10,7 +10,9 @@ public class Movie {
 	private List<Actor> actors;
 	private String overview;
 	
-	
+	public Movie(){		
+	}
+		
 	public String getOverview() {
 		return overview;
 	}
