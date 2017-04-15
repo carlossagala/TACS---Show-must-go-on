@@ -291,6 +291,11 @@ public class ApiController {
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
+		User user = autenticar(request); 
+		//TODO: Al loguearse a la aplicación va a guardar el user en sesion? El user completo o solo id?
+		String title = request.body();
+		FavMovie favMovie = userService.createNewFavMovieList(title,user);
+		resp.setData(favMovie);
 		return resp;
 	};
 

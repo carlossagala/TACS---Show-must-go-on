@@ -16,4 +16,8 @@ public interface UserDao {
 	User findByUserName(String userName);
 	
 	List<String> getFavActors(String userId);
+	
+	void addFavActor(String idUser,String idActor);
+	void deleteFavActor(String idUser,String idActor);
+
 }

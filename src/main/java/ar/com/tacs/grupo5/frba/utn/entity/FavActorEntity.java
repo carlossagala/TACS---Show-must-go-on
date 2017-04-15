@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class FavActor {
+public class FavActorEntity {
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -38,13 +38,12 @@ public class FavActor {
 		this.actorId = actorId;
 	}
 
-	public FavActor() {
+	public FavActorEntity() {
 		super();
 	}
 
-	public FavActor(String id, UserEntity userEntity, String actorId) {
+	public FavActorEntity(UserEntity userEntity, String actorId) {
 		super();
-		this.id = id;
 		this.userEntity = userEntity;
 		this.actorId = actorId;
 	}

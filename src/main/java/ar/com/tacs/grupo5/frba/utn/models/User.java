@@ -1,12 +1,13 @@
 package ar.com.tacs.grupo5.frba.utn.models;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class User {
 
 	private String id;
 	private String userName;
-	private List<FavMovie> favMovies;
+	private Set<FavMovie> favMovies;
 	private String pass;
 	private String nivel;
 
@@ -24,6 +25,7 @@ public class User {
 		this.userName = userName;
 		this.pass = pass;
 		this.nivel = nivel;
+		this.favMovies = new HashSet<>();
 	}
 
 	public String getId() {
@@ -58,11 +60,11 @@ public class User {
 		this.nivel = nivel;
 	}
 
-	public List<FavMovie> getFavMovies() {
+	public Set<FavMovie> getFavMovies() {
 		return favMovies;
 	}
 
-	public void setFavMovies(List<FavMovie> favMovies) {
+	public void setFavMovies(Set<FavMovie> favMovies) {
 		this.favMovies = favMovies;
 	}
 

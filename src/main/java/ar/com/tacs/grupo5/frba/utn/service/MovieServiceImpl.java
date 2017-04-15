@@ -90,9 +90,9 @@ public class MovieServiceImpl implements MovieService {
 		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Movie movie = gson.fromJson(response.getBody(), Movie.class);
-		movie.setReviews(getReviews(id));
-		movie.setImages(getImages(id));
-		movie.setActors(getMovieActors(id));
+//		movie.setReviews(getReviews(id));
+//		movie.setImages(getImages(id));
+//		movie.setActors(getMovieActors(id));
 		return movie;
 	}
 

@@ -1,12 +1,14 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -18,9 +20,12 @@ public class FavMovieEntity {
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String id;
 	private String name;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private UserEntity user;
 
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	private List<MovieEntity> movies;
+	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	private Set<MovieEntity> movies;
 
 	public FavMovieEntity() {
 		super();
@@ -34,11 +39,11 @@ public class FavMovieEntity {
 		this.name = name;
 	}
 
-	public List<MovieEntity> getMovies() {
+	public Set<MovieEntity> getMovies() {
 		return movies;
 	}
 
-	public void setMovies(List<MovieEntity> movies) {
+	public void setMovies(Set<MovieEntity> movies) {
 		this.movies = movies;
 	}
 
@@ -48,5 +53,13 @@ public class FavMovieEntity {
 
 	public String getId() {
 		return id;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
 	}
 }
