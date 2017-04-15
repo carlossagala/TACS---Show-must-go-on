@@ -42,6 +42,8 @@ public class App {
 		UserService userService = ctx.getBean(UserService.class);
 		try{
 			userService.saveUser(new User("test","test1","user"));
+			userService.saveUser(new User("admin","admin1","admin"));
+
 		}catch(Exception e){
 			logger.error("",e);
 		}
@@ -65,8 +67,8 @@ public class App {
 				get("/", MEDIA_TYPE,apiController.getUsers,responseTransformer);
 				get("/:id/",MEDIA_TYPE, apiController.getUser,responseTransformer);
 				get("/:id/favmovies/",MEDIA_TYPE, apiController.getUserFavMovies,responseTransformer);
-				get("/:id/favactors/",MEDIA_TYPE, apiController.getserFavActors,responseTransformer);
 				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
+				get("/:id/favactors/",MEDIA_TYPE, apiController.getAdminUserFavActors,responseTransformer);
 				get("/ranking/actor/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
 			});
 			path("/user", () -> {
@@ -89,6 +91,7 @@ public class App {
 
 			});
 			path("/favactors", () -> {
+				get("/",MEDIA_TYPE, apiController.getUserFavActors,responseTransformer);
 				post("/",MEDIA_TYPE, apiController.addActorToList,responseTransformer);
 				delete("/:id/",MEDIA_TYPE, apiController.deleteActorFromList,responseTransformer);
 			});

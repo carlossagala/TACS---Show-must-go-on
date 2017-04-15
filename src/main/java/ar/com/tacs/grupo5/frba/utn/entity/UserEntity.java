@@ -1,8 +1,10 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,12 +20,16 @@ public class UserEntity {
 	@GenericGenerator(name="system-uuid",
 	  strategy = "uuid")
 	private String id;
+	@Column(unique=true)
 	private String userName;
 	private String pass;
 	private String nivel;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
 	private Set<FavMovieEntity> favMovies;
+	
+	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="userEntity")
+	private List<FavActorEntity> favActors;
 
 	public UserEntity() {
 		super();
@@ -76,5 +82,13 @@ public class UserEntity {
 	
 	public void setFavMovies(Set<FavMovieEntity> fav) {
 		this.favMovies = fav;
+	}
+
+	public List<FavActorEntity> getFavActors() {
+		return favActors;
+	}
+
+	public void setFavActors(List<FavActorEntity> favActors) {
+		this.favActors = favActors;
 	}
 }

@@ -23,4 +23,7 @@ public interface UserService {
 
 	List<Movie> getListIntersection(String id1, String id2);
 
+	List<String> getFavActors(String userId);
+	void addFavActor(String idUser,String idActor);
+	void deleteFavActor(String idUser,String idActor);
 }

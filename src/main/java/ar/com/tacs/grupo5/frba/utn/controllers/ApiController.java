@@ -2,8 +2,11 @@ package ar.com.tacs.grupo5.frba.utn.controllers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,7 @@ import ar.com.tacs.grupo5.frba.utn.service.ApiService;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Request;
 import spark.Route;
+import spark.utils.CollectionUtils;
 
 @Component
 public class ApiController {
@@ -117,21 +121,40 @@ public class ApiController {
 	/**
 	 * Returns the user's favourite actors
 	 */
-	public Route getserFavActors = (request, response) -> {
-		response.status(200);
+	public Route getUserFavActors = (request, response) -> {
+		User user = autenticar(request);
+		
+		PagedResponse resp = new PagedResponse();
+
+		List<String> ids = userService.getFavActors(user.getId());
+		if(CollectionUtils.isEmpty(ids)){
+			response.status(404);
+		}else{
+			response.status(200);
+			setPagedResults(resp,ids);
+			resp.setData(ids);
+		}
+		return resp;
+	};
+	/**
+	 * Returns the user's favourite actors
+	 */
+	public Route getAdminUserFavActors = (request, response) -> {
+		User user = autenticar(request);
+		validateAuthorization(user);
+		String idUser = request.params(":id");
 
 		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
-		resp.setStatusCode(0);
-		resp.setPage(1);
-		resp.setMessage("ok");
 
-		List<Actor> favActors = new ArrayList<Actor>();
+		List<String> ids = userService.getFavActors(idUser);
+		if(CollectionUtils.isEmpty(ids)){
+			response.status(404);
+		}else{
+			response.status(200);
+			setPagedResults(resp,ids);
+			resp.setData(ids);
+		}
 
-		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
-		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
-		resp.setData(favActors);
 		return resp;
 	};
 
@@ -337,24 +360,30 @@ public class ApiController {
 	 * Marks an actor as favourite
 	 */
 	public Route addActorToList = (request, response) -> {
-		response.status(200);
-
-		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		return resp;
+		User user = autenticar(request);
+		String id =null;
+		try{
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			id = (String)requestMap.get("id");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro id en el body es obligatorio";
+		}
+		userService.addFavActor(user.getId(), id);
+		response.status(201);
+		return null;
 	};
 
 	/**
 	 * Unmarks an actor as favourite
 	 */
 	public Route deleteActorFromList = (request, response) -> {
+		User user = autenticar(request);
+		String id = request.params(":id");
+		userService.deleteFavActor(user.getId(), id);
 		response.status(200);
-
-		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		return resp;
+		
+		return null;
 	};
 
 	/**
@@ -421,5 +450,14 @@ public class ApiController {
 			throw new NotAuthorized();
 		}
 		return user;
+	}
+	private void validateAuthorization(User user){
+		if(!"admin".equals(user.getNivel())){
+			throw new NotAuthorized();
+		}
+	}
+	private void setPagedResults(PagedResponse resp, Collection collection) {
+		resp.setTotalPages(collection.size()/PAGE_SIZE);
+		resp.setTotalResults(collection.size());
 	}
 }
