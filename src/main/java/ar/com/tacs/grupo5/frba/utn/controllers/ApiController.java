@@ -1,6 +1,8 @@
 package ar.com.tacs.grupo5.frba.utn.controllers;
 
 import java.util.ArrayList;
+
+import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.*;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +24,7 @@ import ar.com.tacs.grupo5.frba.utn.models.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ApiService;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
+import spark.Request;
 import spark.Route;
 
 @Component
@@ -43,9 +46,9 @@ public class ApiController {
 		this.jwtUtils = jwtUtils;
 	}
 
+		
 	public Route getGenericResponse = (request, response) -> {
 		response.status(200);
-
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
@@ -61,20 +64,8 @@ public class ApiController {
 	 * Returns all users
 	 */
 	public Route getUsers = (request, response) -> {
+		User user = autenticar(request);
 		response.status(200);
-		String token = request.headers("api_key");
-		// Valido token
-
-		if (token == null || jwtUtils.isTokenExpired(token)) {
-			response.status(401);
-			return null;
-		}
-		User user = userService.findByUserName(jwtUtils.getUsernameFromToken(token));
-
-		if (user == null) {
-			response.status(401);
-			return null;
-		}
 
 		PagedResponse resp = new PagedResponse();
 		List<User> users = new ArrayList<>();
@@ -413,4 +404,18 @@ public class ApiController {
 		resp.setData(apiService.helloWorld());
 		return resp;
 	};
+
+	private User autenticar(Request request) {
+		String token = request.headers(jwtUtils.getHeader());
+
+		if (token == null || jwtUtils.isTokenExpired(token)) {
+			throw new NotAuthorized();
+		}
+		User user = userService.findByUserName(jwtUtils.getUsernameFromToken(token));
+
+		if (user == null) {
+			throw new NotAuthorized();
+		}
+		return user;
+	}
 }

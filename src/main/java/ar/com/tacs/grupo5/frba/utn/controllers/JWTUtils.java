@@ -18,6 +18,9 @@ public class JWTUtils {
 	static final String CLAIM_KEY_AUDIENCE = "audience";
 	static final String CLAIM_KEY_CREATED = "created";
 
+	@Value("${jwt.header}")
+	private String header;
+
 	@Value("${jwt.secret}")
 	private String secret;
 
@@ -91,4 +94,11 @@ public class JWTUtils {
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 
+	public String getHeader() {
+		return header;
+	}
+	
+	public void setHeader(String header) {
+		this.header = header;
+	}
 }

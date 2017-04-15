@@ -9,11 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 public class FavMovieEntity {
 	@Id
-	@GeneratedValue
-	private String id;
+	@GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name="system-uuid",
+	  strategy = "uuid")	private String id;
 	private String name;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY)

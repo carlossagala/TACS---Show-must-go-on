@@ -7,6 +7,7 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
+import static spark.Spark.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
+import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.UserService;
 import spark.ResponseTransformer;
@@ -52,6 +54,10 @@ public class App {
 	public static void sparkInit(ApiController apiController,int port, ResponseTransformer responseTransformer) {
 		port(port);
 		staticFiles.location("/public");
+		exception(NotAuthorized.class, (exception, request, response) -> {
+			response.status(401);
+			response.body("Not Authorized");
+		});
 
 		path("/api", () -> {
 			get("/hello/", MEDIA_TYPE,apiController.helloWorld,responseTransformer);
