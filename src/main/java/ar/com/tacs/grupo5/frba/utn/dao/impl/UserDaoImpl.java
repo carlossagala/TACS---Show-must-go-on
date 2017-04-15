@@ -80,7 +80,7 @@ public class UserDaoImpl implements UserDao{
 		if(favActors==null){
 			return new ArrayList<>();
 		}
-		return favActors.stream().map(x->x.getActorId()).collect(Collectors.toList());
+		return favActors.stream().map(FavActorEntity::getActorId).collect(Collectors.toList());
 	}
 
 	@Override
