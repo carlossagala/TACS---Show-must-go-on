@@ -6,6 +6,7 @@ import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.Images;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.Reviews;
+import ar.com.tacs.grupo5.frba.utn.models.Search;
 
 public interface MovieService {
 
@@ -16,5 +17,7 @@ public interface MovieService {
 	public Movie getMovieDetail(String id);
 
 	public List<Actor> getMovieActors(String id);
+	
+	
 
 }
