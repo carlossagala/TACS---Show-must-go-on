@@ -67,13 +67,13 @@ public class ServiceTest {
 	@Test
 	public void getMovieDetailTest() {
 		Movie movie = movieService.getMovieDetail("550");
-//		Assert.assertEquals(77, movie.getActors().size());
-//		Assert.assertEquals(0, movie.getImages().getBackdrops().size());
-//		Assert.assertEquals(3, movie.getImages().getPosters().size());
-//		Assert.assertEquals(0, movie.getReviews().getResults().size());
-//		Assert.assertEquals("El club de la lucha", movie.getTitle());
-//		Assert.assertTrue(movie.getOverview()
-//				.contains("En un viaje en avión conoce a Tyler Durden, un carismático vendedor de jabón"));
+		Assert.assertEquals(77, movie.getActors().size());
+		Assert.assertEquals(0, movie.getImages().getBackdrops().size());
+		Assert.assertEquals(3, movie.getImages().getPosters().size());
+		Assert.assertEquals(0, movie.getReviews().getResults().size());
+		Assert.assertEquals("El club de la lucha", movie.getTitle());
+		Assert.assertTrue(movie.getOverview()
+				.contains("En un viaje en avión conoce a Tyler Durden, un carismático vendedor de jabón"));
 
 	}
 
