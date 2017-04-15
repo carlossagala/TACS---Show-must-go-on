@@ -1,10 +1,10 @@
 package ar.com.tacs.grupo5.frba.utn.dao;
 
-import java.util.List;
-
-import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 
 public interface MovieDao {
-	public List<Movie> mapMovies(List<MovieEntity> movieList);
+
+	public FavMovie getFavMovieList(String id);
+
+	public FavMovie saveFavMovie(FavMovie favMovie);
 }

@@ -7,76 +7,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
+import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Repository
 public class UserDaoImpl implements UserDao{
 	
+	@Autowired
 	private UserRepository userRepository;
-	private FavMoviesDao favMoviesDao;
 	
 	@Autowired
-	public UserDaoImpl(UserRepository userRepository,FavMoviesDao favMoviesDao) {
+	private UserMapper userMapper;
+	
+	@Autowired
+	public UserDaoImpl() {
 		super();
-		this.userRepository = userRepository;
-		this.favMoviesDao = favMoviesDao;
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		return mapUserList(userRepository.findAll());
+		List<UserEntity> usersFound = userRepository.findAll();
+		List<User> users = new ArrayList<>();
+		for (UserEntity userEnt : usersFound) {
+			users.add(userMapper.entityToDto(userEnt));
+		}
+		return users;
 	}
 
 	@Override
 	public User getUserById(String id) {
-		return mapUser(userRepository.findOne(id));
+		return userMapper.entityToDto(userRepository.findOne(id));
 	}
 	
-	private List<User> mapUserList(Iterable<UserEntity> userEntites)
-	{
-		List<User> users = new ArrayList<>();
-		for (UserEntity userEntity : userEntites) {
-			users.add(mapUser(userEntity));
-		}
-		return users;
-	}
 	
-	private User mapUser(UserEntity userEntity)
-	{
-		if(userEntity==null){
-			return null;
-		}
-		User user = new User();
-		user.setId(userEntity.getId());
-		user.setUserName(userEntity.getUserName());
-//		user.setFavMovies(favMoviesDao.mapFavMovies(userEntity.getFavMovies()));
-		return user;
-	}
-
 	@Override
 	@Transactional
 	public User saveUser(User user) {
-		UserEntity userEntity = new UserEntity();
-		
-		userEntity.setUserName(user.getUserName());
-		userEntity.setNivel(user.getNivel());
-		userEntity.setPass(user.getPass());
-
-		return mapUser(userRepository.save(userEntity));
+		UserEntity userEntity = userMapper.dtoToEntity(user);
+		return userMapper.entityToDto(userRepository.saveAndFlush(userEntity));
 	}
 
 	@Override
 	public User findByUserNameAndPass(String userName, String pass) {
-		return mapUser(userRepository.findByUserNameAndPass(userName,pass));
+		return userMapper.entityToDto(userRepository.findByUserNameAndPass(userName,pass));
 	}
 
 	@Override
 	public User findByUserName(String userName) {
-		return mapUser(userRepository.findByUserName(userName));
+		return userMapper.entityToDto(userRepository.findByUserName(userName));
 	}
 
 }

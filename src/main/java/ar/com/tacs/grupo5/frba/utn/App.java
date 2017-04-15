@@ -66,7 +66,7 @@ public class App {
 				get("/:id/",MEDIA_TYPE, apiController.getUser,responseTransformer);
 				get("/:id/favmovies/",MEDIA_TYPE, apiController.getUserFavMovies,responseTransformer);
 				get("/:id/favactors/",MEDIA_TYPE, apiController.getserFavActors,responseTransformer);
-				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getUserIntersection,responseTransformer);
+				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
 				get("/ranking/actor/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
 			});
 			path("/user", () -> {
@@ -84,7 +84,7 @@ public class App {
 				delete("/:id/",MEDIA_TYPE, apiController.deleteFavMoviesList,responseTransformer);
 				post("/:id/movies/",MEDIA_TYPE, apiController.addMovieToList,responseTransformer);
 				delete("/:id/movies/:movie_id/",MEDIA_TYPE, apiController.deleteMovieFromList,responseTransformer);
-				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getUserIntersection,responseTransformer);
+				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
 				get("/:id/ranking/",MEDIA_TYPE, apiController.getRankingFromList,responseTransformer);
 
 			});

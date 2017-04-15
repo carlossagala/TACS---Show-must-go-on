@@ -1,18 +1,13 @@
 package ar.com.tacs.grupo5.frba.utn.models;
 
-import java.util.List;
+import java.util.Set;
 
 public class FavMovie {
 	private String id;
 	private String name;
-	private List<Movie> movies;
+	private String userId;
+	private Set<Movie> movies;
 	
-	public List<Movie> getMovies() {
-		return movies;
-	}
-	public void setMovies(List<Movie> movies) {
-		this.movies = movies;
-	}
 	public String getId() {
 		return id;
 	}
@@ -24,6 +19,18 @@ public class FavMovie {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public Set<Movie> getMovies() {
+		return movies;
+	}
+	public void setMovies(Set<Movie> movies) {
+		this.movies = movies;
 	}
 	
 }

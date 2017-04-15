@@ -1,11 +1,9 @@
 package ar.com.tacs.grupo5.frba.utn.controllers;
 
 import java.util.ArrayList;
-
-import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
-import ar.com.tacs.grupo5.frba.utn.models.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +13,11 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
+import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
@@ -101,9 +102,9 @@ public class ApiController {
 	 */
 	public Route getUserFavMovies = (request, response) -> {
 		response.status(200);
-
+		String id = request.params(":id");
 		PagedResponse resp = new PagedResponse();
-		List<FavMovie> favMovies = userService.getUserFavMovies(request.attribute("id"));
+		Set<FavMovie> favMovies = userService.getUserFavMovies(id);
 		resp.setData(favMovies);
 		resp.setTotalPages(favMovies.size()/PAGE_SIZE);
 		resp.setTotalResults(favMovies.size());
@@ -137,7 +138,7 @@ public class ApiController {
 	/**
 	 * Returns the intersection between the favourite movies from the two users
 	 */
-	public Route getUserIntersection = (request, response) -> {
+	public Route getListIntersection = (request, response) -> {
 		response.status(200);
 
 		PagedResponse resp = new PagedResponse();
@@ -146,8 +147,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
-				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
+		resp.setData(userService.getListIntersection(request.attribute("id"), request.attribute("id2")));
 		return resp;
 	};
 
@@ -175,8 +175,7 @@ public class ApiController {
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		ObjectMapper oMapper = new ObjectMapper();
-		User userDto = oMapper.readValue(request.body(), User.class);
+		User userDto = (User) gson.fromJson(request.body(), User.class);
 		resp.setData(userService.saveUser(userDto));
 		return resp;
 	};
@@ -238,6 +237,11 @@ public class ApiController {
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
+		User user = autenticar(request); 
+		//TODO: Al loguearse a la aplicación va a guardar el user en sesion? El user completo o solo id?
+		String title = request.body();
+		FavMovie favMovie = userService.createNewFavMovieList(title,user);
+		resp.setData(favMovie);
 		return resp;
 	};
 
@@ -362,7 +366,7 @@ public class ApiController {
 		Response resp = new Response();
 		resp.setStatusCode(0);
 		resp.setMessage("ok");
-		resp.setData(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")));
+		resp.setData(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/));
 		return resp;
 	};
 
@@ -378,8 +382,8 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(1);
 		resp.setMessage("ok");
-		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
-				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
+		resp.setData(Arrays.asList(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/),
+				new Movie("2", "Back to the Future"/*, "image.jpg", "", "", Arrays.asList("")*/)));
 		return resp;
 	};
 
