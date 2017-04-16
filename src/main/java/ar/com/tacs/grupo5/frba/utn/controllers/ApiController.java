@@ -153,7 +153,7 @@ public class ApiController {
 		String idUser = request.params(":id");
 		int page = getPage(request);
 		PagedResponse resp = new PagedResponse();
-		userService.getFavActors(user.getId(),page,resp);
+		userService.getFavActors(idUser,page,resp);
 		if(resp.getTotalResults()==0){
 			response.status(404);
 		}else{
