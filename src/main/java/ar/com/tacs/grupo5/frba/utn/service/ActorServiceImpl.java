@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResult;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultActor;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultMovie;
 
+@Component
 public class ActorServiceImpl implements ActorService {
 
 	private static Logger logger = LoggerFactory.getLogger(ActorServiceImpl.class);

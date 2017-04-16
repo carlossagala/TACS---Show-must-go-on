@@ -27,6 +27,10 @@ import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.service.ActorService;
+import ar.com.tacs.grupo5.frba.utn.service.ActorServiceImpl;
+import ar.com.tacs.grupo5.frba.utn.service.MovieService;
+import ar.com.tacs.grupo5.frba.utn.service.MovieServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
 import ar.com.tacs.grupo5.frba.utn.service.SearchServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
@@ -41,14 +45,18 @@ public class ApiController {
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
 	private SearchService searchService;
 	private Gson gson;
+	private MovieService movieService;
 	private UserServiceImpl userService;
+	private ActorService actorService;
 	private JWTUtils jwtUtils;
 
 	@Autowired
-	public ApiController(UserServiceImpl userService,SearchServiceImpl searchService,  Gson gson, JWTUtils jwtUtils) {
+	public ApiController(UserServiceImpl userService,SearchServiceImpl searchService,ActorServiceImpl actorService, MovieServiceImpl movieService,  Gson gson, JWTUtils jwtUtils) {
 		super();
 		this.userService = userService;
 		this.searchService = searchService;
+		this.actorService = actorService;
+		this.movieService = movieService;
 		this.gson = gson;
 		this.jwtUtils = jwtUtils;
 	}
@@ -430,11 +438,9 @@ public class ApiController {
 	 */
 	public Route getMovieById = (request, response) -> {
 		response.status(200);
-
+		String id = request.params(":id");
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		resp.setData(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/));
+		resp.setData(movieService.getMovieDetail(id));
 		return resp;
 	};
 
@@ -460,11 +466,9 @@ public class ApiController {
 	 */
 	public Route getActorById = (request, response) -> {
 		response.status(200);
-
+		String id = request.params(":id");
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		resp.setData(new Actor("1", "imagen.jpg", "Margot Robbie", "", Arrays.asList("123456")));
+		resp.setData(actorService.getDetailActor(id));
 		return resp;
 	};
 
