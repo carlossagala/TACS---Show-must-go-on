@@ -2,6 +2,10 @@ package ar.com.tacs.grupo5.frba.utn.exceptions;
 
 public class BadRequest extends RuntimeException{
 
+	public BadRequest(String msg) {
+		super(msg);
+	}
+
 	/**
 	 * 
 	 */

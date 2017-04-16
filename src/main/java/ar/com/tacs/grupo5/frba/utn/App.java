@@ -56,7 +56,11 @@ public class App {
 		});
 		exception(BadRequest.class, (exception, request, response) -> {
 			response.status(400);
-			response.body("Bad Request");
+			String message = "Bad Request";
+			if(exception.getMessage()!=null){
+				message = message+": "+exception.getMessage();
+			}
+			response.body(message);
 		});
 		
 		

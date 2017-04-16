@@ -11,6 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,9 @@ import spark.utils.CollectionUtils;
 @Component
 public class ApiController {
 
-	private static final int PAGE_SIZE = 20;
+	
+	@Value("${page.size}")
+	private int pageSize;
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
 	private SearchService searchService;
 	private Gson gson;
@@ -66,7 +69,7 @@ public class ApiController {
 		response.status(200);
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		resp.setTotalResults(1L);
 		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
 		resp.setMessage("ok");
@@ -89,7 +92,7 @@ public class ApiController {
 		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
 		resp.setTotalPages(1);
-		resp.setTotalResults(users.size());
+		resp.setTotalResults(Long.valueOf(users.size()));
 		resp.setData(users);
 		return resp;
 	};
@@ -132,15 +135,12 @@ public class ApiController {
 		User user = autenticar(request);
 		
 		PagedResponse resp = new PagedResponse();
-
-		List<String> ids = userService.getFavActors(user.getId());
-		if(CollectionUtils.isEmpty(ids)){
+		int page = getPage(request);
+		userService.getFavActors(user.getId(),page,resp);
+		if(resp.getTotalResults()==0){
 			response.status(404);
 		}else{
 			response.status(200);
-			setPagedResults(resp,ids);
-			resp.setPage(getPage(request));
-			resp.setData(ids);
 		}
 		return resp;
 	};
@@ -151,17 +151,14 @@ public class ApiController {
 		User user = autenticar(request);
 		validateAuthorization(user);
 		String idUser = request.params(":id");
-
+		int page = getPage(request);
 		PagedResponse resp = new PagedResponse();
-		List<String> ids = userService.getFavActors(idUser);
-		if(CollectionUtils.isEmpty(ids)){
+		userService.getFavActors(user.getId(),page,resp);
+		if(resp.getTotalResults()==0){
 			response.status(404);
 		}else{
 			response.status(200);
-			setPagedResults(resp,ids);
-			resp.setData(ids);
 		}
-		resp.setPage(getPage(request));
 		return resp;
 	};
 
@@ -175,7 +172,10 @@ public class ApiController {
 				page = Integer.valueOf(paramPage);
 			}
 		}catch(Exception e){
-			throw new BadRequest();
+			throw new BadRequest("page invalid");
+		}
+		if(page<1){
+			throw new BadRequest("page must be greater than 0");
 		}
 		return page;
 	}
@@ -188,7 +188,7 @@ public class ApiController {
 
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		resp.setTotalResults(1L);
 		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
 		resp.setMessage("ok");
@@ -201,7 +201,7 @@ public class ApiController {
 
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		resp.setTotalResults(1L);
 		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
 		resp.setMessage("ok");
@@ -261,7 +261,7 @@ public class ApiController {
 		Search search = searchService.searchByMovie(request.params(":query"));
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(search.getTotal_pages());
-		resp.setTotalResults(search.getTotal_results());
+		resp.setTotalResults(Long.valueOf(search.getTotal_results()));
 		resp.setPage(search.getPage());
 		resp.setData(search.getResult());
 		return resp;
@@ -276,7 +276,7 @@ public class ApiController {
 		Search search = searchService.searchByActor(request.params(":query"));
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(search.getTotal_pages());
-		resp.setTotalResults(search.getTotal_results());
+		resp.setTotalResults(Long.valueOf(search.getTotal_results()));
 		resp.setPage(search.getPage());
 		resp.setData(search.getResult());
 		return resp;
@@ -291,7 +291,7 @@ public class ApiController {
 		Search search = searchService.searchMulti(request.params(":query"));
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(0);
-		resp.setTotalResults(search.getTotal_results());
+		resp.setTotalResults(Long.valueOf(search.getTotal_results()));
 		resp.setPage(search.getPage());
 		resp.setData(search.getResult());
 		return resp;
@@ -388,7 +388,7 @@ public class ApiController {
 
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		resp.setTotalResults(1L);
 		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
 		resp.setMessage("ok");
@@ -452,7 +452,7 @@ public class ApiController {
 
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
-		resp.setTotalResults(2);
+		resp.setTotalResults(2L);
 		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
 		resp.setMessage("ok");
@@ -492,7 +492,7 @@ public class ApiController {
 		}
 	}
 	private void setPagedResults(PagedResponse resp, @SuppressWarnings("rawtypes") Collection collection) {
-		resp.setTotalPages((int) Math.ceil((double)collection.size()/(double)PAGE_SIZE));
-		resp.setTotalResults(collection.size());
+		resp.setTotalPages((int) Math.ceil((double)collection.size()/(double)pageSize));
+		resp.setTotalResults(Long.valueOf(collection.size()));
 	}
 }

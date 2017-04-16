@@ -2,6 +2,9 @@ package ar.com.tacs.grupo5.frba.utn.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
+import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 public interface UserDao {
@@ -15,7 +18,7 @@ public interface UserDao {
 	
 	User findByUserName(String userName);
 	
-	List<String> getFavActors(String userId);
+	Page<FavActorEntity> getFavActors(String userId, int page);
 	
 	void addFavActor(String idUser,String idActor);
 	void deleteFavActor(String idUser,String idActor);

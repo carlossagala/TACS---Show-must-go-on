@@ -6,12 +6,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
+import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Component
@@ -85,8 +88,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<String> getFavActors(String userId) {
-		return userDao.getFavActors(userId);
+	public void getFavActors(String userId,int page, PagedResponse resp) {
+		if(userId==null){
+			resp.setTotalResults(0L);
+			return;
+		}
+		Page<FavActorEntity> favActorsPage = userDao.getFavActors(userId,page-1);
+		if(favActorsPage==null){
+			resp.setTotalResults(0L);
+			return;
+		}
+		resp.setData(favActorsPage.getContent().stream().map(FavActorEntity::getActorId).collect(Collectors.toList()));
+		resp.setPage(page);
+		resp.setTotalPages(favActorsPage.getTotalPages());
+		resp.setTotalResults(favActorsPage.getTotalElements());
+		return ;
 	}
 
 	@Override

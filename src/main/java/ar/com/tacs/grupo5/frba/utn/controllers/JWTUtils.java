@@ -27,6 +27,17 @@ public class JWTUtils {
 	@Value("${jwt.expiration}")
 	private Long expiration;
 
+	public JWTUtils() {
+		super();
+	}
+
+	public JWTUtils(String header, String secret, Long expiration) {
+		super();
+		this.header = header;
+		this.secret = secret;
+		this.expiration = expiration;
+	}
+
 	public String getUsernameFromToken(String token) {
 		String username;
 		try {

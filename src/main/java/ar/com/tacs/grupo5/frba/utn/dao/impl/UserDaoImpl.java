@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,9 @@ import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Repository
 public class UserDaoImpl implements UserDao{
+	
+	@Value("${page.size}")
+	private int pageSize;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -70,19 +75,12 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	@Transactional
-	public List<String> getFavActors(String userId) {
-		if(userId==null){
-			return new ArrayList<>();
-		}
+	public Page<FavActorEntity> getFavActors(String userId,int page) {
 		UserEntity userEntity = userRepository.findOne(userId);
 		if(userEntity==null){
-			return new ArrayList<>();
+			return null;
 		}
-		Set<FavActorEntity> favActors= userEntity.getFavActors();
-		if(favActors==null){
-			return new ArrayList<>();
-		}
-		return favActors.stream().map(FavActorEntity::getActorId).collect(Collectors.toList());
+		return favActorRepository.findByUserEntity(userEntity, new PageRequest(page, pageSize));
 	}
 
 	@Override

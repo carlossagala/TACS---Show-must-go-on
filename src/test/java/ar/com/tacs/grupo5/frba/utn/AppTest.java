@@ -16,6 +16,10 @@ import com.google.gson.GsonBuilder;
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 import ar.com.tacs.grupo5.frba.utn.controllers.JWTUtils;
 import ar.com.tacs.grupo5.frba.utn.controllers.JsonTransformer;
+import ar.com.tacs.grupo5.frba.utn.service.ActorService;
+import ar.com.tacs.grupo5.frba.utn.service.MovieService;
+import ar.com.tacs.grupo5.frba.utn.service.SearchService;
+import ar.com.tacs.grupo5.frba.utn.service.UserService;
 import spark.servlet.SparkApplication;
 
 /**
@@ -49,7 +53,11 @@ class TestController {
 
 	public TestController() {
 		Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
-		JWTUtils jwtUtils = new JWTUtils();
+		JWTUtils jwtUtils = new JWTUtils("api_key","mySecret",604800L);
+		UserService userService;
+		SearchService searchService;
+		ActorService actorService;
+		MovieService movieService;
 		ApiController apiController = new ApiController(null,null,null,null, gson,jwtUtils);
 		App.sparkInit(apiController, 8080, new JsonTransformer(gson));
 	}

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
+import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 public interface UserService {
@@ -23,7 +24,7 @@ public interface UserService {
 
 	List<Movie> getListIntersection(String id1, String id2);
 
-	List<String> getFavActors(String userId);
+	void getFavActors(String userId,int page,PagedResponse resp);
 	void addFavActor(String idUser,String idActor);
 	void deleteFavActor(String idUser,String idActor);
 }
