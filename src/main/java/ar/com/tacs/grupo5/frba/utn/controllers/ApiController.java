@@ -469,7 +469,7 @@ public class ApiController {
 	};
 
 
-	private User autenticar(Request request) {
+	public User autenticar(Request request) {
 		String token = request.headers(jwtUtils.getHeader());
 
 		if (token == null || jwtUtils.isTokenExpired(token)) {
@@ -482,7 +482,7 @@ public class ApiController {
 		}
 		return user;
 	}
-	private void validateAuthorization(User user){
+	public void validateAuthorization(User user){
 		if(!"admin".equals(user.getNivel())){
 			throw new NotAuthorized();
 		}

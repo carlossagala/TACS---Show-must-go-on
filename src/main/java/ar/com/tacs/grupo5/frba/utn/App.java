@@ -8,6 +8,9 @@ import static spark.Spark.post;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 import static spark.Spark.exception;
+import static spark.Spark.before;
+import static spark.Spark.halt;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +68,30 @@ public class App {
 			response.status(400);
 			response.body("Bad Request");
 		});
+		
+		
+		
+		before("/api/*", (request, response) -> {
+			String path = request.pathInfo();
+			if (!(path.equals("/api/user/login/") || path.equals("/api/user/register/"))){
+				try {
+					apiController.autenticar(request);
+				} catch (Exception e) {
+					halt(401, "No se encuentra autenticado");
+				}
+		}});
+
+		
+		//TODO: falta probar 
+//		before("/api/users/:id*", (request, response) -> {
+//			try {
+//				apiController.validateAuthorization(apiController.autenticar(request));
+//			} catch (Exception e) {
+//				halt(403, "No tiene los permisos suficientes");
+//			}
+//		});
+		
+		
 		path("/api", () -> {
 			path("/users", () -> {
 				get("/", MEDIA_TYPE,apiController.getUsers,responseTransformer);
