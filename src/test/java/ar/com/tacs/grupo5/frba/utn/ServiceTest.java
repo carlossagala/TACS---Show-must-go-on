@@ -1,5 +1,6 @@
 package ar.com.tacs.grupo5.frba.utn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -104,6 +105,22 @@ public class ServiceTest {
 		Assert.assertEquals("Vince Gilligan", actor.getName());
 	}
 
+	
+	@Test
+	public void getMoviesWithActors(){
+		
+		List<String> actorIds = new ArrayList<>();
+		actorIds.add("287");
+		actorIds.add("819");
+		
+		List<Movie> movies = actorService.getMoviesWithActors(actorIds);
+		Assert.assertEquals(18,movies.size());
+		Assert.assertTrue(movies.stream().anyMatch(
+				movie -> "Hitting the Apex".equals(movie.getTitle())));
+	}
+	
+	
+	
 	@Test
 	public void getMovieSearchResultTest() {
 		Search search = searchService.searchByMovie("fight");

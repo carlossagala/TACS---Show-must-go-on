@@ -3,6 +3,7 @@ package ar.com.tacs.grupo5.frba.utn.service;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +96,40 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	
+	//TODO: tener en cuenta que este llamado a la api devuelve paginas
+	//https://www.themoviedb.org/documentation/api/discover
+	@Override
+	public List<Movie> getMoviesWithActors(List<String> actorsId) {
+		
+		
+		//287,819 (Bard pitt, edward norton)
+		String requestUrl = "https://api.themoviedb.org/3/discover/movie?api_key=" + appKey + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_people=" + convertIdsToString(actorsId);
+		
+		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		logger.info("se recibio el siguiente archivo de json" + response.getBody());
+
+		JsonParser jsonParser = new JsonParser();
+
+		JsonObject jsonObject = jsonParser.parse(response.getBody()).getAsJsonObject();
+
+		JsonElement movies = jsonObject.get("results");
+
+		Type listType = new TypeToken<ArrayList<Movie>>() {
+		}.getType();
+		List<Movie> works = gson.fromJson(movies, listType);
+
+		return works;
+		
+		
+		
+	}
+
+	private String convertIdsToString(List<String> actorsId) {
+		
+		return String.join(",", actorsId);
+	}
+
+
 
 
 
