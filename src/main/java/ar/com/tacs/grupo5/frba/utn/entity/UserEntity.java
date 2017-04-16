@@ -1,6 +1,5 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -29,7 +28,7 @@ public class UserEntity {
 	private Set<FavMovieEntity> favMovies;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="userEntity")
-	private List<FavActorEntity> favActors;
+	private Set<FavActorEntity> favActors;
 
 	public UserEntity() {
 		super();
@@ -84,11 +83,11 @@ public class UserEntity {
 		this.favMovies = fav;
 	}
 
-	public List<FavActorEntity> getFavActors() {
+	public Set<FavActorEntity> getFavActors() {
 		return favActors;
 	}
 
-	public void setFavActors(List<FavActorEntity> favActors) {
+	public void setFavActors(Set<FavActorEntity> favActors) {
 		this.favActors = favActors;
 	}
 }

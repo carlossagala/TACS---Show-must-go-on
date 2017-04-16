@@ -19,6 +19,9 @@ public class UserMapper implements GenericMapper<UserEntity, User> {
 
 	@Override
 	public User entityToDto(UserEntity entity) {
+		if(entity==null){
+			return null;
+		}
 		User user = new User();
 		user.setId(entity.getId());
 		user.setNivel(entity.getNivel());

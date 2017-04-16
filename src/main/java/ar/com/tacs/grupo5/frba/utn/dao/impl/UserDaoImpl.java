@@ -1,7 +1,9 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +78,7 @@ public class UserDaoImpl implements UserDao{
 		if(userEntity==null){
 			return new ArrayList<>();
 		}
-		List<FavActorEntity> favActors= userEntity.getFavActors();
+		Set<FavActorEntity> favActors= userEntity.getFavActors();
 		if(favActors==null){
 			return new ArrayList<>();
 		}
@@ -90,9 +92,9 @@ public class UserDaoImpl implements UserDao{
 			return;
 		}
 		UserEntity userEntity = userRepository.findOne(idUser);
-		List<FavActorEntity> favActors= userEntity.getFavActors();
+		Set<FavActorEntity> favActors= userEntity.getFavActors();
 		if(favActors==null){
-			favActors = new ArrayList<>();
+			favActors = new HashSet<>();
 		}
 		boolean idExists = favActors.stream().anyMatch(x->x.getActorId().equals(idActor));
 		if(!idExists){
@@ -105,9 +107,9 @@ public class UserDaoImpl implements UserDao{
 	@Transactional
 	public void deleteFavActor(String idUser, String idActor) {
 		UserEntity userEntity = userRepository.findOne(idUser);
-		List<FavActorEntity> favActors= userEntity.getFavActors();
+		Set<FavActorEntity> favActors= userEntity.getFavActors();
 		if(favActors==null){
-			favActors = new ArrayList<>();
+			favActors = new HashSet<>();
 		}
 		FavActorEntity favActor = favActors.stream().filter(x->x.getActorId().equals(idActor)).findAny().orElse(null);
 		if(favActor!=null){

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
@@ -26,7 +27,6 @@ import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
-import ar.com.tacs.grupo5.frba.utn.service.ApiService;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
 import ar.com.tacs.grupo5.frba.utn.service.SearchServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
@@ -39,16 +39,14 @@ public class ApiController {
 
 	private static final int PAGE_SIZE = 20;
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
-	private ApiService apiService;
 	private SearchService searchService;
 	private Gson gson;
 	private UserServiceImpl userService;
 	private JWTUtils jwtUtils;
 
 	@Autowired
-	public ApiController(ApiService apiService, UserServiceImpl userService,SearchServiceImpl searchService,  Gson gson, JWTUtils jwtUtils) {
+	public ApiController(UserServiceImpl userService,SearchServiceImpl searchService,  Gson gson, JWTUtils jwtUtils) {
 		super();
-		this.apiService = apiService;
 		this.userService = userService;
 		this.searchService = searchService;
 		this.gson = gson;
@@ -62,7 +60,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
-		resp.setPage(1);
+		resp.setPage(getPage(request));
 		resp.setMessage("ok");
 		resp.setData("data");
 		ObjectMapper oMapper = new ObjectMapper();
@@ -81,7 +79,7 @@ public class ApiController {
 		users = userService.getAllUsers();
 		resp.setMessage("ok");
 		resp.setStatusCode(0);
-		resp.setPage(1);
+		resp.setPage(getPage(request));
 		resp.setTotalPages(1);
 		resp.setTotalResults(users.size());
 		resp.setData(users);
@@ -95,11 +93,8 @@ public class ApiController {
 		logger.info(request.pathInfo());
 
 		response.status(200);
-		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		Response resp = new Response();
 		resp.setStatusCode(0);
-		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(userService.getUserById(request.attribute("id")));
 		return resp;
@@ -112,12 +107,12 @@ public class ApiController {
 		response.status(200);
 		String id = request.params(":id");
 		PagedResponse resp = new PagedResponse();
+
 		Set<FavMovie> favMovies = userService.getUserFavMovies(id);
 		resp.setData(favMovies);
-		resp.setTotalPages(favMovies.size()/PAGE_SIZE);
-		resp.setTotalResults(favMovies.size());
+		setPagedResults(resp, favMovies);
 		resp.setStatusCode(0);
-		resp.setPage(1);
+		resp.setPage(getPage(request));
 		resp.setMessage("ok");
 		return resp;
 	};
@@ -136,6 +131,7 @@ public class ApiController {
 		}else{
 			response.status(200);
 			setPagedResults(resp,ids);
+			resp.setPage(getPage(request));
 			resp.setData(ids);
 		}
 		return resp;
@@ -149,7 +145,6 @@ public class ApiController {
 		String idUser = request.params(":id");
 
 		PagedResponse resp = new PagedResponse();
-
 		List<String> ids = userService.getFavActors(idUser);
 		if(CollectionUtils.isEmpty(ids)){
 			response.status(404);
@@ -158,9 +153,24 @@ public class ApiController {
 			setPagedResults(resp,ids);
 			resp.setData(ids);
 		}
-
+		resp.setPage(getPage(request));
 		return resp;
 	};
+
+	private Integer getPage(Request request) {
+		Integer page = null;
+		try{
+			String paramPage = request.queryParams("page");
+			if(paramPage==null){
+				page = 1;
+			}else{
+				page = Integer.valueOf(paramPage);
+			}
+		}catch(Exception e){
+			throw new BadRequest();
+		}
+		return page;
+	}
 
 	/**
 	 * Returns the intersection between the favourite movies from the two users
@@ -172,7 +182,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
-		resp.setPage(1);
+		resp.setPage(getPage(request));
 		resp.setMessage("ok");
 		resp.setData(userService.getListIntersection(request.attribute("id"), request.attribute("id2")));
 		return resp;
@@ -185,7 +195,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
-		resp.setPage(1);
+		resp.setPage(getPage(request));
 		resp.setMessage("ok");
 		List<Actor> favActors = new ArrayList<>();
 
@@ -228,11 +238,8 @@ public class ApiController {
 	public Route logout = (request, response) -> {
 		response.status(200);
 
-		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1);
+		Response resp = new Response();
 		resp.setStatusCode(0);
-		resp.setPage(1);
 		resp.setMessage("ok");
 		resp.setData(new User("1", "Kun"));
 		return resp;
@@ -375,7 +382,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(1);
 		resp.setStatusCode(0);
-		resp.setPage(1);
+		resp.setPage(getPage(request));
 		resp.setMessage("ok");
 
 		List<Actor> favActors = new ArrayList<>();
@@ -394,6 +401,7 @@ public class ApiController {
 		User user = autenticar(request);
 		String id =null;
 		try{
+			@SuppressWarnings("unchecked")
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			id = (String)requestMap.get("id");
 		}catch(Exception e){
@@ -440,7 +448,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(2);
 		resp.setStatusCode(0);
-		resp.setPage(1);
+		resp.setPage(getPage(request));
 		resp.setMessage("ok");
 		resp.setData(Arrays.asList(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/),
 				new Movie("2", "Back to the Future"/*, "image.jpg", "", "", Arrays.asList("")*/)));
@@ -460,14 +468,6 @@ public class ApiController {
 		return resp;
 	};
 
-	public Route helloWorld = (request, response) -> {
-		response.status(200);
-		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		resp.setData(apiService.helloWorld());
-		return resp;
-	};
 
 	private User autenticar(Request request) {
 		String token = request.headers(jwtUtils.getHeader());
@@ -487,8 +487,8 @@ public class ApiController {
 			throw new NotAuthorized();
 		}
 	}
-	private void setPagedResults(PagedResponse resp, Collection collection) {
-		resp.setTotalPages(collection.size()/PAGE_SIZE);
+	private void setPagedResults(PagedResponse resp, @SuppressWarnings("rawtypes") Collection collection) {
+		resp.setTotalPages((int) Math.ceil((double)collection.size()/(double)PAGE_SIZE));
 		resp.setTotalResults(collection.size());
 	}
 }

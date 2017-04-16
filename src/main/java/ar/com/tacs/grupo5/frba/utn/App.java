@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
+import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.UserService;
@@ -60,9 +61,11 @@ public class App {
 			response.status(401);
 			response.body("Not Authorized");
 		});
-
+		exception(BadRequest.class, (exception, request, response) -> {
+			response.status(400);
+			response.body("Bad Request");
+		});
 		path("/api", () -> {
-			get("/hello/", MEDIA_TYPE,apiController.helloWorld,responseTransformer);
 			path("/users", () -> {
 				get("/", MEDIA_TYPE,apiController.getUsers,responseTransformer);
 				get("/:id/",MEDIA_TYPE, apiController.getUser,responseTransformer);
