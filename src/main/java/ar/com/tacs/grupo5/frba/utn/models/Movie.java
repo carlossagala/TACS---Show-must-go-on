@@ -1,9 +1,11 @@
 package ar.com.tacs.grupo5.frba.utn.models;
 
+import java.util.Set;
+
 public class Movie {
 	private String id;
 	private String title;
-	private String favMovieId;
+	private Set<FavMovie> favMovies;
 	
 	public Movie(){		
 	}
@@ -30,12 +32,13 @@ public class Movie {
 		this.title = title;
 	}
 
-	public String getFavMovieId() {
-		return favMovieId;
+	public Set<FavMovie> getFavMovies() {
+		return favMovies;
 	}
 
-	public void setFavMovieId(String favMovieId) {
-		this.favMovieId = favMovieId;
+	public void setFavMovies(Set<FavMovie> favMovies) {
+		this.favMovies = favMovies;
 	}
+
 
 }

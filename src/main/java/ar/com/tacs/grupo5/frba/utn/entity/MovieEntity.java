@@ -1,19 +1,22 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class MovieEntity {
 	@Id
 	private String id;
 	private String title;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "favmovie_id", referencedColumnName = "id")
-	private FavMovieEntity favMovie;
+	private Set<FavMovieEntity> favMovies;
 	
 	public MovieEntity() {
 		super();
@@ -34,11 +37,11 @@ public class MovieEntity {
 		this.id = id;
 	}
 
-	public FavMovieEntity getFavMovie() {
-		return favMovie;
+	public Set<FavMovieEntity> getFavMovies() {
+		return favMovies;
 	}
 
-	public void setFavMovie(FavMovieEntity favMovie) {
-		this.favMovie = favMovie;
+	public void setFavMovies(Set<FavMovieEntity> favMovies) {
+		this.favMovies = favMovies;
 	}
 }

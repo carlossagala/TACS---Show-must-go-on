@@ -118,6 +118,5 @@ public class UserDaoImpl implements UserDao{
 			userRepository.save(userEntity);
 		}
 	}
-	
 
 }

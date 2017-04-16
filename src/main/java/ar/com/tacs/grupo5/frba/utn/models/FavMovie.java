@@ -8,6 +8,25 @@ public class FavMovie {
 	private String userId;
 	private Set<Movie> movies;
 	
+	public FavMovie()
+	{
+		
+	}
+	
+	public FavMovie(String name, String userId) {
+		super();
+		this.name = name;
+		this.userId = userId;
+	}
+	
+	public FavMovie(String id, String name, String userId, Set<Movie> movies) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.userId = userId;
+		this.movies = movies;
+	}
+
 	public String getId() {
 		return id;
 	}

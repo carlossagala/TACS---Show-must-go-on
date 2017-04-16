@@ -2,26 +2,30 @@ package ar.com.tacs.grupo5.frba.utn.dao;
 
 import org.springframework.stereotype.Repository;
 
-import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
-import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
-import ar.com.tacs.grupo5.frba.utn.mapper.FavMovieMapper;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
+import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
+import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
+import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 @Repository
 public class MovieDaoImpl implements MovieDao {
 	
-	private FavMovieRepository favMovieRepository;
+	private MovieRepository movieRepository;
 	
-	private FavMovieMapper favMovieMapper;
+	private MovieMapper movieMapper;
 
 	@Override
-	public FavMovie getFavMovieList(String id) {
-		return favMovieMapper.entityToDto(favMovieRepository.findOne(id));
+	public Movie getMovie(String id) {
+		MovieEntity movieEnt = movieRepository.findOne(id);
+		return movieMapper.entityToDto(movieEnt);
 	}
 
 	@Override
-	public FavMovie saveFavMovie(FavMovie favMovie) {
-		FavMovieEntity favMovieEntity = favMovieMapper.dtoToEntity(favMovie);
-		return favMovieMapper.entityToDto(favMovieRepository.saveAndFlush(favMovieEntity));
+	public Movie saveMovie(Movie movie) {
+		MovieEntity movieEnt = movieMapper.dtoToEntity(movie);
+		Movie createdMovie = movieMapper.entityToDto(movieRepository.saveAndFlush(movieEnt));
+		return createdMovie;
 	}
+	
+
 }

@@ -7,4 +7,5 @@ public interface FavMoviesDao {
 	FavMovie getFavMovie(String id);
 	
 	FavMovie saveFavMovie(FavMovie favMovie);
+	
 }
