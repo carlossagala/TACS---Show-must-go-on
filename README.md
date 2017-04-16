@@ -8,4 +8,4 @@ Ejecutar la aplicación por linea de comando:
 
 mvn clean install -DskipTests && mvn spring-boot:run
 
-Documentación Swagger en https://app.swaggerhub.com/apis/mrios/TACS-Grupo5/1.0.0
+Documentación Swagger en https://app.swaggerhub.com/apis/tacs-g5/show-must-go-on/1.0.0
