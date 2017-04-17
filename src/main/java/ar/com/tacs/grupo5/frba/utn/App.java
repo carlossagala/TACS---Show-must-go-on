@@ -33,9 +33,11 @@ import spark.ResponseTransformer;
 @SpringBootApplication
 @PropertySource("classpath:application.properties")
 @ComponentScan({ "ar.com.tacs.grupo5.frba.utn" })
+
 public class App {
 	private static final String MEDIA_TYPE = "application/json";
 	private static Logger logger = LoggerFactory.getLogger(App.class);
+	
 	public static void main(String[] args) {
 		@SuppressWarnings("resource")
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class);

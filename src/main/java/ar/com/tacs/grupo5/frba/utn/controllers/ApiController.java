@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 
 import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
@@ -30,6 +31,8 @@ import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ActorService;
 import ar.com.tacs.grupo5.frba.utn.service.ActorServiceImpl;
+import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
+import ar.com.tacs.grupo5.frba.utn.service.FavMoviesServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.MovieService;
 import ar.com.tacs.grupo5.frba.utn.service.MovieServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
@@ -51,15 +54,17 @@ public class ApiController {
 	private MovieService movieService;
 	private UserServiceImpl userService;
 	private ActorService actorService;
+	private FavMoviesService favMoviesService;
 	private JWTUtils jwtUtils;
 
 	@Autowired
-	public ApiController(UserServiceImpl userService,SearchServiceImpl searchService,ActorServiceImpl actorService, MovieServiceImpl movieService,  Gson gson, JWTUtils jwtUtils) {
+	public ApiController(UserServiceImpl userService,SearchServiceImpl searchService,ActorServiceImpl actorService, MovieServiceImpl movieService, FavMoviesServiceImpl favMoviesService, Gson gson, JWTUtils jwtUtils) {
 		super();
 		this.userService = userService;
 		this.searchService = searchService;
 		this.actorService = actorService;
 		this.movieService = movieService;
+		this.favMoviesService = favMoviesService;
 		this.gson = gson;
 		this.jwtUtils = jwtUtils;
 	}
@@ -336,11 +341,36 @@ public class ApiController {
 	 * Updates a list information
 	 */
 	public Route updateFavMoviesDetail = (request, response) -> {
-		response.status(200);
-
+		String newTitle;
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
+		User user = autenticar(request);
+		
+		String idFavMovie = request.params(":id");
+		
+		try{
+			@SuppressWarnings("unchecked")
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			newTitle = (String)requestMap.get("newTitle");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro newTitle en el body es obligatorio";
+		}
+				
+		try
+		{
+			FavMovie favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
+			resp.setData(favMovie);
+			response.status(200);
+			resp.setStatusCode(0);
+			resp.setMessage("ok");
+		}
+		catch (ResourceNotFound e) {
+			response.status(404);
+			resp.setStatusCode(0);
+			resp.setMessage("Not Found: La lista de películas favoritas no existe");
+		}
+	
 		return resp;
 	};
 

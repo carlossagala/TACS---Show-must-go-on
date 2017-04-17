@@ -1,5 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn;
 
+import static org.junit.Assert.fail;
+
 import java.util.Set;
 
 import org.junit.Assert;
@@ -12,10 +14,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
+import ar.com.tacs.grupo5.frba.utn.service.FavMoviesServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -52,5 +57,26 @@ public class FavMoviesTest {
 		savedUser = this.userDao.saveUser(savedUser);
 		Assert.assertTrue(savedUser.getFavMovies().size()>0);
 	}
-
+	
+	@Test
+	public void testUpdateFavMovies()
+	{
+		FavMoviesService favMoviesService = new FavMoviesServiceImpl();
+		
+		User savedUser = this.userDao.saveUser(new User("userrrr3", "userrrr3", "user"));
+		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
+		savedUser.getFavMovies().add(savedFavMovie); 
+		savedUser = this.userDao.saveUser(savedUser);
+		
+		try
+		{
+			savedFavMovie = favMoviesService.updateFavMovie("Mi Segunda Lista", savedFavMovie.getId());
+		}
+		catch(ResourceNotFound e)
+		{
+			fail();
+		}
+				
+		Assert.assertTrue(this.favMoviesDao.getFavMovie(savedFavMovie.getId()).getName() == "Mi Segunda Lista");
+	}
 }

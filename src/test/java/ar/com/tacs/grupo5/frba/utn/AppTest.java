@@ -58,8 +58,7 @@ class TestController {
 		SearchService searchService;
 		ActorService actorService;
 		MovieService movieService;
-		ApiController apiController = new ApiController(null,null,null,null, gson,jwtUtils);
+		ApiController apiController = new ApiController(null,null,null,null, null, gson,jwtUtils);
 		App.sparkInit(apiController, 8080, new JsonTransformer(gson));
 	}
-
 }
