@@ -4,14 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
+import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 
 @Component
 public class FavMoviesServiceImpl implements FavMoviesService {
 	@Autowired
 	private FavMoviesDao favMoviesDao;
+	
+	@Autowired
+	private MovieDao movieDao;
 	
 	@Override
 	public FavMovie updateFavMovie(String newTitle, String idFavMovie) throws ResourceNotFound {
@@ -35,5 +40,32 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 			throw new ResourceNotFound();
 		
 		return favMoviesDao.deleteFavMovie(deletedFavMovie);
+	}
+
+	@Override
+	public Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound {
+		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		if(favMovie == null)
+		{
+			throw new ResourceNotFound();
+		}
+		Movie movie = new Movie();
+		movie.setFavMovieId(idFavMovie);
+		movie.setId(movieId);
+		return movieDao.saveMovie(movie);
+
+	}
+
+	@Override
+	public Movie removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
+		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		if(favMovie == null)
+		{
+			throw new ResourceNotFound();
+		}
+		Movie movie = new Movie();
+		movie.setFavMovieId(idFavMovie);
+		movie.setId(movieId);
+		return movieDao.deleteMovie(movie);
 	};
 }

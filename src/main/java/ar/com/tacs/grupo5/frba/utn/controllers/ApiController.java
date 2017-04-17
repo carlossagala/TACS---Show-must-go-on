@@ -394,10 +394,14 @@ public class ApiController {
 	 * Adds a movie to the list
 	 */
 	public Route addMovieToList = (request, response) -> {
+		User user = authenticate(request);
+		String idFavMovie = request.params(":id");
+		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+		String movieId = (String)requestMap.get("id");
+		Movie movie = favMoviesService.addMovie(idFavMovie, movieId);
 		response.status(200);
-
 		Response resp = new Response();
-		
+		resp.setData(movie);
 		return resp;
 	};
 
@@ -405,10 +409,14 @@ public class ApiController {
 	 * Removes a movie from the list
 	 */
 	public Route deleteMovieFromList = (request, response) -> {
+		User user = authenticate(request);
+		String idFavMovie = request.params(":id");
+		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+		String movieId = (String)requestMap.get("id");
+		Movie movie =  favMoviesService.removeMovie(idFavMovie, movieId);
 		response.status(200);
-
 		Response resp = new Response();
-		
+		resp.setData(movie);
 		return resp;
 	};
 
@@ -486,8 +494,8 @@ public class ApiController {
 		resp.setTotalResults(2L);
 		resp.setPage(getPage(request));
 		
-		resp.setData(Arrays.asList(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/),
-				new Movie("2", "Back to the Future"/*, "image.jpg", "", "", Arrays.asList("")*/)));
+//		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
+//				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
 		return resp;
 	};
 

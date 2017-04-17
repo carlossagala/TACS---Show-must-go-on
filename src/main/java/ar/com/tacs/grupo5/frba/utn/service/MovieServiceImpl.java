@@ -18,6 +18,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
+import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Images;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;
@@ -33,6 +37,12 @@ public class MovieServiceImpl implements MovieService {
 	private RestTemplate restTemplate;
 
 	private Gson gson;
+	
+	@Autowired
+	private MovieDao movieDao;
+	
+	@Autowired
+	private FavMoviesDao favMoviesDao;
 
 	@Autowired
 	public MovieServiceImpl() {
@@ -95,6 +105,32 @@ public class MovieServiceImpl implements MovieService {
 		movie.setActors(getMovieActors(id));
 		return movie;
 	}
+	
+	@Override
+	public ar.com.tacs.grupo5.frba.utn.models.Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound {
+		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		if(favMovie == null)
+		{
+			throw new ResourceNotFound();
+		}
+		ar.com.tacs.grupo5.frba.utn.models.Movie movie = new ar.com.tacs.grupo5.frba.utn.models.Movie();
+		movie.setFavMovieId(idFavMovie);
+		movie.setId(movieId);
+		return movieDao.saveMovie(movie);
+	}
+
+	@Override
+	public ar.com.tacs.grupo5.frba.utn.models.Movie removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
+		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		if(favMovie == null)
+		{
+			throw new ResourceNotFound();
+		}
+		ar.com.tacs.grupo5.frba.utn.models.Movie movie = new ar.com.tacs.grupo5.frba.utn.models.Movie();
+		movie.setFavMovieId(idFavMovie);
+		movie.setId(movieId);
+		return movieDao.deleteMovie(movie);
+	};
 
 	
 
