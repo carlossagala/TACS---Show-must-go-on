@@ -302,12 +302,12 @@ paths:
           description: Successfully logged out
         400:
           description: Invalid input, object invalid
-  /search/{type}/:
+  /search/actor/{name}/:
     get:
       tags:
       - developers
-      summary: buscar por actor, pelicula o ambos
-      operationId: searchByType
+      summary: buscar actores por nombre
+      operationId: searchActorByName
       description: |
         Como usuario quiero buscar por nombre (películas y actores)
           Poder elegir si buscar ambos, películas o actores
@@ -319,13 +319,43 @@ paths:
           description: ""
           required: true
           type: string
-        - name: type
+        - name: name
           in: path
-          description: Type to fetch, can be `movie`, `actor` or `movie_actor`
+          description: name to fetch
           required: true
           type: string
-        - name: name
+        - name: page
           in: query
+          description: Page selected, default value is 1
+          required: true
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Search result
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Search'
+  /search/movie/{title}/:
+    get:
+      tags:
+      - developers
+      summary: busca peliculas por titulo
+      operationId: searchMovieByTitle
+      description: |
+        Como usuario quiero buscar por nombre (películas y actores)
+          Poder elegir si buscar ambos, películas o actores
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: api_key
+          description: ""
+          required: true
+          type: string
+        - name: title
+          in: path
           description: Name to fetch
           required: true
           type: string
@@ -342,6 +372,42 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Search'
+  /search/full/{query}/:
+    get:
+      tags:
+      - developers
+      summary: buscar por actor, pelicula o ambos
+      operationId: searchByType
+      description: |
+        Como usuario quiero buscar por nombre (películas y actores)
+          Poder elegir si buscar ambos, películas o actores
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: api_key
+          description: ""
+          required: true
+          type: string
+        - name: query
+          in: path
+          description: Name to fetch
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Page selected, default value is 1
+          required: true
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Search result
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Search'
+
   /favmovies/:
     post:
       tags:
@@ -615,7 +681,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/FavActors'
+              $ref: '#/definitions/FavActorsResponse'
         404:
           description: Resource not found
     post:
@@ -863,6 +929,31 @@ definitions:
       name:
         type: string
         example: Top 5 best movies
+  FavActorsResponse:
+    type: object
+    required:
+      - page
+      - total_pages
+      - total_result
+      - data
+    properties:
+      page:
+        type: integer
+        example: 1
+      total_pages:
+        type: integer
+        example: 10
+      total_result:
+        type: integer
+        example: 100
+      data:
+        type: array
+        xml:
+          name: movie
+          wrapped: true
+        items:
+          type: string
+          description: ids de peliculas
   FavActors:
     type: object
     required:
