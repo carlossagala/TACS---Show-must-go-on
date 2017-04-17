@@ -36,6 +36,8 @@ public class FavMoviesTest {
 	private UserMapper userMapper;
 	@SpyBean
 	private MovieMapper movieMapper;
+	@SpyBean
+	private FavMoviesService favMoviesService;
 	
 	@Test
 	public void testSaveFavMovies()
@@ -61,8 +63,6 @@ public class FavMoviesTest {
 	@Test
 	public void testUpdateFavMovies()
 	{
-		FavMoviesService favMoviesService = new FavMoviesServiceImpl();
-		
 		User savedUser = this.userDao.saveUser(new User("userrrr3", "userrrr3", "user"));
 		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
 		savedUser.getFavMovies().add(savedFavMovie); 
