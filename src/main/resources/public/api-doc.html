@@ -336,7 +336,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Search'
+              $ref: '#/definitions/GenericItem'
   /search/movie/{title}/:
     get:
       tags:
@@ -371,7 +371,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Search'
+              $ref: '#/definitions/GenericItem'
   /search/full/{query}/:
     get:
       tags:
@@ -406,7 +406,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Search'
+              $ref: '#/definitions/GenericItem'
 
   /favmovies/:
     post:
@@ -1136,10 +1136,20 @@ definitions:
       data:
         type: array
         xml:
-          name: movie
+          name: GenericObject
           wrapped: true
         items:
-          $ref: '#/definitions/Movie'
+          $ref: '#/definitions/GenericItem'
+  GenericItem:
+    type: object
+    properties:
+      id:
+        type: string
+        example: "ff9cddb4-527d-4dd4-a5d0-ff936238d9fb"
+      type:
+        description: Posible values 'movie' or 'actor'
+        type: string
+        example: "movie"
 # Added by API Auto Mocking Plugin
 host: localhost:8080
 basePath: /api
