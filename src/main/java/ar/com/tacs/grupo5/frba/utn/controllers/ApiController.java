@@ -37,6 +37,7 @@ import ar.com.tacs.grupo5.frba.utn.service.MovieService;
 import ar.com.tacs.grupo5.frba.utn.service.MovieServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
 import ar.com.tacs.grupo5.frba.utn.service.SearchServiceImpl;
+import ar.com.tacs.grupo5.frba.utn.service.UserService;
 import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Request;
 import spark.Route;
@@ -52,13 +53,13 @@ public class ApiController {
 	private SearchService searchService;
 	private Gson gson;
 	private MovieService movieService;
-	private UserServiceImpl userService;
+	private UserService userService;
 	private ActorService actorService;
 	private FavMoviesService favMoviesService;
 	private JWTUtils jwtUtils;
 
 	@Autowired
-	public ApiController(UserServiceImpl userService,SearchServiceImpl searchService,ActorServiceImpl actorService, MovieServiceImpl movieService, FavMoviesServiceImpl favMoviesService, Gson gson, JWTUtils jwtUtils) {
+	public ApiController(UserService userService,SearchService searchService,ActorService actorService, MovieService movieService, FavMoviesService favMoviesService, Gson gson, JWTUtils jwtUtils) {
 		super();
 		this.userService = userService;
 		this.searchService = searchService;
@@ -75,9 +76,8 @@ public class ApiController {
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
-		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
-		resp.setMessage("ok");
+		
 		resp.setData("data");
 		ObjectMapper oMapper = new ObjectMapper();
 		return oMapper.writeValueAsBytes(resp);
@@ -87,14 +87,12 @@ public class ApiController {
 	 * Returns all users
 	 */
 	public Route getUsers = (request, response) -> {
-		User user = autenticar(request);
 		response.status(200);
 
 		PagedResponse resp = new PagedResponse();
 		List<User> users = new ArrayList<>();
 		users = userService.getAllUsers();
-		resp.setMessage("ok");
-		resp.setStatusCode(0);
+		
 		resp.setPage(getPage(request));
 		resp.setTotalPages(1);
 		resp.setTotalResults(Long.valueOf(users.size()));
@@ -110,8 +108,7 @@ public class ApiController {
 
 		response.status(200);
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
 		resp.setData(userService.getUserById(request.attribute("id")));
 		return resp;
 	};
@@ -127,9 +124,8 @@ public class ApiController {
 		Set<FavMovie> favMovies = userService.getUserFavMovies(id);
 		resp.setData(favMovies);
 		setPagedResults(resp, favMovies);
-		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
-		resp.setMessage("ok");
+		
 		return resp;
 	};
 
@@ -137,7 +133,7 @@ public class ApiController {
 	 * Returns the user's favourite actors
 	 */
 	public Route getUserFavActors = (request, response) -> {
-		User user = autenticar(request);
+		User user = authenticate(request);
 		
 		PagedResponse resp = new PagedResponse();
 		int page = getPage(request);
@@ -153,7 +149,7 @@ public class ApiController {
 	 * Returns the user's favourite actors
 	 */
 	public Route getAdminUserFavActors = (request, response) -> {
-		User user = autenticar(request);
+		User user = authenticate(request);
 		validateAuthorization(user);
 		String idUser = request.params(":id");
 		int page = getPage(request);
@@ -194,9 +190,8 @@ public class ApiController {
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
-		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
-		resp.setMessage("ok");
+		
 		resp.setData(userService.getListIntersection(request.attribute("id"), request.attribute("id2")));
 		return resp;
 	};
@@ -207,9 +202,8 @@ public class ApiController {
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
-		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
-		resp.setMessage("ok");
+		
 		List<Actor> favActors = new ArrayList<>();
 
 		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
@@ -223,8 +217,7 @@ public class ApiController {
 	 */
 	public Route registerUser = (request, response) -> {
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
 		User userDto = (User) gson.fromJson(request.body(), User.class);
 		resp.setData(userService.saveUser(userDto));
 		return resp;
@@ -252,8 +245,7 @@ public class ApiController {
 		response.status(200);
 
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
 		resp.setData(new User("1", "Kun"));
 		return resp;
 	};
@@ -309,10 +301,8 @@ public class ApiController {
 		response.status(200);
 
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
-		User user = autenticar(request); 
-		//TODO: Al loguearse a la aplicación va a guardar el user en sesion? El user completo o solo id?
+		
+		User user = authenticate(request); 
 		String title = request.body();
 		FavMovie favMovie = userService.createNewFavMovieList(title,user);
 		resp.setData(favMovie);
@@ -326,8 +316,7 @@ public class ApiController {
 		response.status(200);
 
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
 
 		FavMovie f1 = new FavMovie();
 		f1.setId("1");
@@ -344,7 +333,7 @@ public class ApiController {
 		String newTitle;
 		Response resp = new Response();
 		
-		User user = autenticar(request);
+		User user = authenticate(request);
 		
 		String idFavMovie = request.params(":id");
 		
@@ -362,12 +351,10 @@ public class ApiController {
 			FavMovie favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
 			resp.setData(favMovie);
 			response.status(200);
-			resp.setStatusCode(0);
-			resp.setMessage("ok");
+			
 		}
 		catch (ResourceNotFound e) {
 			response.status(404);
-			resp.setStatusCode(0);
 			resp.setMessage("Not Found: La lista de películas favoritas no existe");
 		}
 	
@@ -381,8 +368,7 @@ public class ApiController {
 		response.status(200);
 
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
 		return resp;
 	};
 
@@ -393,8 +379,7 @@ public class ApiController {
 		response.status(200);
 
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
 		return resp;
 	};
 
@@ -405,8 +390,7 @@ public class ApiController {
 		response.status(200);
 
 		Response resp = new Response();
-		resp.setStatusCode(0);
-		resp.setMessage("ok");
+		
 		return resp;
 	};
 
@@ -419,9 +403,8 @@ public class ApiController {
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
-		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
-		resp.setMessage("ok");
+		
 
 		List<Actor> favActors = new ArrayList<>();
 
@@ -436,7 +419,7 @@ public class ApiController {
 	 * Marks an actor as favourite
 	 */
 	public Route addActorToList = (request, response) -> {
-		User user = autenticar(request);
+		User user = authenticate(request);
 		String id =null;
 		try{
 			@SuppressWarnings("unchecked")
@@ -455,7 +438,7 @@ public class ApiController {
 	 * Unmarks an actor as favourite
 	 */
 	public Route deleteActorFromList = (request, response) -> {
-		User user = autenticar(request);
+		User user = authenticate(request);
 		String id = request.params(":id");
 		userService.deleteFavActor(user.getId(), id);
 		response.status(200);
@@ -483,9 +466,8 @@ public class ApiController {
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(2L);
-		resp.setStatusCode(0);
 		resp.setPage(getPage(request));
-		resp.setMessage("ok");
+		
 		resp.setData(Arrays.asList(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/),
 				new Movie("2", "Back to the Future"/*, "image.jpg", "", "", Arrays.asList("")*/)));
 		return resp;
@@ -503,7 +485,7 @@ public class ApiController {
 	};
 
 
-	public User autenticar(Request request) {
+	public User authenticate(Request request) {
 		String token = request.headers(jwtUtils.getHeader());
 
 		if (token == null || jwtUtils.isTokenExpired(token)) {

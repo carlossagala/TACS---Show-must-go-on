@@ -27,4 +27,6 @@ public interface UserService {
 	void getFavActors(String userId,int page,PagedResponse resp);
 	void addFavActor(String idUser,String idActor);
 	void deleteFavActor(String idUser,String idActor);
+	
+	FavMovie createNewFavMovieList(String title, User user) ;
 }

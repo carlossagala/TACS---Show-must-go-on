@@ -71,7 +71,7 @@ public class App {
 			String path = request.pathInfo();
 			if (!(path.equals("/api/user/login/") || path.equals("/api/user/register/"))){
 				try {
-					apiController.autenticar(request);
+					apiController.authenticate(request);
 				} catch (Exception e) {
 					halt(401, "No se encuentra autenticado");
 				}
