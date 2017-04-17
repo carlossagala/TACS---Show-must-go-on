@@ -365,10 +365,28 @@ public class ApiController {
 	 * Deletes a list of movies
 	 */
 	public Route deleteFavMoviesList = (request, response) -> {
-		response.status(200);
-
 		Response resp = new Response();
 		
+		User user = authenticate(request);
+		
+		String idFavMovie = request.params(":id");
+		
+		try
+		{
+			if (favMoviesService.deleteFavMovie(idFavMovie)) {
+				response.status(200);
+				resp.setMessage("ok");
+			}
+			else {
+				response.status(500);
+				resp.setMessage("Internal Error");
+			}
+		}
+		catch (ResourceNotFound e) {
+			response.status(404);
+			resp.setMessage("Not Found: La lista de películas favoritas no existe");
+		}
+	
 		return resp;
 	};
 

@@ -33,4 +33,15 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 		return favMovieMapper.entityToDto(favMovieRepository.saveAndFlush(favMovieMapper.dtoToEntity(favMovie)));
 	}
 
+	@Override
+	public boolean deleteFavMovie(FavMovie favMovie) {
+		try {
+			favMovieRepository.delete(favMovieMapper.dtoToEntity(favMovie));
+		}
+		catch(IllegalArgumentException e) {
+			return false;
+		}
+		return true;
+	}
+
 }

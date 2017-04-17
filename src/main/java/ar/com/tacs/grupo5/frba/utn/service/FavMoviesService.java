@@ -6,4 +6,6 @@ import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 public interface FavMoviesService {
 
 	FavMovie updateFavMovie(String newTitle, String idFavMovie) throws ResourceNotFound;
+
+	boolean deleteFavMovie(String idFavMovie) throws ResourceNotFound;
 }

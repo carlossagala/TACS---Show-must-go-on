@@ -22,6 +22,9 @@ public class FavMovieMapper implements GenericMapper<FavMovieEntity, FavMovie>{
 
 	@Override
 	public FavMovie entityToDto(FavMovieEntity entity) {
+		if (entity == null)
+			return null;
+		
 		FavMovie favMovie = new FavMovie();
 		favMovie.setId(entity.getId());
 		favMovie.setName(entity.getName());

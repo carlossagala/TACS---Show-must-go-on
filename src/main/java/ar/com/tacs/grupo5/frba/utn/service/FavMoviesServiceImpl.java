@@ -25,5 +25,15 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		favMoviesDao.saveFavMovie(modifiedFavMovie);
 		
 		return modifiedFavMovie;
+	}
+
+	@Override
+	public boolean deleteFavMovie(String idFavMovie) throws ResourceNotFound {
+		FavMovie deletedFavMovie = favMoviesDao.getFavMovie(idFavMovie);
+		
+		if (deletedFavMovie == null)
+			throw new ResourceNotFound();
+		
+		return favMoviesDao.deleteFavMovie(deletedFavMovie);
 	};
 }

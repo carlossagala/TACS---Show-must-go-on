@@ -79,4 +79,43 @@ public class FavMoviesTest {
 				
 		Assert.assertTrue(this.favMoviesDao.getFavMovie(savedFavMovie.getId()).getName() == "Mi Segunda Lista");
 	}
+	
+	@Test
+	public void testDeleteFavMovies()
+	{
+		User savedUser = this.userDao.saveUser(new User("userrrr4", "userrrr4", "user"));
+		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
+		savedUser.getFavMovies().add(savedFavMovie); 
+		savedUser = this.userDao.saveUser(savedUser);
+		
+		try
+		{
+			favMoviesService.deleteFavMovie(savedFavMovie.getId());
+		}
+		catch(ResourceNotFound e)
+		{
+			fail();
+		}
+		
+		Assert.assertNull(this.favMoviesDao.getFavMovie(savedFavMovie.getId()));
+	}
+	
+	@Test(expected=ResourceNotFound.class)
+	public void testDeleteFavMoviesNotFound() throws ResourceNotFound {
+		User savedUser = this.userDao.saveUser(new User("userrrr4", "userrrr4", "user"));
+		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
+		savedUser.getFavMovies().add(savedFavMovie); 
+		savedUser = this.userDao.saveUser(savedUser);
+		
+		try
+		{
+			favMoviesService.deleteFavMovie(savedFavMovie.getId());
+		}
+		catch(ResourceNotFound e)
+		{
+			fail();
+		}
+				
+		favMoviesService.deleteFavMovie(savedFavMovie.getId());
+	}
 }
