@@ -197,7 +197,8 @@ public class ApiController {
 		resp.setData(userService.getListIntersection(request.attribute("id"), request.attribute("id2")));
 		return resp;
 	};
-
+	
+	
 	public Route getRankingActor = (request, response) -> {
 		response.status(200);
 
@@ -206,10 +207,24 @@ public class ApiController {
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
 		
-		List<Actor> favActors = new ArrayList<>();
 
+		List<User> users = userService.getAllUsers();
 		
-		resp.setData(favActors);
+		List<String> actoresId = new ArrayList<>();
+		
+		users.forEach(u->actoresId.addAll(userService.getFavActorsId(u.getId(), getPage(request)))); 
+		
+		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor > actores = new ArrayList<>();
+		
+		actoresId.forEach(id -> actores.add(actorService.getDetailActor(id)));
+		
+		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
+		
+		actores.forEach(a -> cargarRanking(a,ranking));
+
+		resp.setData(ranking);
+
+		resp.setData(ranking);
 		return resp;
 	};
 
