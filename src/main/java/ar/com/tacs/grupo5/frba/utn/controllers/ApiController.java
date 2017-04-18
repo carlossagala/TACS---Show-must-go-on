@@ -339,16 +339,24 @@ public class ApiController {
 	 * Returns the favourite movies
 	 */
 	public Route getFavMovieDetail = (request, response) -> {
-		response.status(200);
-
 		Response resp = new Response();
 		
-
-		FavMovie f1 = new FavMovie();
-		f1.setId("1");
-		f1.setName("Top 10 Horror Movies");
-
-		resp.setData(f1);
+		User user = authenticate(request);
+		
+		String idFavMovie = request.params(":id");
+		
+		try
+		{
+			FavMovie favMovie = favMoviesService.getFavMovieDetail(idFavMovie);
+			resp.setData(favMovie);
+			response.status(200);
+			
+		}
+		catch (ResourceNotFound e) {
+			response.status(404);
+			resp.setMessage("Not Found: La lista de películas favoritas no existe");
+		}
+	
 		return resp;
 	};
 

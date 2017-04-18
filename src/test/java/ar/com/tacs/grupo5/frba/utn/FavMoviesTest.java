@@ -160,4 +160,28 @@ public class FavMoviesTest {
 		
 	}
 	
+	
+	@Test
+	public void testGetFavMoviesDetail()
+	{
+		FavMovie getFavMovie = new FavMovie();
+		
+		User savedUser = this.userDao.saveUser(new User("usrGetFavDetail", "usrGetFavDetail", "user"));
+		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
+		savedUser.getFavMovies().add(savedFavMovie); 
+		savedUser = this.userDao.saveUser(savedUser);
+		
+		try
+		{
+			getFavMovie = favMoviesService.getFavMovieDetail(savedFavMovie.getId());
+		}
+		catch(ResourceNotFound e)
+		{
+			fail();
+		}
+				
+		Assert.assertTrue(getFavMovie.getName() == "Mi Primera Lista");
+		Assert.assertTrue(getFavMovie.getUserId() == savedUser.getId());
+		Assert.assertTrue(getFavMovie.getId() == savedFavMovie.getId());
+	}
 }
