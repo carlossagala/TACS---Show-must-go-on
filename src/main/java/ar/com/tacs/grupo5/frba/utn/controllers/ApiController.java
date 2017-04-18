@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,15 +29,21 @@ import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
-import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
+import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.ActorService;
+import ar.com.tacs.grupo5.frba.utn.service.ActorServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
+import ar.com.tacs.grupo5.frba.utn.service.FavMoviesServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.MovieService;
+import ar.com.tacs.grupo5.frba.utn.service.MovieServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
+import ar.com.tacs.grupo5.frba.utn.service.SearchServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.UserService;
+import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Request;
 import spark.Route;
+import spark.utils.CollectionUtils;
 
 @Component
 public class ApiController {
@@ -189,7 +197,8 @@ public class ApiController {
 		resp.setData(userService.getListIntersection(request.attribute("id"), request.attribute("id2")));
 		return resp;
 	};
-
+	
+	
 	public Route getRankingActor = (request, response) -> {
 		response.status(200);
 
@@ -198,11 +207,22 @@ public class ApiController {
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
 		
-		List<Actor> favActors = new ArrayList<>();
 
-		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
-		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
-		resp.setData(favActors);
+		List<User> users = userService.getAllUsers();
+		
+		List<String> actoresId = new ArrayList<>();
+		
+		users.forEach(u->actoresId.addAll(userService.getFavActorsId(u.getId(), getPage(request)))); 
+		
+		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor > actores = new ArrayList<>();
+		
+		actoresId.forEach(id -> actores.add(actorService.getDetailActor(id)));
+		
+		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
+		
+		actores.forEach(a -> cargarRanking(a,ranking));
+
+		resp.setData(ranking);
 		return resp;
 	};
 
@@ -425,25 +445,47 @@ public class ApiController {
 		resp.setData("Se eliminó la pelicula de la lista");
 		return resp;
 	};
-
+	
+	private void cargarRanking(ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor actor,HashMap<String, Integer> ranking){
+		
+		if(ranking.get(actor.getName()) != null){
+			Integer count = ranking.get(actor);
+			count ++;
+			ranking.put(actor.getName(),count);
+		} else{
+			ranking.put(actor.getName(), 1);
+		}
+		
+		
+	}
+	
 	/**
 	 * Returns a ranking based on a list
 	 */
 	public Route getRankingFromList = (request, response) -> {
+		
+		User user = authenticate(request);
 		response.status(200);
-
+		String idList = request.params(":id");
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
 		
 
-		List<Actor> favActors = new ArrayList<>();
+		Set<FavMovie> listOfFavMovies = userService.getUserFavMovies(user.getId()); 
+		FavMovie lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).collect(Collectors.toList()).get(0);
+		
+		
+		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
+		
+		lista.getMovies().forEach(m -> actores.addAll(movieService.getMovieActors(m.getId())));
+		
+		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
+		
+		actores.forEach(a -> cargarRanking(a,ranking));
 
-		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
-		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
-
-		resp.setData(favActors);
+		resp.setData(ranking);
 		return resp;
 	};
 
@@ -504,7 +546,7 @@ public class ApiController {
 		
 	
 		
-		resp.setData(	actorService.getMoviesWithActors(userService.getFavActorsId(user.getId(), 1)));
+		resp.setData(	actorService.getMoviesWithActors(userService.getFavActorsId(user.getId(),getPage(request) )));
 //		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
 //				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
 //		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),

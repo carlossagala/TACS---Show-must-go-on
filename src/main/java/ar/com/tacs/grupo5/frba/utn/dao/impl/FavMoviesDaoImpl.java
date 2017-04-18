@@ -1,8 +1,9 @@
-package ar.com.tacs.grupo5.frba.utn.dao;
+package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
