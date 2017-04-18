@@ -2,8 +2,6 @@ package ar.com.tacs.grupo5.frba.utn;
 
 import static org.junit.Assert.fail;
 
-import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +16,9 @@ import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
-import ar.com.tacs.grupo5.frba.utn.service.FavMoviesServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -117,5 +115,19 @@ public class FavMoviesTest {
 		}
 				
 		favMoviesService.deleteFavMovie(savedFavMovie.getId());
+	}
+	
+	@Test
+	public void testAddMovieToFavMovies()
+	{
+		User savedUser = this.userDao.saveUser(new User("userAddMovie", "userAddMovie", "user"));
+		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Una lista para dias de lluvia", savedUser.getId()));
+		Movie addedMovie = null;
+		try {
+			addedMovie = favMoviesService.addMovie(savedFavMovie.getId(), "123");
+		} catch (ResourceNotFound e) {
+			fail();
+		}
+		Assert.assertNotNull(this.movieDao.getMovie(addedMovie.getId()));
 	}
 }
