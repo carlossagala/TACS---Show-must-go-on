@@ -487,6 +487,8 @@ public class ApiController {
 	 * Returns recommendations for the user
 	 */
 	public Route getRecommendedMovies = (request, response) -> {
+		
+		User user = authenticate(request);
 		response.status(200);
 
 		PagedResponse resp = new PagedResponse();
