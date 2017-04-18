@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
+import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
@@ -17,6 +18,9 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	
 	@Autowired
 	private MovieDao movieDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	@Override
 	public FavMovie updateFavMovie(String newTitle, String idFavMovie) throws ResourceNotFound {
@@ -39,7 +43,7 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		if (deletedFavMovie == null)
 			throw new ResourceNotFound();
 		
-		return favMoviesDao.deleteFavMovie(deletedFavMovie);
+		return userDao.deleteFavMovies(deletedFavMovie.getUserId(), deletedFavMovie.getId());
 	}
 
 //	@Override

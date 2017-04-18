@@ -101,23 +101,30 @@ public class FavMoviesTest {
 		Assert.assertNull(this.favMoviesDao.getFavMovie(savedFavMovie.getId()));
 	}
 	
-	@Test(expected=ResourceNotFound.class)
-	public void testDeleteFavMoviesNotFound() throws ResourceNotFound {
-		User savedUser = this.userDao.saveUser(new User("userrrr4", "userrrr4", "user"));
+	@Test
+	public void testDeleteFavMoviesNotFound(){
+		User savedUser = this.userDao.saveUser(new User("userrrr5", "userrrr5", "user"));
 		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
 		savedUser.getFavMovies().add(savedFavMovie); 
 		savedUser = this.userDao.saveUser(savedUser);
 		
-		try
-		{
+		try	{
 			favMoviesService.deleteFavMovie(savedFavMovie.getId());
 		}
 		catch(ResourceNotFound e)
 		{
 			fail();
 		}
-				
-		favMoviesService.deleteFavMovie(savedFavMovie.getId());
+		
+		//Intento borrar la entidad una segunda vez, en caso de que haya funcionado el primer delete, 
+		//debería tirar la excepción
+		try {
+			favMoviesService.deleteFavMovie(savedFavMovie.getId());
+			fail();
+		}
+		catch(ResourceNotFound e)
+		{
+		}
 	}
 	
 	@Test

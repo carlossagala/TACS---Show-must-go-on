@@ -14,10 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavActorRepository;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Repository
@@ -31,6 +34,9 @@ public class UserDaoImpl implements UserDao{
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private FavMovieRepository favMoviesRepository;
 	
 	private FavActorRepository favActorRepository;
 	
@@ -115,6 +121,24 @@ public class UserDaoImpl implements UserDao{
 			favActorRepository.delete(favActor);
 			userRepository.save(userEntity);
 		}
+	}
+	
+	@Override
+	@Transactional
+	public boolean deleteFavMovies(String idUser, String idFavMovies) {
+		UserEntity userEntity = userRepository.findOne(idUser);
+		Set<FavMovieEntity> favMovies= userEntity.getFavMovies();
+		
+		FavMovieEntity favMov = favMovies.stream().filter(x->x.getId().equals(idFavMovies)).findAny().orElse(null);
+		if(favMov!=null){
+			favMovies.remove(favMov);
+			favMoviesRepository.delete(favMov);
+			userRepository.save(userEntity);
+			
+			return true;
+		}
+		
+		return false;
 	}
 
 }

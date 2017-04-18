@@ -22,5 +22,6 @@ public interface UserDao {
 	
 	void addFavActor(String idUser,String idActor);
 	void deleteFavActor(String idUser,String idActor);
+	boolean deleteFavMovies(String idUser, String idFavMovies);
 	
 }

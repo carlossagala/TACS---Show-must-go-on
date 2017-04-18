@@ -8,5 +8,5 @@ public interface FavMoviesDao {
 	
 	FavMovie saveFavMovie(FavMovie favMovie);
 
-	boolean deleteFavMovie(FavMovie favMovie);
+	//boolean deleteFavMovie(FavMovie favMovie);
 }
