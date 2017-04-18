@@ -16,7 +16,7 @@ public class MovieMapper implements GenericMapper<MovieEntity, Movie>{
 	@Override
 	public Movie entityToDto(MovieEntity entity) {
 		Movie movie = new Movie();
-		movie.setId(entity.getId());
+		movie.setId(entity.getIdMovie());
 		movie.setFavMovieId(entity.getFavMovie().getId());
 		return movie;
 	}
@@ -24,7 +24,7 @@ public class MovieMapper implements GenericMapper<MovieEntity, Movie>{
 	@Override
 	public MovieEntity dtoToEntity(Movie dto) {
 		MovieEntity movieEntity = new MovieEntity();
-		movieEntity.setId(dto.getId());
+		movieEntity.setIdMovie(dto.getId());
 		movieEntity.setFavMovie(favMovieRepo.findOne(dto.getFavMovieId()));
 		return movieEntity;
 	}

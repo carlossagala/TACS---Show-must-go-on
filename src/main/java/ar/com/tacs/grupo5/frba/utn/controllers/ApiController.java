@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,21 +27,15 @@ import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
-import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.service.ActorService;
-import ar.com.tacs.grupo5.frba.utn.service.ActorServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
-import ar.com.tacs.grupo5.frba.utn.service.FavMoviesServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.MovieService;
-import ar.com.tacs.grupo5.frba.utn.service.MovieServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
-import ar.com.tacs.grupo5.frba.utn.service.SearchServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.UserService;
-import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Request;
 import spark.Route;
-import spark.utils.CollectionUtils;
 
 @Component
 public class ApiController {
@@ -298,14 +292,26 @@ public class ApiController {
 	 * Creates a new list of favourite movies
 	 */
 	public Route createNewList = (request, response) -> {
-		response.status(200);
+		response.status(201);
 
 		Response resp = new Response();
 		
-		User user = authenticate(request); 
-		String title = request.body();
-		FavMovie favMovie = userService.createNewFavMovieList(title,user);
-		resp.setData(favMovie);
+		User user = authenticate(request);
+		String name = null;
+		try{
+			@SuppressWarnings("unchecked")
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			name = (String)requestMap.get("name");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro name en el body es obligatorio";
+		}
+		FavMovie favMovie = userService.createNewFavMovieList(name,user);
+		if(favMovie!=null){
+			response.status(201);
+		}else{
+			response.status(404);
+		}
 		return resp;
 	};
 
