@@ -3,9 +3,9 @@ package ar.com.tacs.grupo5.frba.utn.controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.Map;
@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.datasource.UserCredentialsDataSourceAdapter;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -301,14 +300,26 @@ public class ApiController {
 	 * Creates a new list of favourite movies
 	 */
 	public Route createNewList = (request, response) -> {
-		response.status(200);
+		response.status(201);
 
 		Response resp = new Response();
 		
-		User user = authenticate(request); 
-		String title = request.body();
-		FavMovie favMovie = userService.createNewFavMovieList(title,user);
-		resp.setData(favMovie);
+		User user = authenticate(request);
+		String name = null;
+		try{
+			@SuppressWarnings("unchecked")
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			name = (String)requestMap.get("name");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro name en el body es obligatorio";
+		}
+		FavMovie favMovie = userService.createNewFavMovieList(name,user);
+		if(favMovie!=null){
+			response.status(201);
+		}else{
+			response.status(404);
+		}
 		return resp;
 	};
 
