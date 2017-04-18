@@ -114,10 +114,30 @@ public class ServiceTest {
 		actorIds.add("819");
 		
 		List<Movie> movies = actorService.getMoviesWithActors(actorIds);
-		Assert.assertEquals(18,movies.size());
+		Assert.assertEquals(1,movies.size());
 		Assert.assertTrue(movies.stream().anyMatch(
-				movie -> "Hitting the Apex".equals(movie.getTitle())));
+				movie -> "Fight Club".equals(movie.getTitle())));
+		
+		actorIds.add("11701");//angeline jolie
+		
+		 movies = actorService.getMoviesWithActors(actorIds);
+		Assert.assertNotEquals(1,movies.size());
+		Assert.assertTrue(movies.stream().anyMatch(
+				movie -> "Fight Club".equals(movie.getTitle())));
 	}
+	
+	@Test
+	public void getMoviesWithActors2(){
+		
+		List<String> actorIds = new ArrayList<>();
+		
+		
+		List<Movie> movies = actorService.getMoviesWithActors(actorIds);
+		Assert.assertEquals(0,movies.size());
+		
+	}
+	
+	
 	
 	
 	

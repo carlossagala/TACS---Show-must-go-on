@@ -4,6 +4,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,27 +105,47 @@ public class ActorServiceImpl implements ActorService {
 		
 		
 		//287,819 (Bard pitt, edward norton)
-		String requestUrl = "https://api.themoviedb.org/3/discover/movie?api_key=" + appKey + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_people=" + convertIdsToString(actorsId);
 		
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
-		logger.info("se recibio el siguiente archivo de json" + response.getBody());
-
-		JsonParser jsonParser = new JsonParser();
-
-		JsonObject jsonObject = jsonParser.parse(response.getBody()).getAsJsonObject();
-
-		JsonElement movies = jsonObject.get("results");
-
-		Type listType = new TypeToken<ArrayList<Movie>>() {
-		}.getType();
-		List<Movie> works = gson.fromJson(movies, listType);
-
-		return works;
+		List<Movie> movies = new ArrayList<>();
+		actorsId.forEach(id-> movies.addAll(getActorMovies(id)));
+		
+		List<Movie> moviesWithTwoOrMoreActors = movies.stream().filter(movie->repeteableMovie(movie,movies)).collect(Collectors.toList());
+		
+		List<Movie> moviesWithOutRepeteables = new ArrayList<>(); 
+		moviesWithTwoOrMoreActors.stream().forEach(m ->{
+			if(notRepeateableInList(m,moviesWithOutRepeteables)){
+				moviesWithOutRepeteables.add(m);
+		}
+			
+		});
+		
+		
+		return moviesWithOutRepeteables;
+		
+		
+	}
+	
+	private Boolean repeteableMovie(Movie movie,List<Movie> movies){
+		
+		int count = 0;
+		List<Movie> countRepeteables =  movies.stream().filter(m ->
+			m.getId().equals(movie.getId())).collect(Collectors.toList());
+		count = countRepeteables.size();
+		return (count > 1);
 		
 		
 		
 	}
-
+	
+	private boolean notRepeateableInList( Movie m,List<Movie> movies){
+		boolean bool = movies.stream().anyMatch(movie-> movie.getId().equals(m.getId()));
+		
+		return !(bool);
+		
+	}
+	
+	
+	
 	private String convertIdsToString(List<String> actorsId) {
 		
 		return String.join(",", actorsId);

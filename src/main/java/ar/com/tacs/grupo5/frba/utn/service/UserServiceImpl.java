@@ -115,4 +115,12 @@ public class UserServiceImpl implements UserService {
 		userDao.deleteFavActor(idUser, idActor);
 	}
 
+	@Override
+	public List<String> getFavActorsId(String userId, int page) {
+		Page<FavActorEntity> favActorsPage = userDao.getFavActors(userId,page-1);
+		
+		List<String> ids = favActorsPage.getContent().stream().map(FavActorEntity::getActorId).collect(Collectors.toList());
+		return ids;
+	}
+
 }

@@ -480,14 +480,15 @@ public class ApiController {
 	 */
 	public Route getRecommendedMovies = (request, response) -> {
 		response.status(200);
-
+		User user = authenticate(request);
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(2L);
 		resp.setPage(getPage(request));
 		
-		resp.setData(Arrays.asList(new Movie("1", "Matrix"/*, "image.jpg", "", "", Arrays.asList("")*/),
-				new Movie("2", "Back to the Future"/*, "image.jpg", "", "", Arrays.asList("")*/)));
+	
+		
+		resp.setData(	actorService.getMoviesWithActors(userService.getFavActorsId(user.getId(), 1)));
 		return resp;
 	};
 
