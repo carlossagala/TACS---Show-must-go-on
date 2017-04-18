@@ -95,7 +95,7 @@ public class App {
 				get("/:id/favmovies/",MEDIA_TYPE, apiController.getUserFavMovies,responseTransformer);
 				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
 				get("/:id/favactors/",MEDIA_TYPE, apiController.getAdminUserFavActors,responseTransformer);
-				get("/ranking/actor/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
+				get("/ranking/actors/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
 			});
 			path("/user", () -> {
 				post("/register/",MEDIA_TYPE, apiController.registerUser,responseTransformer);
