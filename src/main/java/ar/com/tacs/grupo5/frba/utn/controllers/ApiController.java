@@ -434,14 +434,14 @@ public class ApiController {
 		return resp;
 	};
 	
-	private void cargarRanking(ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor actor,HashMap<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor, Integer> ranking){
+	private void cargarRanking(ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor actor,HashMap<String, Integer> ranking){
 		
-		if(ranking.get(actor) != null){
+		if(ranking.get(actor.getName()) != null){
 			Integer count = ranking.get(actor);
 			count ++;
-			ranking.put(actor,count);
+			ranking.put(actor.getName(),count);
 		} else{
-			ranking.put(actor, 1);
+			ranking.put(actor.getName(), 1);
 		}
 		
 		
@@ -469,7 +469,7 @@ public class ApiController {
 		
 		lista.getMovies().forEach(m -> actores.addAll(movieService.getMovieActors(m.getId())));
 		
-		HashMap<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor, Integer > ranking = new HashMap<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor,Integer>();
+		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
 		
 		actores.forEach(a -> cargarRanking(a,ranking));
 
