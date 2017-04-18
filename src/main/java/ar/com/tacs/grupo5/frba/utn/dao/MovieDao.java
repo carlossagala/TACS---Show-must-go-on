@@ -8,6 +8,6 @@ public interface MovieDao {
 	
 	Movie saveMovie(Movie movie);
 
-	ar.com.tacs.grupo5.frba.utn.models.Movie deleteMovie(ar.com.tacs.grupo5.frba.utn.models.Movie movie);
+	void deleteMovie(ar.com.tacs.grupo5.frba.utn.models.Movie movie);
 	
 }

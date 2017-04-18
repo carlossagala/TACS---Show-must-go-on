@@ -21,7 +21,7 @@ public interface MovieService {
 
 	ar.com.tacs.grupo5.frba.utn.models.Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound;
 
-	ar.com.tacs.grupo5.frba.utn.models.Movie removeMovie(String idFavMovie, String movieId) throws ResourceNotFound;
+	void removeMovie(String idFavMovie, String movieId) throws ResourceNotFound;
 	
 	
 

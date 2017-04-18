@@ -115,12 +115,12 @@ public class MovieServiceImpl implements MovieService {
 		}
 		ar.com.tacs.grupo5.frba.utn.models.Movie movie = new ar.com.tacs.grupo5.frba.utn.models.Movie();
 		movie.setFavMovieId(idFavMovie);
-		movie.setId(movieId);
+		movie.setMovieId(movieId);
 		return movieDao.saveMovie(movie);
 	}
 
 	@Override
-	public ar.com.tacs.grupo5.frba.utn.models.Movie removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
+	public void removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
 		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
 		if(favMovie == null)
 		{
@@ -128,8 +128,8 @@ public class MovieServiceImpl implements MovieService {
 		}
 		ar.com.tacs.grupo5.frba.utn.models.Movie movie = new ar.com.tacs.grupo5.frba.utn.models.Movie();
 		movie.setFavMovieId(idFavMovie);
-		movie.setId(movieId);
-		return movieDao.deleteMovie(movie);
+		movie.setMovieId(movieId);
+		movieDao.deleteMovie(movie);
 	};
 
 	

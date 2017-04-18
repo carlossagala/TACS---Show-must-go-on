@@ -19,6 +19,7 @@ import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
+import ar.com.tacs.grupo5.frba.utn.service.MovieService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -36,6 +37,8 @@ public class FavMoviesTest {
 	private MovieMapper movieMapper;
 	@SpyBean
 	private FavMoviesService favMoviesService;
+	@SpyBean
+	private MovieService movieService;
 	
 	@Test
 	public void testSaveFavMovies()
@@ -122,12 +125,32 @@ public class FavMoviesTest {
 	{
 		User savedUser = this.userDao.saveUser(new User("userAddMovie", "userAddMovie", "user"));
 		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Una lista para dias de lluvia", savedUser.getId()));
+		String favMovieId = savedFavMovie.getId();
 		Movie addedMovie = null;
 		try {
-			addedMovie = favMoviesService.addMovie(savedFavMovie.getId(), "123");
+			addedMovie = movieService.addMovie(favMovieId, "123");
 		} catch (ResourceNotFound e) {
 			fail();
 		}
-		Assert.assertNotNull(this.movieDao.getMovie(addedMovie.getId()));
+		Assert.assertNotNull(this.movieDao.getMovie("123"));
 	}
+	
+	@Test
+	public void testRemoveMovieFromFavMovies()
+	{
+		User savedUser = this.userDao.saveUser(new User("userRemoveMovie", "userRemoveMovie", "user"));
+		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Una lista para dias de lluvia", savedUser.getId()));
+		String favMovieId = savedFavMovie.getId();
+		Movie addedMovie = null;
+		try {
+			addedMovie = movieService.addMovie(favMovieId, "123");
+			Assert.assertNotNull(this.movieDao.getMovie("123"));
+			this.movieService.removeMovie(favMovieId, "123");
+			Assert.assertNull(this.movieDao.getMovie("123"));
+		} catch (ResourceNotFound e) {
+			fail();
+		}
+		
+	}
+	
 }

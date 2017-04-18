@@ -3,13 +3,14 @@ package ar.com.tacs.grupo5.frba.utn.models;
 public class Movie {
 	private String id;
 	private String favMovieId;
+	private String movieId;
 	
 	public Movie(){		
 	}
 	
-	public Movie(String id, String favMovieId)
+	public Movie(String movieId, String favMovieId)
 	{
-		this.id = id;
+		this.movieId = movieId;
 		this.favMovieId = favMovieId;
 	}
 	
@@ -27,6 +28,14 @@ public class Movie {
 
 	public void setFavMovieId(String favMovieId) {
 		this.favMovieId = favMovieId;
+	}
+
+	public String getMovieId() {
+		return movieId;
+	}
+
+	public void setMovieId(String movieId) {
+		this.movieId = movieId;
 	}
 
 

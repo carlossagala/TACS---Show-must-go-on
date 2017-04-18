@@ -33,11 +33,9 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public Movie deleteMovie(Movie movie) {
-		MovieEntity movieEnt = movieMapper.dtoToEntity(movie);
-		movieRepository.delete(movieEnt);
-		return movie;
+	public void deleteMovie(Movie movie) {
+//		return movieRepository.removeByIdMovie(movie.getMovieId());
+		movieRepository.delete(movieRepository.findByIdMovie(movie.getMovieId()));
 	}
 	
-
 }

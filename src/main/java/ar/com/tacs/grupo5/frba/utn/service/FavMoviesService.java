@@ -10,7 +10,7 @@ public interface FavMoviesService {
 
 	boolean deleteFavMovie(String idFavMovie) throws ResourceNotFound;
 
-	Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound;
-
-	Movie removeMovie(String idFavMovie, String movieId) throws ResourceNotFound;
+//	Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound;
+//
+//	void removeMovie(String idFavMovie, String movieId) throws ResourceNotFound;
 }

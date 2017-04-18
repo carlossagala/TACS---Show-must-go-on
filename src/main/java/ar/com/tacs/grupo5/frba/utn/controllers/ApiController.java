@@ -404,7 +404,7 @@ public class ApiController {
 		String idFavMovie = request.params(":id");
 		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 		String movieId = (String)requestMap.get("id");
-		Movie movie = favMoviesService.addMovie(idFavMovie, movieId);
+		Movie movie = movieService.addMovie(idFavMovie, movieId);
 		response.status(200);
 		Response resp = new Response();
 		resp.setData(movie);
@@ -419,10 +419,10 @@ public class ApiController {
 		String idFavMovie = request.params(":id");
 		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 		String movieId = (String)requestMap.get("id");
-		Movie movie =  favMoviesService.removeMovie(idFavMovie, movieId);
+		movieService.removeMovie(idFavMovie, movieId);
 		response.status(200);
 		Response resp = new Response();
-		resp.setData(movie);
+		resp.setData("Se eliminó la pelicula de la lista");
 		return resp;
 	};
 

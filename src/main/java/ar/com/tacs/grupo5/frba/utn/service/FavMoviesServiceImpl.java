@@ -42,30 +42,25 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		return favMoviesDao.deleteFavMovie(deletedFavMovie);
 	}
 
-	@Override
-	public Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound {
-		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
-		if(favMovie == null)
-		{
-			throw new ResourceNotFound();
-		}
-		Movie movie = new Movie();
-		movie.setFavMovieId(idFavMovie);
-		movie.setId(movieId);
-		return movieDao.saveMovie(movie);
-
-	}
-
-	@Override
-	public Movie removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
-		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
-		if(favMovie == null)
-		{
-			throw new ResourceNotFound();
-		}
-		Movie movie = new Movie();
-		movie.setFavMovieId(idFavMovie);
-		movie.setId(movieId);
-		return movieDao.deleteMovie(movie);
-	};
+//	@Override
+//	public Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound {
+//		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
+//		if(favMovie == null)
+//		{
+//			throw new ResourceNotFound();
+//		}
+//		Movie movie = new Movie();
+//		movie.setFavMovieId(idFavMovie);
+//		movie.setMovieId(movieId);
+//		return movieDao.saveMovie(movie);
+//
+//	}
+//
+//	@Override
+//	public void removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
+//		Movie movie = new Movie();
+//		movie.setFavMovieId(idFavMovie);
+//		movie.setMovieId(movieId);
+//		movieDao.deleteMovie(movie);
+//	};
 }
