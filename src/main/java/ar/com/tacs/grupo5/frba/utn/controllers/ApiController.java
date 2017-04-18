@@ -208,8 +208,7 @@ public class ApiController {
 		
 		List<Actor> favActors = new ArrayList<>();
 
-		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
-		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
+		
 		resp.setData(favActors);
 		return resp;
 	};
@@ -534,7 +533,7 @@ public class ApiController {
 		
 	
 		
-		resp.setData(	actorService.getMoviesWithActors(userService.getFavActorsId(user.getId(), 1)));
+		resp.setData(	actorService.getMoviesWithActors(userService.getFavActorsId(user.getId(),getPage(request) )));
 //		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
 //				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
 //		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
