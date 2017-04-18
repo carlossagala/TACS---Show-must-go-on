@@ -30,7 +30,7 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 
 	@Override
 	public FavMovie saveFavMovie(FavMovie favMovie) {
-		return favMovieMapper.entityToDto(favMovieRepository.saveAndFlush(favMovieMapper.dtoToEntity(favMovie)));
+		return favMovieMapper.entityToDto(favMovieRepository.save(favMovieMapper.dtoToEntity(favMovie)));
 	}
 
 	@Override

@@ -1,10 +1,13 @@
 package ar.com.tacs.grupo5.frba.utn.dao.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
+import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
-public interface MovieRepository extends JpaRepository<MovieEntity, String>{
-	
+public interface MovieRepository extends PagingAndSortingRepository<MovieEntity, String>{
+	MovieEntity findByIdMovie(String idMovie);
+	Page<FavMovieEntity> findByFavMovie(FavMovieEntity favMovieEntity,Pageable pageable);
 }

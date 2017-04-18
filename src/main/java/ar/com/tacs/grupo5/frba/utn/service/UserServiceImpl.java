@@ -7,19 +7,30 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
+import ar.com.tacs.grupo5.frba.utn.mapper.FavMovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.User;
-
 @Component
 public class UserServiceImpl implements UserService {
 	
+	@Autowired
+	private FavMovieRepository favMovieRepository;
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private FavMovieMapper favMovieMapper;
 	@Autowired
 	private UserDao userDao;
 	
@@ -58,11 +69,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public Set<FavMovie> getUserFavMovies(String id) 
 	{
-		User user = getUserById(id);
-		Set<FavMovie> favMovies = user.getFavMovies();
-		return favMovies != null? favMovies : new HashSet();
+		Page<FavMovieEntity> pageFavMovies = favMovieRepository.findByUser(userRepository.findOne(id), new PageRequest(0, 20));
+
+		return pageFavMovies.getContent() != null? pageFavMovies.getContent().stream().map(x->favMovieMapper.entityToDto(x)).collect(Collectors.toSet()) : new HashSet();
 	}
 
 	/**
@@ -76,14 +88,12 @@ public class UserServiceImpl implements UserService {
 		FavMovie favMovieTwo = favMoviesDao.getFavMovie(id2);
 		return favMovieOne.getMovies().stream().filter(favMovieTwo.getMovies()::contains).collect(Collectors.toList());
 	}
-
+	
 	public FavMovie createNewFavMovieList(String title, User user) {
 		FavMovie favMovie = new FavMovie();
 		favMovie.setName(title);
 		favMovie.setUserId(user.getId());
 		FavMovie createdFavMovie = favMoviesDao.saveFavMovie(favMovie);
-		user.getFavMovies().add(createdFavMovie);
-		userDao.saveUser(user);
 		return createdFavMovie;
 	}
 
