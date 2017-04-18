@@ -1,36 +1,71 @@
 package ar.com.tacs.grupo5.frba.utn.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class User {
-	
-	private String firstName;
-	private String lastName;
 
-	public User(String firstName, String lastName) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-	}
-	
+	private String id;
+	private String userName;
+	private Set<FavMovie> favMovies;
+	private String pass;
+	private String nivel;
+
 	public User() {
+	}
+
+	public User(String id, String userName) {
 		super();
+		this.id = id;
+		this.userName = userName;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public User(String userName, String pass, String nivel) {
+		super();
+		this.userName = userName;
+		this.pass = pass;
+		this.nivel = nivel;
+		this.favMovies = new HashSet<>();
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public String getId() {
+		return id;
 	}
 
-	public String getLastName() {
-		return lastName;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public String getUserName() {
+		return userName;
 	}
-	
-	
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+
+	public String getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(String nivel) {
+		this.nivel = nivel;
+	}
+
+	public Set<FavMovie> getFavMovies() {
+		return favMovies;
+	}
+
+	public void setFavMovies(Set<FavMovie> favMovies) {
+		this.favMovies = favMovies;
+	}
 
 }

@@ -8,44 +8,47 @@ public class Actor {
 		super();
 		this.id = id;
 		this.name = name;
-		this.image = image;
+		//this.image = image;
 		this.biography = biography;
-		this.movies = movies;
+		//this.movies = movies;
 	}
 	private String id;
 	private String name;
-	private String image;
+	private List<Image> image;
 	private String biography;
-	private List<String> movies;
+	private List<Movie> movies;
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getImage() {
-		return image;
-	}
-	public void setImage(String image) {
-		this.image = image;
-	}
+
 	public String getBiography() {
 		return biography;
 	}
 	public void setBiography(String biography) {
 		this.biography = biography;
 	}
-	public List<String> getMovies() {
-		return movies;
-	}
-	public void setMovies(List<String> movies) {
-		this.movies = movies;
-	}
+
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
+	public List<Image> getImage() {
+		return image;
+	}
+	public void setImage(List<Image> image) {
+		this.image = image;
+	}
+	public List<Movie> getMovies() {
+		return movies;
+	}
+	public void setMovies(List<Movie> movies) {
+		this.movies = movies;
+	}
+	
 
 }

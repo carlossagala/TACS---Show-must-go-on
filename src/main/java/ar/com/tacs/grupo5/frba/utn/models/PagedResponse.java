@@ -3,7 +3,7 @@ package ar.com.tacs.grupo5.frba.utn.models;
 public class PagedResponse extends Response{
 	
 	private Integer page;
-	private Integer totalResults;
+	private Long totalResults;
 	private Integer totalPages;
 	
 	public Integer getPage() {
@@ -13,10 +13,10 @@ public class PagedResponse extends Response{
 		this.page = page;
 	}
 
-	public Integer getTotalResults() {
+	public Long getTotalResults() {
 		return totalResults;
 	}
-	public void setTotalResults(Integer totalResults) {
+	public void setTotalResults(Long totalResults) {
 		this.totalResults = totalResults;
 	}
 	public Integer getTotalPages() {

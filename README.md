@@ -6,6 +6,6 @@ Instrucciones
 
 Ejecutar la aplicación por linea de comando:
 
-mvn clean install -DskipTests && java -jar target/ShowMustGoOn-1.0-SNAPSHOT.jar
+mvn clean install -DskipTests && mvn spring-boot:run
 
-Documentación Swagger en http://localhost:8080/api-doc.html
+Documentación Swagger en https://app.swaggerhub.com/apis/tacs-g5/show-must-go-on/1.0.0
