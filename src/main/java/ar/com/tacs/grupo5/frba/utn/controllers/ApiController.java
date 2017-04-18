@@ -223,8 +223,6 @@ public class ApiController {
 		actores.forEach(a -> cargarRanking(a,ranking));
 
 		resp.setData(ranking);
-
-		resp.setData(ranking);
 		return resp;
 	};
 
