@@ -3,15 +3,18 @@ package ar.com.tacs.grupo5.frba.utn.controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.datasource.UserCredentialsDataSourceAdapter;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -419,25 +422,47 @@ public class ApiController {
 		resp.setData(movie);
 		return resp;
 	};
-
+	
+	private void cargarRanking(ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor actor,HashMap<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor, Integer> ranking){
+		
+		if(ranking.get(actor) != null){
+			Integer count = ranking.get(actor);
+			count ++;
+			ranking.put(actor,count);
+		} else{
+			ranking.put(actor, 1);
+		}
+		
+		
+	}
+	
 	/**
 	 * Returns a ranking based on a list
 	 */
 	public Route getRankingFromList = (request, response) -> {
+		
+		User user = authenticate(request);
 		response.status(200);
-
+		String idList = request.params(":id");
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
 		
 
-		List<Actor> favActors = new ArrayList<>();
+		Set<FavMovie> listOfFavMovies = userService.getUserFavMovies(user.getId()); 
+		FavMovie lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).collect(Collectors.toList()).get(0);
+		
+		
+		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
+		
+		lista.getMovies().forEach(m -> actores.addAll(movieService.getMovieActors(m.getId())));
+		
+		HashMap<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor, Integer > ranking = new HashMap<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor,Integer>();
+		
+		actores.forEach(a -> cargarRanking(a,ranking));
 
-		favActors.add(new Actor("22", "Angelina Jolie", "image.png", "", Arrays.asList("")));
-		favActors.add(new Actor("23", "Brad Pitt", "image.png", "", Arrays.asList("")));
-
-		resp.setData(favActors);
+		resp.setData(ranking);
 		return resp;
 	};
 
