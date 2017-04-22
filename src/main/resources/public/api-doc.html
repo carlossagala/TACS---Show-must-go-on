@@ -32,6 +32,17 @@ paths:
         Como administrador quiero ver los usuarios registrados
       produces:
       - application/json
+      parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Users registered on the system
@@ -50,6 +61,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: User id to fetch
@@ -75,11 +91,21 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: User id to fetch
         required: true
         type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: User details
@@ -102,11 +128,21 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: User id to fetch
         required: true
         type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Favorite actors form an user
@@ -129,6 +165,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id1
         in: path
         description: User list id to fetch
@@ -139,6 +180,11 @@ paths:
         description: User list id to fetch
         required: true
         type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Intersection between 2 user favorite list
@@ -156,7 +202,17 @@ paths:
         Como administrador quiero ver el ranking de actores favoritos de todos mis usuarios (los actores que han sido más veces elegidos como favoritos)
       produces:
       - application/json
-      parameters: []
+      parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Search results matching criteria
@@ -180,6 +236,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - in: body
         name: user_credentials
         description: User to add
@@ -204,6 +265,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - in: body
         name: user_credentials
         description: Credentials to validate
@@ -225,31 +291,71 @@ paths:
       - application/json
       produces:
       - application/json
-      parameters: []
+      parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       responses:
         200:
           description: Successfully logged out
         400:
           description: Invalid input, object invalid
-  /search/{type}/:
+  /search/actor/{name}/:
     get:
       tags:
       - developers
-      summary: buscar por actor, pelicula o ambos
-      operationId: searchByType
+      summary: buscar actores por nombre
+      operationId: searchActorByName
       description: |
         Como usuario quiero buscar por nombre (películas y actores)
           Poder elegir si buscar ambos, películas o actores
       produces:
       - application/json
       parameters:
-        - name: type
-          in: path
-          description: Type to fetch, can be `movie`, `actor` or `movie_actor`
+        - in: header
+          name: api_key
+          description: ""
           required: true
           type: string
         - name: name
+          in: path
+          description: name to fetch
+          required: true
+          type: string
+        - name: page
           in: query
+          description: Page selected, default value is 1
+          required: true
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Search result
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GenericItem'
+  /search/movie/{title}/:
+    get:
+      tags:
+      - developers
+      summary: busca peliculas por titulo
+      operationId: searchMovieByTitle
+      description: |
+        Como usuario quiero buscar por nombre (películas y actores)
+          Poder elegir si buscar ambos, películas o actores
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: api_key
+          description: ""
+          required: true
+          type: string
+        - name: title
+          in: path
           description: Name to fetch
           required: true
           type: string
@@ -265,7 +371,43 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Search'
+              $ref: '#/definitions/GenericItem'
+  /search/full/{query}/:
+    get:
+      tags:
+      - developers
+      summary: buscar por actor, pelicula o ambos
+      operationId: searchByType
+      description: |
+        Como usuario quiero buscar por nombre (películas y actores)
+          Poder elegir si buscar ambos, películas o actores
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: api_key
+          description: ""
+          required: true
+          type: string
+        - name: query
+          in: path
+          description: Name to fetch
+          required: true
+          type: string
+        - name: page
+          in: query
+          description: Page selected, default value is 1
+          required: true
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Search result
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GenericItem'
+
   /favmovies/:
     post:
       tags:
@@ -278,6 +420,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - in: body
         name: name
         description: Name of the new favorite list of movies
@@ -288,16 +435,21 @@ paths:
           description: Successfully favmovie created
         400:
           description: Invalid input, object invalid
-  /favmovies/{id}//:
+  /favmovies/{id}/:
     get:
       tags:
       - developers
-      summary: consulta una favmovie
+      summary: consulta lista de peliculas favoritas
       operationId: getFavmovie
       description: Como usuario quiero consultar la lista
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the favorite list of movies
@@ -310,7 +462,6 @@ paths:
             $ref: '#/definitions/FavMovies'
         404:
           description: Resource not found
-  /favmovies/{id}/:
     put:
       tags:
       - developers
@@ -320,6 +471,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the favorite list of movies
@@ -335,8 +491,6 @@ paths:
           description: Successfully favmovie updated
         404:
           description: Resource not found
-  # NOTA: swagger no permite duplicar las url para distintos metodos, al menos con PUT
-  /favmovies/{id}:
     delete:
       tags:
       - developers
@@ -346,6 +500,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the favorite list of movies
@@ -363,9 +522,16 @@ paths:
       summary: añade una pelicula a una favmovie
       operationId: addMovieToFavmovie
       description: Como usuario quiero agregar una pelicula a la lista
+      consumes:
+      - application/json
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the favorite list of movies
@@ -394,6 +560,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the favorite list of movies
@@ -409,7 +580,7 @@ paths:
           description: Successfully movie removed from favmovie
         404:
           description: Resource not found
-  /favmovies/{id1}/intersection/{id2}:
+  /favmovies/{id1}/intersection/{id2}/:
     get:
       tags:
       - developers
@@ -419,6 +590,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id1
         in: path
         description: Id1 of the favorite list of movies
@@ -429,6 +605,11 @@ paths:
         description: Id2 of the favorite list of movies
         required: true
         type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Successfully intersection found
@@ -448,11 +629,21 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the favorite list of movies
         required: true
         type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Successfully ranking by favmovie found
@@ -462,28 +653,6 @@ paths:
               $ref: '#/definitions/Actor'
         404:
           description: Resource not found
-  #/favactors/:
-  #  post:
-  #    tags:
-  #    - developers
-  #    summary: crea una lista de actores favoritos
-  #    operationId: createFavactor
-  #    description: Como usuario quiero crear una lista de actores con un nombre
-  #    consumes:
-  #    - application/json
-  #    produces:
-  #    - application/json
-  #    parameters:
-  #    - in: body
-  #      name: name
-  #      description: Name of the new favorite list of actors
-  #      schema:
-  #        $ref: '#/definitions/FavActor'
-  #    responses:
-  #      201:
-  #        description: Successfully favmovie created
-  #      400:
-  #        description: Invalid input, object invalid
   /favactors/:
     get:
       tags:
@@ -491,47 +660,46 @@ paths:
       summary: consulta la favactor
       operationId: getFavactor
       description: Como usuario quiero consultar la lista de actores favoritos
+      consumes:
+      - application/json
       produces:
       - application/json
+      parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Successfully favactor found
           schema:
             type: array
             items:
-              $ref: '#/definitions/FavActors'
+              $ref: '#/definitions/FavActorsResponse'
         404:
           description: Resource not found
-  #/favactors/{id}:
-  #  delete:
-  #    tags:
-  #    - developers
-  #    summary: elimina la favactor
-  #    operationId: removeFavactor
-  #    description: Como usuario quiero eliminar la lista
-  #    produces:
-  #    - application/json
-  #    parameters:
-  #    - name: id
-  #      in: path
-  #      description: Id of the favorite list of actors
-  #      required: true
-  #      type: string
-  #    responses:
-  #      200:
-  #        description: Successfully favactor removed
-  #      404:
-  #        description: Resource not found
-  /favactors:
     post:
       tags:
       - developers
       summary: añade un actor a la favactor
       operationId: addActorToFavactor
       description: Como usuario quiero agregar un actor a la lista (Marcar un actor como favorito)
+      consumes:
+      - application/json
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - in: body
         name: movieId
         description: Actor id to add
@@ -555,6 +723,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the actor to remove from the favactor
@@ -565,7 +738,7 @@ paths:
           description: Successfully actor removed from favactor
         404:
           description: Resource not found
-  /movies/{id}/:
+  /movie/{id}/:
     get:
       tags:
       - developers
@@ -596,7 +769,17 @@ paths:
       description: Como usuario quiero consultar peliculas recomendadas
       produces:
       - application/json
-      parameters: []
+      parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
+      - name: page
+        in: query
+        description: Page selected, default value is 1
+        required: true
+        type: integer
       responses:
         200:
           description: Successfully recommended movies found
@@ -606,7 +789,7 @@ paths:
               $ref: '#/definitions/Movie'
         404:
           description: Resource not found
-  /actors/{id}/:
+  /actor/{id}/:
     get:
       tags:
       - developers
@@ -616,6 +799,11 @@ paths:
       produces:
       - application/json
       parameters:
+      - in: header
+        name: api_key
+        description: ""
+        required: true
+        type: string
       - name: id
         in: path
         description: Id of the actor
@@ -628,6 +816,11 @@ paths:
             $ref: '#/definitions/Actor'
         404:
           description: Resource not found
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
 # models
 definitions:
   UserSummary:
@@ -736,6 +929,31 @@ definitions:
       name:
         type: string
         example: Top 5 best movies
+  FavActorsResponse:
+    type: object
+    required:
+      - page
+      - total_pages
+      - total_result
+      - data
+    properties:
+      page:
+        type: integer
+        example: 1
+      total_pages:
+        type: integer
+        example: 10
+      total_result:
+        type: integer
+        example: 100
+      data:
+        type: array
+        xml:
+          name: movie
+          wrapped: true
+        items:
+          type: string
+          description: ids de peliculas
   FavActors:
     type: object
     required:
@@ -761,14 +979,14 @@ definitions:
           wrapped: true
         items:
           $ref: '#/definitions/Actor'
-  FavActor:
-    type: object
-    required:
-    - name
-    properties:
-      name:
-        type: string
-        example: Top 5 best actors
+#  FavActor:
+#    type: object
+#    required:
+#    - name
+#    properties:
+#      name:
+#        type: string
+#        example: Top 5 best actors
   Movie:
     type: object
     required:
@@ -918,10 +1136,20 @@ definitions:
       data:
         type: array
         xml:
-          name: movie
+          name: GenericObject
           wrapped: true
         items:
-          $ref: '#/definitions/Movie'
+          $ref: '#/definitions/GenericItem'
+  GenericItem:
+    type: object
+    properties:
+      id:
+        type: string
+        example: "ff9cddb4-527d-4dd4-a5d0-ff936238d9fb"
+      type:
+        description: Posible values 'movie' or 'actor'
+        type: string
+        example: "movie"
 # Added by API Auto Mocking Plugin
 host: localhost:8080
 basePath: /api
