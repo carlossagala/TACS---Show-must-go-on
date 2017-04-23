@@ -1,14 +1,25 @@
 package ar.com.tacs.grupo5.frba.utn.controllers;
 
+import static spark.Spark.before;
+import static spark.Spark.delete;
+import static spark.Spark.exception;
+import static spark.Spark.get;
+import static spark.Spark.halt;
+import static spark.Spark.path;
+import static spark.Spark.port;
+import static spark.Spark.post;
+import static spark.Spark.put;
+import static spark.Spark.staticFiles;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,35 +33,125 @@ import com.google.gson.Gson;
 import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.models.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
 import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
 import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
-import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.service.ActorService;
-import ar.com.tacs.grupo5.frba.utn.service.ActorServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
-import ar.com.tacs.grupo5.frba.utn.service.FavMoviesServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.MovieService;
-import ar.com.tacs.grupo5.frba.utn.service.MovieServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
-import ar.com.tacs.grupo5.frba.utn.service.SearchServiceImpl;
 import ar.com.tacs.grupo5.frba.utn.service.UserService;
-import ar.com.tacs.grupo5.frba.utn.service.UserServiceImpl;
 import spark.Request;
+import spark.ResponseTransformer;
 import spark.Route;
-import spark.utils.CollectionUtils;
 
 @Component
 public class ApiController {
 
+	private static final String MEDIA_TYPE = "application/json";
+
+	@Autowired
+	ResponseTransformer responseTransformer;
 	
+	@Value("${server.port}")
+	private String serverPort;
 	@Value("${page.size}")
 	private int pageSize;
+	
+	@PostConstruct
+    public void init() {
+		sparkInit(this,Integer.valueOf(serverPort),responseTransformer);
+    }
+	public static void sparkInit(ApiController apiController,int port, ResponseTransformer responseTransformer) {
+		port(port);
+		staticFiles.location("/public");
+		exception(NotAuthorized.class, (exception, request, response) -> {
+			response.status(401);
+			response.body("Not Authorized");
+		});
+		exception(BadRequest.class, (exception, request, response) -> {
+			response.status(400);
+			String message = "Bad Request";
+			if(exception.getMessage()!=null){
+				message = message+": "+exception.getMessage();
+			}
+			response.body(message);
+		});
+		
+		
+		
+		before("/api/*", (request, response) -> {
+			String path = request.pathInfo();
+			if (!(path.equals("/api/user/login/") || path.equals("/api/user/register/"))){
+				try {
+					apiController.authenticate(request);
+				} catch (Exception e) {
+					halt(401, "No se encuentra autenticado");
+				}
+		}});
+
+		
+		//TODO: falta probar 
+//		before("/api/users/:id*", (request, response) -> {
+//			try {
+//				apiController.validateAuthorization(apiController.autenticar(request));
+//			} catch (Exception e) {
+//				halt(403, "No tiene los permisos suficientes");
+//			}
+//		});
+		
+		
+		path("/api", () -> {
+			path("/users", () -> {
+				get("/", MEDIA_TYPE,apiController.getUsers,responseTransformer);
+				get("/:id/",MEDIA_TYPE, apiController.getUser,responseTransformer);
+				get("/:id/favmovies/",MEDIA_TYPE, apiController.getUserFavMovies,responseTransformer);
+				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
+				get("/:id/favactors/",MEDIA_TYPE, apiController.getAdminUserFavActors,responseTransformer);
+				get("/ranking/actors/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
+			});
+			path("/user", () -> {
+				post("/register/",MEDIA_TYPE, apiController.registerUser,responseTransformer);
+				post("/login/",MEDIA_TYPE, apiController.login,responseTransformer);
+				post("/logout/",MEDIA_TYPE, apiController.logout,responseTransformer);
+			});
+			path("/search", () -> {
+				get("/movie/:query/", MEDIA_TYPE,apiController.searchByMovie,responseTransformer);
+				get("/actor/:query/", MEDIA_TYPE,apiController.searchByActor,responseTransformer);
+				get("/full/:query/", MEDIA_TYPE,apiController.searchByFull,responseTransformer);
+			});
+			path("/favmovies", () -> {
+				post("/", MEDIA_TYPE,apiController.createNewList,responseTransformer);
+				get("/:id/",MEDIA_TYPE, apiController.getFavMovieDetail,responseTransformer);
+				put("/:id/",MEDIA_TYPE, apiController.updateFavMoviesDetail,responseTransformer);
+				delete("/:id/",MEDIA_TYPE, apiController.deleteFavMoviesList,responseTransformer);
+				post("/:id/movies/",MEDIA_TYPE, apiController.addMovieToList,responseTransformer);
+				delete("/:id/movies/:movie_id/",MEDIA_TYPE, apiController.deleteMovieFromList,responseTransformer);
+				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
+				get("/:id/ranking/",MEDIA_TYPE, apiController.getRankingFromList,responseTransformer);
+
+			});
+			path("/favactors", () -> {
+				get("/",MEDIA_TYPE, apiController.getUserFavActors,responseTransformer);
+				post("/",MEDIA_TYPE, apiController.addActorToList,responseTransformer);
+				delete("/:id/",MEDIA_TYPE, apiController.deleteActorFromList,responseTransformer);
+			});
+			path("/movie", () -> {
+				get("/:id/",MEDIA_TYPE, apiController.getMovieById,responseTransformer);
+			});
+			path("/movies", () -> {
+				get("/recommended/",MEDIA_TYPE, apiController.getRecommendedMovies,responseTransformer);
+			});
+			path("/actor", () -> {
+				get("/:id/",MEDIA_TYPE, apiController.getActorById,responseTransformer);
+			});
+		});
+	}
 	private static Logger logger = LoggerFactory.getLogger(ApiController.class);
 	private SearchService searchService;
 	private Gson gson;
@@ -90,7 +191,7 @@ public class ApiController {
 	 */
 	public Route getUsers = (request, response) -> {
 		response.status(200);
-
+		response.type(MEDIA_TYPE);
 		PagedResponse resp = new PagedResponse();
 		List<User> users = new ArrayList<>();
 		users = userService.getAllUsers();
