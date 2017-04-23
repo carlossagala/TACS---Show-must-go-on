@@ -22,7 +22,7 @@ public class FavMovieEntity {
 	private String id;
 	private String name;
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@JoinColumn(name = "user_id")
 	private UserEntity user;
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy="favMovie")
 	private Set<MovieEntity> movies;
