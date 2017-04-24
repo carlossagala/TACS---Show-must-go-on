@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
@@ -26,6 +27,7 @@ import ar.com.tacs.grupo5.frba.utn.service.MovieService;
 @EnableAutoConfiguration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
+@Transactional
 public class FavMoviesTest {
 	// Mockeo Apicontroller para que no levante el servidor embebido de spark
 	@MockBean
@@ -131,7 +133,7 @@ public class FavMoviesTest {
 		} catch (ResourceNotFound e) {
 			fail();
 		}
-		Assert.assertNotNull(this.movieDao.getMovie("123"));
+		Assert.assertNotNull(this.movieDao.getMovie(favMovieId,"123"));
 	}
 
 	@Test
@@ -143,9 +145,9 @@ public class FavMoviesTest {
 		Movie addedMovie = null;
 		try {
 			addedMovie = movieService.addMovie(favMovieId, "123");
-			Assert.assertNotNull(this.movieDao.getMovie("123"));
+			Assert.assertNotNull(this.movieDao.getMovie(favMovieId,"123"));
 			this.movieService.removeMovie(favMovieId, "123");
-			Assert.assertNull(this.movieDao.getMovie("123"));
+			Assert.assertNull(this.movieDao.getMovie(favMovieId,"123"));
 		} catch (ResourceNotFound e) {
 			fail();
 		}

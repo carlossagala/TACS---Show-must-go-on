@@ -4,7 +4,7 @@ import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 public interface MovieDao {
 
-	Movie getMovie(String id);
+	Movie getMovie(String idFavMovie,String idMovie);
 	
 	Movie saveMovie(Movie movie);
 

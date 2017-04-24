@@ -1,15 +1,14 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 @Repository
 public class FavMoviesDaoImpl implements FavMoviesDao {
@@ -35,6 +34,17 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 	@Override
 	public FavMovie saveFavMovie(FavMovie favMovie) {
 		return favMovieMapper.entityToDto(favMovieRepository.save(favMovieMapper.dtoToEntity(favMovie)));
+	}
+
+	@Override
+	public FavMovieEntity findOne(String id) {
+		return this.favMovieRepository.findOne(id);
+	}
+
+	@Override
+	@Transactional
+	public void save(FavMovieEntity fm) {
+		this.favMovieRepository.save(fm);
 	}
 
 	/*@Override

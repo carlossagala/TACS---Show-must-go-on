@@ -1,11 +1,16 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
@@ -13,6 +18,13 @@ import ar.com.tacs.grupo5.frba.utn.models.Movie;
 @Repository
 @Transactional
 public class MovieDaoImpl implements MovieDao {
+
+	@Autowired
+	private EntityManager em;
+	@Autowired
+	private FavMovieRepository favMovieRepository;
+	@Autowired
+	private FavMoviesDao favMoviesDao;
 	
 	@Autowired
 	private MovieRepository movieRepository;
@@ -21,8 +33,8 @@ public class MovieDaoImpl implements MovieDao {
 	private MovieMapper movieMapper;
 
 	@Override
-	public Movie getMovie(String id) {
-		MovieEntity movieEnt = movieRepository.findByIdMovie(id);
+	public Movie getMovie(String idFavMovie,String idMovie) {
+		MovieEntity movieEnt = movieRepository.findByIdMovieAndFavMovie(idMovie, favMoviesDao.findOne(idFavMovie));
 		return movieMapper.entityToDto(movieEnt);
 	}
 
@@ -34,9 +46,15 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
+	@Transactional
 	public void deleteMovie(Movie movie) {
-//		return movieRepository.removeByIdMovie(movie.getMovieId());
-		movieRepository.delete(movieRepository.findByIdMovie(movie.getMovieId()));
+		FavMovieEntity favMovieEntity = favMoviesDao.findOne(movie.getFavMovieId());
+		MovieEntity movieEntity = movieRepository.findByIdMovieAndFavMovie(movie.getMovieId(),favMovieEntity);
+//		MovieEntity movieEntityItem = favMovieEntity.getMovies().stream().filter(x->x.getId().equals(movieEntity.getId())).findAny().orElse(null);
+//		favMovieEntity.getMovies().remove(movieEntityItem);
+		movieRepository.delete(movieEntity);
+//		favMovieRepository.save(favMovieEntity);
+		em.flush();
 	}
 	
 }

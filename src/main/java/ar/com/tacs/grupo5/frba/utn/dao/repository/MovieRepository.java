@@ -8,7 +8,7 @@ import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 
 public interface MovieRepository extends PagingAndSortingRepository<MovieEntity, String>{
-	MovieEntity findByIdMovie(String idMovie);
+	MovieEntity findByIdMovieAndFavMovie(String idMovie,FavMovieEntity favMovieEntity);
 	Page<FavMovieEntity> findByFavMovie(FavMovieEntity favMovieEntity,Pageable pageable);
 	Long removeByIdMovie(String idMovie);
 }
