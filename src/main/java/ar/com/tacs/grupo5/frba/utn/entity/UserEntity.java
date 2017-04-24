@@ -24,7 +24,7 @@ public class UserEntity {
 	private String pass;
 	private String nivel;
 	
-	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.EAGER,mappedBy="user")
+	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="user")
 	private Set<FavMovieEntity> favMovies;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="userEntity")

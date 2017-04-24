@@ -6,41 +6,56 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
+import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+@Transactional
 public class UserDaoTest {
 	
 	@SpyBean
 	private UserDao userDao;
-	
+	@SpyBean
+	private UserMapper userMapper;
 	
 	@Test
 	public void testRegisterUser()
 	{
-		User created = new User("TRU1","TRU1","user");
-		created = this.userDao.saveUser(created);
-		User found = this.userDao.findByUserName("TRU1");
+		User userDto = new User("user","user","user");
+		UserEntity userToRegister = userMapper.dtoToEntity(userDto);
+		this.userDao.saveUser(userToRegister);
+		UserEntity found = this.userDao.findByUserName("user");
 		Assert.assertNotNull(found);
-		Assert.assertTrue(created.getId().equals(found.getId()));
 	}
 	
 	@Test
 	public void testGetAllUsers()
 	{
-		this.userDao.saveUser(new User("userTGAU1", "userTGAU1", "user"));
-		this.userDao.saveUser(new User("userTGAU2", "userTGAU2", "admin"));
-		this.userDao.saveUser(new User("userTGAU3", "userTGAU3", "user"));
-		this.userDao.saveUser(new User("userTGAU4", "userTGAU4", "user"));
-		//en este punto existen los 4 users creados aca mas los dos creados por script al iniciar el contexto
-		List<User> allUsers = this.userDao.getAllUsers();
+		List<UserEntity> allUsers = this.userDao.getAllUsers();
 		Assert.assertNotNull(allUsers);
-		Assert.assertTrue(allUsers.size()==6);
+		Assert.assertTrue(allUsers.size()==2);
+	}
+	
+	@Test
+	public void testGetUnexistingUserByUserName()
+	{
+		UserEntity found = this.userDao.findByUserName("AnyUser");
+		Assert.assertNull(found);
+	}
+	
+	@Test
+	public void testGetUnexistingUserById()
+	{
+		UserEntity found = this.userDao.getUserById("300");
+		Assert.assertNull(found);
 	}
 	
 	

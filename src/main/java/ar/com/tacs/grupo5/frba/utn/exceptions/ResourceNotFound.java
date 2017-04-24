@@ -6,5 +6,15 @@ public class ResourceNotFound extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 1823279448740137525L;
+	
+	public ResourceNotFound()
+	{
+		
+	}
+	
+	public ResourceNotFound(String message)
+	{
+		super(message);
+	}
 
 }

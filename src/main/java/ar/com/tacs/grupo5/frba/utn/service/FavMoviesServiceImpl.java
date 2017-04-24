@@ -38,12 +38,13 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 
 	@Override
 	public boolean deleteFavMovie(String idFavMovie) throws ResourceNotFound {
-		FavMovie deletedFavMovie = favMoviesDao.getFavMovie(idFavMovie);
-		
-		if (deletedFavMovie == null)
-			throw new ResourceNotFound();
-		
-		return userDao.deleteFavMovies(deletedFavMovie.getUserId(), deletedFavMovie.getId());
+		return false;
+//		FavMovie deletedFavMovie = favMoviesDao.getFavMovie(idFavMovie);
+//		
+//		if (deletedFavMovie == null)
+//			throw new ResourceNotFound();
+//		
+//		return userDao.deleteFavMovies(deletedFavMovie.getUserId(), deletedFavMovie.getId());
 	}
 
 	@Override

@@ -2,26 +2,22 @@ package ar.com.tacs.grupo5.frba.utn.dao;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
-import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
-import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 
 public interface UserDao {
-	List<User> getAllUsers();
+	List<UserEntity> getAllUsers();
 
-	User getUserById(String id);
+	UserEntity getUserById(String id);
 
-	User saveUser(User user);
+	UserEntity saveUser(UserEntity user);
 	
-	User findByUserNameAndPass(String userName,String pass);
+	UserEntity findByUserNameAndPass(String userName,String pass);
 	
-	User findByUserName(String userName);
+	UserEntity findByUserName(String userName);
 	
-	Page<FavActorEntity> getFavActors(String userId, int page);
-	
-	void addFavActor(String idUser,String idActor);
-	void deleteFavActor(String idUser,String idActor);
-	boolean deleteFavMovies(String idUser, String idFavMovies);
+//	Page<FavActorEntity> getFavActors(String userId, int page);
+//	void addFavActor(String idUser,String idActor);
+//	void deleteFavActor(String idUser,String idActor);
+//	boolean deleteFavMovies(String idUser, String idFavMovies);
 	
 }
