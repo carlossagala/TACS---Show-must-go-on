@@ -5,21 +5,28 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-@Transactional
+@EnableAutoConfiguration
+@PropertySource("classpath:application.properties")
+@ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
 public class UserDaoTest {
+	// Mockeo Apicontroller para que no levante el servidor embebido de spark
+	@MockBean
+	ApiController apiController;
 	
 	@SpyBean
 	private UserDao userDao;

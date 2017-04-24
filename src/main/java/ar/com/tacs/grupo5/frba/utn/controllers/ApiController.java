@@ -94,6 +94,9 @@ public class ApiController {
 					halt(401, "No se encuentra autenticado");
 				}
 		}});
+		after("/api/*", (request, response) -> {
+			response.type(MEDIA_TYPE);
+		});
 
 		
 		//TODO: falta probar 
