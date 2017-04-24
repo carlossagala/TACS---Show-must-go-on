@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 @Component
+@Transactional
 public class UserServiceImpl implements UserService {
 	
 //	@Autowired
@@ -55,6 +57,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+
 	public User findByUserNameAndPass(String userName, String pass) {
 		UserEntity userEntity = userDao.findByUserNameAndPass(userName, pass);
 		return userMapper.entityToDto(userEntity);

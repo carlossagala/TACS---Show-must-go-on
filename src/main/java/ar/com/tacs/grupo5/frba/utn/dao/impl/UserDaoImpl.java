@@ -17,6 +17,7 @@ import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 
 @Repository
+@Transactional
 public class UserDaoImpl implements UserDao{
 	
 	@Value("${page.size}")
