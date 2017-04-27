@@ -15,20 +15,27 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-public class FavMovieEntity {
+public class FavMoviesEntity {
 	@Id
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String id;
 	private String name;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
+	
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy="favMovie")
 	private Set<MovieEntity> movies;
 
-	public FavMovieEntity() {
+	public FavMoviesEntity() {
 		super();
+	}
+
+	public FavMoviesEntity(String name, UserEntity user) {
+		this.name = name;
+		this.user = user;
 	}
 
 	public String getName() {

@@ -1,7 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
+import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,13 +25,15 @@ public class UserEntity {
 	private String nivel;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="user")
-	private Set<FavMovieEntity> favMovies;
+	private Set<FavMoviesEntity> favMovies;
 	
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="userEntity")
 	private Set<FavActorEntity> favActors;
 
 	public UserEntity() {
 		super();
+		favMovies = new HashSet<FavMoviesEntity>();
+		favActors = new HashSet<FavActorEntity>();
 	}
 
 	public UserEntity(String id, String userName, String pass, String nivel) {
@@ -40,6 +42,8 @@ public class UserEntity {
 		this.userName = userName;
 		this.setPass(pass);
 		this.setNivel(nivel);
+		favMovies = new HashSet<FavMoviesEntity>();
+		favActors = new HashSet<FavActorEntity>();
 	}
 
 	public String getId() {
@@ -75,11 +79,11 @@ public class UserEntity {
 	}
 
 	
-	public Set<FavMovieEntity> getFavMovies() {
+	public Set<FavMoviesEntity> getFavMovies() {
 		return this.favMovies;
 	}
 	
-	public void setFavMovies(Set<FavMovieEntity> fav) {
+	public void setFavMovies(Set<FavMoviesEntity> fav) {
 		this.favMovies = fav;
 	}
 

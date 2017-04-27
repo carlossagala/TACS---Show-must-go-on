@@ -22,7 +22,8 @@ import com.google.gson.reflect.TypeToken;
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Images;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;
@@ -41,6 +42,9 @@ public class MovieServiceImpl implements MovieService {
 	
 	@Autowired
 	private MovieDao movieDao;
+	
+	@Autowired
+	private FavMoviesMapper favMoviesMapper;
 	
 	@Autowired
 	private FavMoviesDao favMoviesDao;
@@ -109,7 +113,7 @@ public class MovieServiceImpl implements MovieService {
 	
 	@Override
 	public ar.com.tacs.grupo5.frba.utn.models.Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound {
-		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		FavMovies favMovie = favMoviesMapper.entityToDto(favMoviesDao.getFavMovie(idFavMovie));
 		if(favMovie == null)
 		{
 			throw new ResourceNotFound();
@@ -123,7 +127,7 @@ public class MovieServiceImpl implements MovieService {
 	@Override
 	@Transactional
 	public void removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
-		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		FavMovies favMovie = favMoviesMapper.entityToDto(favMoviesDao.getFavMovie(idFavMovie));
 		if(favMovie == null)
 		{
 			throw new ResourceNotFound();

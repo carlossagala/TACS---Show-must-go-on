@@ -34,7 +34,7 @@ import com.google.gson.Gson;
 import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
 import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
@@ -458,7 +458,7 @@ public class ApiController {
 		
 		try
 		{
-			FavMovie favMovie = favMoviesService.getFavMovieDetail(idFavMovie);
+			FavMovies favMovie = favMoviesService.getFavMovieDetail(idFavMovie);
 			resp.setData(favMovie);
 			response.status(200);
 			
@@ -493,7 +493,7 @@ public class ApiController {
 				
 		try
 		{
-			FavMovie favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
+			FavMovies favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
 			resp.setData(favMovie);
 			response.status(200);
 			

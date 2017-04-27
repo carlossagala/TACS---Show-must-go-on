@@ -7,7 +7,7 @@ public class User {
 
 	private String id;
 	private String userName;
-	private Set<FavMovie> favMovies;
+	private Set<FavMovies> favMovies;
 	private String pass;
 	private String nivel;
 
@@ -60,11 +60,11 @@ public class User {
 		this.nivel = nivel;
 	}
 
-	public Set<FavMovie> getFavMovies() {
+	public Set<FavMovies> getFavMovies() {
 		return favMovies;
 	}
 
-	public void setFavMovies(Set<FavMovie> favMovies) {
+	public void setFavMovies(Set<FavMovies> favMovies) {
 		this.favMovies = favMovies;
 	}
 

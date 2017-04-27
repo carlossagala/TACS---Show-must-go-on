@@ -1,7 +1,7 @@
-package ar.com.tacs.grupo5.frba.utn;
+package ar.com.tacs.grupo5.frba.utn.dao;
+import org.hsqldb.util.DatabaseManagerSwing;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +18,10 @@ import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
-import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
-import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
 import ar.com.tacs.grupo5.frba.utn.service.MovieService;
 
@@ -30,9 +29,7 @@ import ar.com.tacs.grupo5.frba.utn.service.MovieService;
 @EnableAutoConfiguration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
-@Transactional
-@Ignore
-public class FavMoviesTest {
+public class FavMoviesDaoTest {
 	// Mockeo Apicontroller para que no levante el servidor embebido de spark
 	@MockBean
 	ApiController apiController;
@@ -50,41 +47,50 @@ public class FavMoviesTest {
 	private FavMoviesService favMoviesService;
 	@SpyBean
 	private MovieService movieService;
+	
+	private UserEntity user;
+	
+	@Before
+	public void Before()
+	{
+//		DatabaseManagerSwing.main(
+//					new String[] { "--url", "jdbc:hsqldb:mem:testdb", "--user", "sa", "--password", ""});
+		
+		user = this.userDao.getUserById("2");
+	}
 
-//	@Test
-//	public void testSaveFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userrrr1", "userrrr1", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Lista", savedUser.getId()));
-//		Assert.assertNotNull(savedFavMovie);
-//		Assert.assertTrue(savedFavMovie.getName().equals("Mi Lista"));
-//	}
-//
-//	@Test
-//	public void testGetFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userrrr2", "userrrr2", "user"));
-//		FavMovie savedFavMovie1 = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
-//		FavMovie savedFavMovie2 = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Segunda Lista", savedUser.getId()));
-//		savedUser.getFavMovies().add(savedFavMovie1);
-//		savedUser.getFavMovies().add(savedFavMovie2);
-//		savedUser = this.userDao.saveUser(savedUser);
-//		Assert.assertTrue(savedUser.getFavMovies().size() > 0);
-//	}
-//
-//	@Test
-//	public void testUpdateFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userrrr3", "userrrr3", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
-//		savedUser.getFavMovies().add(savedFavMovie);
-//		savedUser = this.userDao.saveUser(savedUser);
-//
-//		try {
-//			savedFavMovie = favMoviesService.updateFavMovie("Mi Segunda Lista", savedFavMovie.getId());
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//		Assert.assertTrue(this.favMoviesDao.getFavMovie(savedFavMovie.getId()).getName() == "Mi Segunda Lista");
-//	}
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testSaveFavMovies() {
+		FavMoviesEntity savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMoviesEntity("Mi Lista Test", user));
+		
+		Assert.assertNotNull(savedFavMovie);
+		Assert.assertTrue(savedFavMovie.getName().equals("Mi Lista Test"));
+		Assert.assertTrue(favMoviesDao.getFavMoviesByUser(user).size() == 3);
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testGetFavMovies() {
+		Assert.assertTrue(favMoviesDao.getFavMoviesByUser(user).size() == 2);
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testUpdateFavMovies() {
+		FavMoviesEntity fav = favMoviesDao.getFavMovie("2");
+
+		fav.setName("Nombre cambiado");
+		
+		fav = favMoviesDao.saveFavMovie(fav);
+
+		FavMoviesEntity fav2 = favMoviesDao.getFavMovie("2");
+		
+		Assert.assertTrue(fav2.getName() == "Nombre cambiado");
+	}
 //
 //	@Test
 //	public void testDeleteFavMovies() {

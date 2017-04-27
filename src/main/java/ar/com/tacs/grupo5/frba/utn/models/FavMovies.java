@@ -2,24 +2,24 @@ package ar.com.tacs.grupo5.frba.utn.models;
 
 import java.util.Set;
 
-public class FavMovie {
+public class FavMovies {
 	private String id;
 	private String name;
 	private String userId;
 	private Set<Movie> movies;
 	
-	public FavMovie()
+	public FavMovies()
 	{
 		
 	}
 	
-	public FavMovie(String name, String userId) {
+	public FavMovies(String name, String userId) {
 		super();
 		this.name = name;
 		this.userId = userId;
 	}
 	
-	public FavMovie(String id, String name, String userId, Set<Movie> movies) {
+	public FavMovies(String id, String name, String userId, Set<Movie> movies) {
 		super();
 		this.id = id;
 		this.name = name;

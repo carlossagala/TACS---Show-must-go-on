@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
-import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 @Component
-public class FavMovieMapper implements GenericMapper<FavMovieEntity, FavMovie>{
+public class FavMoviesMapper implements GenericMapper<FavMoviesEntity, FavMovies>{
 	
 	@Autowired
 	private MovieMapper movieMapper;
@@ -21,11 +21,11 @@ public class FavMovieMapper implements GenericMapper<FavMovieEntity, FavMovie>{
 	private UserRepository userRepo;
 
 	@Override
-	public FavMovie entityToDto(FavMovieEntity entity) {
+	public FavMovies entityToDto(FavMoviesEntity entity) {
 		if (entity == null)
 			return null;
 		
-		FavMovie favMovie = new FavMovie();
+		FavMovies favMovie = new FavMovies();
 		favMovie.setId(entity.getId());
 		favMovie.setName(entity.getName());
 		favMovie.setUserId(entity.getUser().getId());
@@ -41,8 +41,8 @@ public class FavMovieMapper implements GenericMapper<FavMovieEntity, FavMovie>{
 	}
 
 	@Override
-	public FavMovieEntity dtoToEntity(FavMovie dto) {
-		FavMovieEntity favMovieEnt = new FavMovieEntity();
+	public FavMoviesEntity dtoToEntity(FavMovies dto) {
+		FavMoviesEntity favMovieEnt = new FavMoviesEntity();
 		favMovieEnt.setId(dto.getId());
 		favMovieEnt.setName(dto.getName());
 		favMovieEnt.setUser(userRepo.findOne(dto.getUserId()));

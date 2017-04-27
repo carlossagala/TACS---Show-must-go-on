@@ -1,15 +1,17 @@
 package ar.com.tacs.grupo5.frba.utn.dao;
 
-import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import java.util.HashSet;
+
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 
 public interface FavMoviesDao {
 
-	void save(FavMovieEntity fm);
-	FavMovieEntity findOne(String id);
-	FavMovie getFavMovie(String id);
-	
-	FavMovie saveFavMovie(FavMovie favMovie);
+	//void save(FavMoviesEntity fm);
+	FavMoviesEntity findOne(String id);
+	FavMoviesEntity getFavMovie(String id);
+	FavMoviesEntity saveFavMovie(FavMoviesEntity favMovie);
+	HashSet<FavMoviesEntity> getFavMoviesByUser(UserEntity user);
 
 	//boolean deleteFavMovie(FavMovie favMovie);
 }

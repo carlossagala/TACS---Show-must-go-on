@@ -1,51 +1,62 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
+import java.util.HashSet;
+
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
-import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
-import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
-import ar.com.tacs.grupo5.frba.utn.mapper.FavMovieMapper;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
+import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 
 @Repository
 public class FavMoviesDaoImpl implements FavMoviesDao {
-	
 	@Autowired
-	private FavMovieMapper favMovieMapper;
+	private EntityManager em;
 	
-	private FavMovieRepository favMovieRepository;
+	private FavMoviesRepository favMovieRepository;
 
-	public FavMovieRepository getFavMovieRepository() {
+	public FavMoviesRepository getFavMovieRepository() {
 		return favMovieRepository;
 	}
 
-	public FavMoviesDaoImpl(FavMovieRepository favMovieRepository) {
+	public FavMoviesDaoImpl(FavMoviesRepository favMovieRepository) {
 		this.favMovieRepository = favMovieRepository;
 	}
 
 	@Override
-	public FavMovie getFavMovie(String id) {
-		return favMovieMapper.entityToDto(favMovieRepository.findOne(id));
+	public FavMoviesEntity getFavMovie(String id) {
+		return favMovieRepository.findOne(id);
 	}
 
 	@Override
-	public FavMovie saveFavMovie(FavMovie favMovie) {
-		return favMovieMapper.entityToDto(favMovieRepository.save(favMovieMapper.dtoToEntity(favMovie)));
+	public FavMoviesEntity saveFavMovie(FavMoviesEntity favMovie) {
+		FavMoviesEntity fav = favMovieRepository.save(favMovie);
+		em.flush();
+		return fav; 
 	}
 
 	@Override
-	public FavMovieEntity findOne(String id) {
+	public FavMoviesEntity findOne(String id) {
 		return this.favMovieRepository.findOne(id);
 	}
 
 	@Override
-	@Transactional
-	public void save(FavMovieEntity fm) {
-		this.favMovieRepository.save(fm);
+	public HashSet<FavMoviesEntity> getFavMoviesByUser(UserEntity user) {
+		return this.favMovieRepository.findByUser(user);		
 	}
+
+//	@Override
+//	@Transactional
+//	public void save(FavMoviesEntity fm) {
+//		this.favMovieRepository.save(fm);
+//	}
 
 	/*@Override
 	@Transactional

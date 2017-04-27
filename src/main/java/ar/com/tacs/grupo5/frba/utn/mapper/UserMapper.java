@@ -6,16 +6,16 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Component
 public class UserMapper implements GenericMapper<UserEntity, User> {
 
 	@Autowired
-	private FavMovieMapper favMovieMapper;
+	private FavMoviesMapper favMovieMapper;
 
 	@Override
 	public User entityToDto(UserEntity entity) {
@@ -28,10 +28,10 @@ public class UserMapper implements GenericMapper<UserEntity, User> {
 		user.setPass(entity.getPass());
 		user.setUserName(entity.getUserName());
 		user.setFavMovies(new HashSet<>());
-		Set<FavMovieEntity> favMoviesEnt = entity.getFavMovies();
+		Set<FavMoviesEntity> favMoviesEnt = entity.getFavMovies();
 		if(favMoviesEnt != null && favMoviesEnt.size()>0)
 		{
-			for (FavMovieEntity favMovieEntity : favMoviesEnt) {
+			for (FavMoviesEntity favMovieEntity : favMoviesEnt) {
 				user.getFavMovies().add(favMovieMapper.entityToDto(favMovieEntity));
 			}
 		}
@@ -46,10 +46,10 @@ public class UserMapper implements GenericMapper<UserEntity, User> {
 		userEnt.setPass(dto.getPass());
 		userEnt.setUserName(dto.getUserName());
 		userEnt.setFavMovies(new HashSet<>());
-		Set<FavMovie> favMovies = dto.getFavMovies();
+		Set<FavMovies> favMovies = dto.getFavMovies();
 		if(favMovies != null && favMovies.size()>0)
 		{
-			for (FavMovie favMovie : favMovies) {
+			for (FavMovies favMovie : favMovies) {
 				userEnt.getFavMovies().add(favMovieMapper.dtoToEntity(favMovie));
 			}
 		}

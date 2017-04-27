@@ -3,7 +3,7 @@ package ar.com.tacs.grupo5.frba.utn.service;
 import java.util.List;
 
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Images;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;

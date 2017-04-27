@@ -3,7 +3,7 @@ package ar.com.tacs.grupo5.frba.utn.mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
@@ -11,7 +11,7 @@ import ar.com.tacs.grupo5.frba.utn.models.Movie;
 public class MovieMapper implements GenericMapper<MovieEntity, Movie>{
 	
 	@Autowired
-	private FavMovieRepository favMovieRepo;
+	private FavMoviesRepository favMovieRepo;
 	
 	@Override
 	public Movie entityToDto(MovieEntity entity) {

@@ -22,3 +22,7 @@ insert into FAV_ACTOR_ENTITY (id, USER_ID, actor_id) values (19, 2, 19);
 insert into FAV_ACTOR_ENTITY (id, USER_ID, actor_id) values (20, 2, 20);
 insert into FAV_ACTOR_ENTITY (id, USER_ID, actor_id) values (21, 2, 21);
 insert into FAV_ACTOR_ENTITY (id, USER_ID, actor_id) values (22, 2, 22);
+
+
+insert into FAV_MOVIES_ENTITY (id, name, USER_ID) values (1, 'Mi primera lista', 2);
+insert into FAV_MOVIES_ENTITY (id, name, USER_ID) values (2, 'Mi segunda lista', 2);

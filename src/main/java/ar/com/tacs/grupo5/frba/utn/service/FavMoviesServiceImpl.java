@@ -7,8 +7,8 @@ import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovie;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
+import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 
 
 @Component
@@ -17,21 +17,24 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	private FavMoviesDao favMoviesDao;
 	
 	@Autowired
+	private FavMoviesMapper favMoviesMapper;
+	
+	@Autowired
 	private MovieDao movieDao;
 	
 	@Autowired
 	private UserDao userDao;
 	
 	@Override
-	public FavMovie updateFavMovie(String newTitle, String idFavMovie) throws ResourceNotFound {
-		FavMovie modifiedFavMovie = favMoviesDao.getFavMovie(idFavMovie);
+	public FavMovies updateFavMovie(String newTitle, String idFavMovie) throws ResourceNotFound {
+		FavMovies modifiedFavMovie = favMoviesMapper.entityToDto(favMoviesDao.getFavMovie(idFavMovie));
 		
 		if (modifiedFavMovie == null)
 			throw new ResourceNotFound();
 		
 		modifiedFavMovie.setName(newTitle);
 
-		favMoviesDao.saveFavMovie(modifiedFavMovie);
+		favMoviesDao.saveFavMovie(favMoviesMapper.dtoToEntity(modifiedFavMovie));
 		
 		return modifiedFavMovie;
 	}
@@ -48,8 +51,8 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	}
 
 	@Override
-	public FavMovie getFavMovieDetail(String idFavMovie) throws ResourceNotFound {
-		FavMovie returnFavMovie = favMoviesDao.getFavMovie(idFavMovie);
+	public FavMovies getFavMovieDetail(String idFavMovie) throws ResourceNotFound {
+		FavMovies returnFavMovie = favMoviesMapper.entityToDto(favMoviesDao.getFavMovie(idFavMovie));
 		
 		if (returnFavMovie == null)
 			throw new ResourceNotFound();

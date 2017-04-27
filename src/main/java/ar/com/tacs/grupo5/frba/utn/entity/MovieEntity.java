@@ -23,7 +23,7 @@ public class MovieEntity {
 	private String id;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "favmovie_id", referencedColumnName = "id")
-	private FavMovieEntity favMovie;
+	private FavMoviesEntity favMovie;
 	private String idMovie;
 
 
@@ -31,7 +31,7 @@ public class MovieEntity {
 		super();
 	}
 	
-	public MovieEntity(FavMovieEntity favMovie)
+	public MovieEntity(FavMoviesEntity favMovie)
 	{
 		this.favMovie = favMovie;
 	}
@@ -44,11 +44,11 @@ public class MovieEntity {
 		this.id = id;
 	}
 
-	public FavMovieEntity getFavMovie() {
+	public FavMoviesEntity getFavMovie() {
 		return favMovie;
 	}
 
-	public void setFavMovie(FavMovieEntity favMovie) {
+	public void setFavMovie(FavMoviesEntity favMovie) {
 		this.favMovie = favMovie;
 	}
 

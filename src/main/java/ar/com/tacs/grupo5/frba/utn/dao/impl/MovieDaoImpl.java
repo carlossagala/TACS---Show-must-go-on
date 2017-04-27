@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
-import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
-import ar.com.tacs.grupo5.frba.utn.entity.FavMovieEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
@@ -22,7 +22,7 @@ public class MovieDaoImpl implements MovieDao {
 	@Autowired
 	private EntityManager em;
 	@Autowired
-	private FavMovieRepository favMovieRepository;
+	private FavMoviesRepository favMovieRepository;
 	@Autowired
 	private FavMoviesDao favMoviesDao;
 	
@@ -48,7 +48,7 @@ public class MovieDaoImpl implements MovieDao {
 	@Override
 	@Transactional
 	public void deleteMovie(Movie movie) {
-		FavMovieEntity favMovieEntity = favMoviesDao.findOne(movie.getFavMovieId());
+		FavMoviesEntity favMovieEntity = favMoviesDao.findOne(movie.getFavMovieId());
 		MovieEntity movieEntity = movieRepository.findByIdMovieAndFavMovie(movie.getMovieId(),favMovieEntity);
 //		MovieEntity movieEntityItem = favMovieEntity.getMovies().stream().filter(x->x.getId().equals(movieEntity.getId())).findAny().orElse(null);
 //		favMovieEntity.getMovies().remove(movieEntityItem);

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavActorRepository;
-import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMovieRepository;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavActorEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
