@@ -1,0 +1,14 @@
+{
+	"page": 1,
+	"total_results": 2,
+	"total_pages": 1,
+	"data": [{
+		"id": "1",
+		"user_name": "admin",
+		"nivel": "admin"
+	}, {
+		"id": "2",
+		"user_name": "test",
+		"nivel": "user"
+	}]
+}

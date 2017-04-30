@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
-@Table(
+@Table(name="MOVIE",
 	    uniqueConstraints=
 		@UniqueConstraint(columnNames={"idmovie", "favmovie_id"})
 	)

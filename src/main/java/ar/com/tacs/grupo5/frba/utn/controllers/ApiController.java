@@ -216,7 +216,7 @@ public class ApiController {
 		response.status(200);
 		Response resp = new Response();
 		
-		resp.setData(userService.getUserById(request.attribute("id")));
+		resp.setData(userService.getUserById(request.params(":id")));
 		return resp;
 	};
 
@@ -295,16 +295,15 @@ public class ApiController {
 	 * Returns the intersection between the favourite movies from the two users
 	 */
 	public Route getListIntersection = (request, response) -> {
-		return response;
-//		response.status(200);
-//
-//		PagedResponse resp = new PagedResponse();
+		response.status(200);
+
+		PagedResponse resp = new PagedResponse();
 //		resp.setTotalPages(1);
 //		resp.setTotalResults(1L);
 //		resp.setPage(getPage(request));
 //		
-//		resp.setData(userService.getListIntersection(request.attribute("id"), request.attribute("id2")));
-//		return resp;
+//		resp.setData(userService.getListIntersection(request.params(":id"), request.params(":id2")));
+		return resp;
 	};
 	
 	
@@ -485,7 +484,7 @@ public class ApiController {
 		try{
 			@SuppressWarnings("unchecked")
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
-			newTitle = (String)requestMap.get("newTitle");
+			newTitle = (String)requestMap.get("new_title");
 		}catch(Exception e){
 			response.status(400);
 			return "Bad Request: Parametro newTitle en el body es obligatorio";
@@ -544,7 +543,7 @@ public class ApiController {
 		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 		String movieId = (String)requestMap.get("id");
 		Movie movie = movieService.addMovie(idFavMovie, movieId);
-		response.status(200);
+		response.status(201);
 		Response resp = new Response();
 		resp.setData(movie);
 		return resp;
@@ -556,8 +555,7 @@ public class ApiController {
 	public Route deleteMovieFromList = (request, response) -> {
 		User user = authenticate(request);
 		String idFavMovie = request.params(":id");
-		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
-		String movieId = (String)requestMap.get("id");
+		String movieId = request.params(":movie_id");
 		movieService.removeMovie(idFavMovie, movieId);
 		response.status(200);
 		Response resp = new Response();

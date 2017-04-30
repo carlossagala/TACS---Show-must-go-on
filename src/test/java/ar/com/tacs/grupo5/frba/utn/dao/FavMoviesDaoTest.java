@@ -67,14 +67,14 @@ public class FavMoviesDaoTest {
 		
 		Assert.assertNotNull(savedFavMovie);
 		Assert.assertTrue(savedFavMovie.getName().equals("Mi Lista Test"));
-		Assert.assertTrue(favMoviesDao.getFavMoviesByUser(user).size() == 3);
+		Assert.assertEquals(5,favMoviesDao.getFavMoviesByUser(user).size());
 	}
 
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testGetFavMovies() {
-		Assert.assertTrue(favMoviesDao.getFavMoviesByUser(user).size() == 2);
+		Assert.assertEquals(4,favMoviesDao.getFavMoviesByUser(user).size());
 	}
 
 	@Test

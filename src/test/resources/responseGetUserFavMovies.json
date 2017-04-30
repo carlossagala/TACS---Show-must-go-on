@@ -1,0 +1,17 @@
+{
+  "page": 1,
+  "total_results": 2,
+  "total_pages": 1,
+  "data": [
+    {
+      "id": "838987df153f",
+      "name": "Peliculas de terror",
+      "user_id": "1"
+    },
+    {
+      "id": "bac25bb4c3dd",
+      "name": "Top peliculas 1",
+      "user_id": "1"
+    }
+  ]
+}

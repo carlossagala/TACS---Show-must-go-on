@@ -47,13 +47,13 @@ public class FavMoviesMapper implements GenericMapper<FavMoviesEntity, FavMovies
 		favMovieEnt.setName(dto.getName());
 		favMovieEnt.setUser(userRepo.findOne(dto.getUserId()));
 		favMovieEnt.setMovies(new HashSet<>());
-		Set<Movie> movies = dto.getMovies();
-		if(movies != null && !movies.isEmpty())
-		{
-			for (Movie movie : movies) {
-				favMovieEnt.getMovies().add(movieMapper.dtoToEntity(movie));
-			}
-		}
+//		Set<Movie> movies = dto.getMovies();
+//		if(movies != null && !movies.isEmpty())
+//		{
+//			for (Movie movie : movies) {
+//				favMovieEnt.getMovies().add(movieMapper.dtoToEntity(movie));
+//			}
+//		}
 		return favMovieEnt;
 	}
 

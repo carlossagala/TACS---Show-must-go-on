@@ -1,0 +1,15 @@
+{
+  "page": 1,
+  "total_results": 1,
+  "total_pages": 1,
+  "data": [
+    {
+      "id": "6384",
+      "type": "actor",
+      "profile_path": "/id1qIb7cZs2eQno90KsKwG8VLGN.jpg",
+      "adult": false,
+      "name": "Keanu Reeves",
+      "popularity": "12.313545"
+    }
+  ]
+}
