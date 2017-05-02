@@ -1,0 +1,47 @@
+<div class="row login-header">
+    <h3 class="center-align">Show must go on</h3>
+</div>
+<div class="row">
+    <div class="login-container col m8 offset-m2">
+    <div class="row grey darken-3 form-wrapper">
+        <div class="col m4 hide-on-med-and-down">
+            <img class="responsive-img" src="images/TheShowMustGoOn.jpg">
+        </div>
+        <div class="col m6 offset-m1 login-wrapper">
+            <div class="section">
+                <h5 class="center-align blue-text">Login</h5>
+                <p class="center-align">Por favor, inicie sesion para continuar.</p>
+            </div>
+            <div class="section-wrapper">
+                <form id="login-form" name="login.loginForm">
+                    <div class="row container">
+                        <div class="card-panel card-message red lighten-1 white-text" ng-show="login.invalidInput">
+                            <p class="center-align">Error en los datos ingresados</p>
+                        </div>
+                        <div class="card-panel card-message red lighten-1 white-text" ng-show="login.serverError">
+                            <p class="center-align">Error al procesar la solicitud</p>
+                        </div>
+                        <div class="input-field col s12 m12">
+                            <i class="material-icons prefix">perm_identity</i>
+                            <input id="icon_prefix" type="text" class="validate" ng-model="login.user.username" ng-required="true">
+                            <label for="icon_prefix">Username</label>
+                        </div>
+                        <div class="input-field col s12 m12">
+                            <i class="material-icons prefix">vpn_key</i>
+                            <input id="icon_prefix" type="password" class="validate" ng-model="login.user.password" ng-required="true">
+                            <label for="icon_prefix">Password</label>
+                        </div>
+                        <div class="input-field col s12 m12 center-align">
+                            <a class="waves-effect waves-light btn" ng-click="login.auth()" ng-disabled="!login.loginForm.$valid">Iniciar sesion!</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="row container">
+    <p class="center-align">Si aun no tiene cuenta puede crear una cuenta en el siguiente enlace</p>
+    <p class="center-align"><a href="#/signup" class="waves-effect waves-teal btn-flat blue-text">Registrarse</a></p>
+</div>

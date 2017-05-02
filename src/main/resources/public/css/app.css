@@ -107,6 +107,27 @@ p:hover {
     box-sizing: border-box;
 }
 
+.login-header {
+    margin-top:60px;
+}
+
+.login-container .form-wrapper > .col {
+    padding: 0 !important;
+    height: 456px;
+}
+
+.login-container .form-wrapper > .col.login-wrapper {
+    padding-top: 24px !important;
+}
+
+.card-message {
+    padding: 12px;
+}
+
+.card.horizontal .card-image {
+    max-width: 23.5% !important;
+}
+
 /* DARK THEME - DESKTOP - BEGIN  */
 
 .dark-theme .form-wrapper {
@@ -116,6 +137,11 @@ p:hover {
 
 .dark-theme .form-wrapper {
     color: #ccc;
+}
+
+.dark-theme .login-wrapper {
+    border-bottom: 0px !important;
+    box-sizing: border-box;
 }
 
 /* DARK THEME - DESKTOP - END */

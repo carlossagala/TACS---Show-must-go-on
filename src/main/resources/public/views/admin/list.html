@@ -1,0 +1,201 @@
+<div id="panelRight" class="col s12">
+	<div class="progress-wrapper col s6 offset-s3" ng-if="main.loading">
+		<h4 class="teal-text">Cargando...</h4>
+		<div class="progress">
+			<div class="indeterminate"></div>
+		</div>
+	</div>
+	<div class="row list-wrapper" ng-if="!main.loading && main.preloaded">
+		<div class="col s12">
+			<ul class="tabs grey darken-4">
+				<li class="tab col s4"><a class="active" href="#t1">Peliculas Recomendadas</a></li>
+				<li class="tab col s4"><a href="#t2">Peliculas favoritas</a></li>
+				<li class="tab col s4"><a href="#t3">Actores favoritos</a></li>
+			</ul>
+		</div>
+
+		<div id="t1" class="col s12 m12">
+			<div class="row section-wrapper">
+				<div ng-repeat="movie in movies" class="col s12 m6">
+					<div class="card horizontal small">
+						<div class="card-image">
+							<img src="{{ movie.images[0].path ? movie.images[0].path : '' }}">
+						</div>
+						<div class="card-stacked">
+							<div class="card-content">
+								<h5 class="header">{{ movie.title }}</h5>
+								<p>{{ movie.description }}</p>
+							</div>
+							<div class="card-action">
+								<a href="#">Mas info...</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="t2" class="col s12 m12">
+			<div class="row section-wrapper">
+				<h4 class="header">Top 5 Horror</h4>
+				<table>
+					<thead>
+					  <tr>
+						  <th>Titulo</th>
+						  <th>Sinopsis</th>
+						  <th>Actores</th>
+						  <th>Imagenes</th>
+						  <th>Quitar</th>
+					  </tr>
+					</thead>
+
+					<tbody>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="divider"></div>
+			<div class="row section-wrapper">
+				<h4 class="header">Top 5 Suspenso</h4>
+				<table>
+					<thead>
+					  <tr>
+						  <th>Titulo</th>
+						  <th>Sinopsis</th>
+						  <th>Actores</th>
+						  <th>Imagenes</th>
+						  <th>Quitar</th>
+					  </tr>
+					</thead>
+
+					<tbody>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="t3" class="col s12 m12">
+			<div class="row section-wrapper">
+				<table>
+					<thead>
+					  <tr>
+						  <th>Nombre</th>
+						  <th>Biografia</th>
+						  <th>Peliculas</th>
+					  </tr>
+					</thead>
+
+					<tbody>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					  <tr>
+						<td>...</td>
+						<td>...</td>
+						<td>...</td>
+					  </tr>
+					</tbody>
+				  </table>
+			</div>
+		</div>
+
+	</div>
+	<div class="row list-wrapper">
+		<div class="col s12">
+			Total de resultados: {{ search_items.total_results }}
+		</div>
+
+		<div class="col s12 m12">
+			<div class="row section-wrapper">
+				<div ng-repeat="item in search_items.data">
+					<div class="col s12 m3" ng-if="item.type==='actor'">
+						<div class="card horizontal">
+							<div class="card-image">
+								<a href="#/actor/{{item.id}}"><img src="https://image.tmdb.org/t/p/w500{{ item.profile_path }}"></a>
+							</div>
+							<div class="card-stacked">
+								<div class="card-content">
+									<h5 class="header">{{ item.name }}</h5>
+									<p>Popularidad: {{ item.popularity }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m4" ng-if="item.type==='movie'">
+						<div class="card horizontal">
+							<div class="card-image">
+								<a href="#/movie/{{item.id}}"><img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"></a>
+							</div>
+							<div class="card-stacked">
+								<div class="card-content">
+									<h5 class="header">{{ item.title }}</h5>
+									<p>{{ item.overview }}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+ <script type="text/javascript">
+ 	/*
+  	$(document).ready(function(){
+	    setTimeout(
+	    	function(){
+	    		$(".progress-wrapper").addClass("hide")
+	    		$(".list-wrapper").removeClass("hide")
+
+	    		$('ul.tabs').tabs({
+			    	swipeable: true
+			    });
+	    	}, 2000
+	    );
+	});*/
+  </script>
