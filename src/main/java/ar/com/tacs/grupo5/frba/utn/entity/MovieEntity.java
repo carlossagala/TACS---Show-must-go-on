@@ -60,4 +60,31 @@ public class MovieEntity {
 		this.idMovie = idMovie;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((idMovie == null) ? 0 : idMovie.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MovieEntity other = (MovieEntity) obj;
+		if (idMovie == null) {
+			if (other.idMovie != null)
+				return false;
+		} else if (!idMovie.equals(other.idMovie))
+			return false;
+		return true;
+	}
+	
+	
+
 }

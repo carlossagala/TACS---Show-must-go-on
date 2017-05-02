@@ -61,7 +61,7 @@ public class IntegrationTest
 	public void testPutFavMovies() throws Exception {
 		Map<String,String> requestMap = new HashMap<>();
 		requestMap.put("new_title", "Nueva lista");
-		genericPut("/api/favmovies/5b377bf69c18/", gson.toJson(requestMap));
+		genericPut("/api/favmovies/db67970a4304/", gson.toJson(requestMap));
 	}
 	@Test
 	public void testGetFavMovies() throws Exception {
@@ -71,7 +71,7 @@ public class IntegrationTest
 	public void testPostMovie() throws Exception {
 		Map<String,String> requestMap = new HashMap<>();
 		requestMap.put("id", "9");
-		genericPost("/api/favmovies/5b377bf69c18/movies/", gson.toJson(requestMap));
+		genericPost("/api/favmovies/db67970a4304/movies/", gson.toJson(requestMap));
 	}
 	@Test
 	public void testDeleteMovie() throws Exception {
@@ -82,7 +82,6 @@ public class IntegrationTest
 		Map<String,String> requestMap = new HashMap<>();
 		requestMap.put("name", "lista1");
 		genericPost("/api/favmovies/",gson.toJson(requestMap));
-
 	}
 	@Test
 	public void testCrearFavActor() throws Exception {

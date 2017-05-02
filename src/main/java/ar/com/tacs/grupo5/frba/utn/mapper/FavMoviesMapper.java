@@ -10,15 +10,18 @@ import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 @Component
 public class FavMoviesMapper implements GenericMapper<FavMoviesEntity, FavMovies>{
 	
-	@Autowired
 	private MovieMapper movieMapper;
-	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	public FavMoviesMapper(MovieMapper movieMapper, UserRepository userRepo) {
+		this.movieMapper = movieMapper;
+		this.userRepo = userRepo;
+	}
 
 	@Override
 	public FavMovies entityToDto(FavMoviesEntity entity) {
@@ -47,13 +50,6 @@ public class FavMoviesMapper implements GenericMapper<FavMoviesEntity, FavMovies
 		favMovieEnt.setName(dto.getName());
 		favMovieEnt.setUser(userRepo.findOne(dto.getUserId()));
 		favMovieEnt.setMovies(new HashSet<>());
-//		Set<Movie> movies = dto.getMovies();
-//		if(movies != null && !movies.isEmpty())
-//		{
-//			for (Movie movie : movies) {
-//				favMovieEnt.getMovies().add(movieMapper.dtoToEntity(movie));
-//			}
-//		}
 		return favMovieEnt;
 	}
 

@@ -43,6 +43,7 @@ import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.service.ActorService;
+import ar.com.tacs.grupo5.frba.utn.service.FavActorService;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
 import ar.com.tacs.grupo5.frba.utn.service.MovieService;
 import ar.com.tacs.grupo5.frba.utn.service.SearchService;
@@ -163,16 +164,18 @@ public class ApiController {
 	private UserService userService;
 	private ActorService actorService;
 	private FavMoviesService favMoviesService;
+	private FavActorService favActorService;
 	private JWTUtils jwtUtils;
 
 	@Autowired
-	public ApiController(UserService userService,SearchService searchService,ActorService actorService, MovieService movieService, FavMoviesService favMoviesService, Gson gson, JWTUtils jwtUtils) {
+	public ApiController(UserService userService,SearchService searchService,ActorService actorService, MovieService movieService, FavMoviesService favMoviesService, FavActorService favActorService, Gson gson, JWTUtils jwtUtils) {
 		super();
 		this.userService = userService;
 		this.searchService = searchService;
 		this.actorService = actorService;
 		this.movieService = movieService;
 		this.favMoviesService = favMoviesService;
+		this.favActorService = favActorService;
 		this.gson = gson;
 		this.jwtUtils = jwtUtils;
 	}
@@ -224,53 +227,45 @@ public class ApiController {
 	 * Returns the user's favourite movies
 	 */
 	public Route getUserFavMovies = (request, response) -> {
-		return response;
-//		response.status(200);
-//		String id = request.params(":id");
-//		PagedResponse resp = new PagedResponse();
-//
-//		Set<FavMovie> favMovies = userService.getUserFavMovies(id);
-//		resp.setData(favMovies);
-//		setPagedResults(resp, favMovies);
-//		resp.setPage(getPage(request));
-//		
-//		return resp;
+		String id = request.params(":id");
+		PagedResponse resp = new PagedResponse();
+		Set<FavMovies> favMovies = userService.getUserById(id).getFavMovies();
+		resp.setData(favMovies);
+		setPagedResults(resp, favMovies);
+		resp.setPage(getPage(request));
+		return resp;
 	};
 
 	/**
 	 * Returns the user's favourite actors
 	 */
 	public Route getUserFavActors = (request, response) -> {
-		return response;
-//		User user = authenticate(request);
-//		
-//		PagedResponse resp = new PagedResponse();
-//		int page = getPage(request);
-//		userService.getFavActors(user.getId(),page,resp);
-//		if(resp.getTotalResults()==0){
-//			response.status(404);
-//		}else{
-//			response.status(200);
-//		}
-//		return resp;
+		User user = authenticate(request);
+		PagedResponse resp = new PagedResponse();
+		favActorService.getFavActors(user.getId(), getPage(request), resp);
+		if(resp.getTotalResults()==0){
+			response.status(404);
+		}else{
+			response.status(200);
+		}
+		return resp;
 	};
 	/**
 	 * Returns the user's favourite actors
 	 */
 	public Route getAdminUserFavActors = (request, response) -> {
-		return response;
-//		User user = authenticate(request);
-//		validateAuthorization(user);
-//		String idUser = request.params(":id");
-//		int page = getPage(request);
-//		PagedResponse resp = new PagedResponse();
-//		userService.getFavActors(idUser,page,resp);
-//		if(resp.getTotalResults()==0){
-//			response.status(404);
-//		}else{
-//			response.status(200);
-//		}
-//		return resp;
+		User user = authenticate(request);
+		validateAuthorization(user);
+		String idUser = request.params(":id");
+		int page = getPage(request);
+		PagedResponse resp = new PagedResponse();
+		favActorService.getFavActors(idUser, page, resp);
+		if(resp.getTotalResults()==0){
+			response.status(404);
+		}else{
+			response.status(200);
+		}
+		return resp;
 	};
 
 	private Integer getPage(Request request) {
@@ -296,43 +291,40 @@ public class ApiController {
 	 */
 	public Route getListIntersection = (request, response) -> {
 		response.status(200);
-
 		PagedResponse resp = new PagedResponse();
-//		resp.setTotalPages(1);
-//		resp.setTotalResults(1L);
-//		resp.setPage(getPage(request));
-//		
-//		resp.setData(userService.getListIntersection(request.params(":id"), request.params(":id2")));
+		resp.setTotalPages(1);
+		resp.setTotalResults(1L);
+		resp.setPage(getPage(request));
+		resp.setData(favMoviesService.getListIntersection(request.params(":id"), request.params(":id2")));
 		return resp;
 	};
 	
 	
 	public Route getRankingActor = (request, response) -> {
-		return response;
-//		response.status(200);
-//
-//		PagedResponse resp = new PagedResponse();
-//		resp.setTotalPages(1);
-//		resp.setTotalResults(1L);
-//		resp.setPage(getPage(request));
-//		
-//
-//		List<User> users = userService.getAllUsers();
-//		
-//		List<String> actoresId = new ArrayList<>();
-//		
-//		users.forEach(u->actoresId.addAll(userService.getFavActorsId(u.getId(), getPage(request)))); 
-//		
-//		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor > actores = new ArrayList<>();
-//		
-//		actoresId.forEach(id -> actores.add(actorService.getDetailActor(id)));
-//		
-//		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
-//		
-//		actores.forEach(a -> cargarRanking(a,ranking));
-//
-//		resp.setData(ranking);
-//		return resp;
+		response.status(200);
+
+		PagedResponse resp = new PagedResponse();
+		resp.setTotalPages(1);
+		resp.setTotalResults(1L);
+		resp.setPage(getPage(request));
+		
+
+		List<User> users = userService.getAllUsers();
+		
+		List<String> actoresId = new ArrayList<>();
+		
+		users.forEach(u->actoresId.addAll(favActorService.getFavActorsId(u.getId(), getPage(request)))); 
+		
+		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor > actores = new ArrayList<>();
+		
+		actoresId.forEach(id -> actores.add(actorService.getDetailActor(id)));
+		
+		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
+		
+		actores.forEach(a -> cargarRanking(a,ranking));
+
+		resp.setData(ranking);
+		return resp;
 	};
 
 	/**
@@ -421,28 +413,25 @@ public class ApiController {
 	 * Creates a new list of favourite movies
 	 */
 	public Route createNewList = (request, response) -> {
-		return response;
-//		response.status(201);
-//
-//		Response resp = new Response();
-//		
-//		User user = authenticate(request);
-//		String name = null;
-//		try{
-//			@SuppressWarnings("unchecked")
-//			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
-//			name = (String)requestMap.get("name");
-//		}catch(Exception e){
-//			response.status(400);
-//			return "Bad Request: Parametro name en el body es obligatorio";
-//		}
-//		FavMovie favMovie = userService.createNewFavMovieList(name,user);
-//		if(favMovie!=null){
-//			response.status(201);
-//		}else{
-//			response.status(404);
-//		}
-//		return resp;
+		Response resp = new Response();
+		
+		User user = authenticate(request);
+		String name = null;
+		try{
+			@SuppressWarnings("unchecked")
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			name = (String)requestMap.get("name");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro name en el body es obligatorio";
+		}
+		FavMovies favMovie = favMoviesService.createNewFavMovieList(name,user);
+		if(favMovie!=null){
+			response.status(201);
+		}else{
+			response.status(404);
+		}
+		return resp;
 	};
 
 	/**
@@ -510,21 +499,13 @@ public class ApiController {
 	 */
 	public Route deleteFavMoviesList = (request, response) -> {
 		Response resp = new Response();
-		
-		User user = authenticate(request);
-		
 		String idFavMovie = request.params(":id");
 		
 		try
 		{
-			if (favMoviesService.deleteFavMovie(idFavMovie)) {
-				response.status(200);
-				resp.setMessage("ok");
-			}
-			else {
-				response.status(500);
-				resp.setMessage("Internal Error");
-			}
+			favMoviesService.deleteFavMovie(idFavMovie);
+			response.status(200);
+			resp.setMessage("ok");
 		}
 		catch (ResourceNotFound e) {
 			response.status(404);
@@ -580,63 +561,59 @@ public class ApiController {
 	 * Returns a ranking based on a list
 	 */
 	public Route getRankingFromList = (request, response) -> {
-		return response;
-//		User user = authenticate(request);
-//		response.status(200);
-//		String idList = request.params(":id");
-//		PagedResponse resp = new PagedResponse();
-//		resp.setTotalPages(1);
-//		resp.setTotalResults(1L);
-//		resp.setPage(getPage(request));
-//		
-//
-//		Set<FavMovie> listOfFavMovies = userService.getUserFavMovies(user.getId()); 
-//		FavMovie lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).collect(Collectors.toList()).get(0);
-//		
-//		
-//		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
-//		
-//		lista.getMovies().forEach(m -> actores.addAll(movieService.getMovieActors(m.getId())));
-//		
-//		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
-//		
-//		actores.forEach(a -> cargarRanking(a,ranking));
-//
-//		resp.setData(ranking);
-//		return resp;
+		User user = authenticate(request);
+		response.status(200);
+		String idList = request.params(":id");
+		PagedResponse resp = new PagedResponse();
+		resp.setTotalPages(1);
+		resp.setTotalResults(1L);
+		resp.setPage(getPage(request));
+		
+
+		Set<FavMovies> listOfFavMovies = user.getFavMovies(); 
+		FavMovies lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).collect(Collectors.toList()).get(0);
+		
+		
+		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
+		
+		lista.getMovies().forEach(m -> actores.addAll(movieService.getMovieActors(m.getId())));
+		
+		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
+		
+		actores.forEach(a -> cargarRanking(a,ranking));
+
+		resp.setData(ranking);
+		return resp;
 	};
 
 	/**
 	 * Marks an actor as favourite
 	 */
 	public Route addActorToList = (request, response) -> {
-		return response;
-//		User user = authenticate(request);
-//		String id =null;
-//		try{
-//			@SuppressWarnings("unchecked")
-//			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
-//			id = (String)requestMap.get("id");
-//		}catch(Exception e){
-//			response.status(400);
-//			return "Bad Request: Parametro id en el body es obligatorio";
-//		}
-//		userService.addFavActor(user.getId(), id);
-//		response.status(201);
-//		return null;
+		String id = null;
+		User user = authenticate(request);
+		Response resp = new Response();
+		try{
+			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+			id = (String)requestMap.get("id");
+		}catch(Exception e){
+			response.status(400);
+			return "Bad Request: Parametro id en el body es obligatorio";
+		}
+		favActorService.addFavActor(user, id);
+		response.status(201);
+		return resp;
 	};
 
 	/**
 	 * Unmarks an actor as favourite
 	 */
 	public Route deleteActorFromList = (request, response) -> {
-		return response;
-//		User user = authenticate(request);
-//		String id = request.params(":id");
-//		userService.deleteFavActor(user.getId(), id);
-//		response.status(200);
-//		
-//		return null;
+		User user = authenticate(request);
+		String id = request.params(":id");
+		favActorService.deleteFavActor(user, id);
+		response.status(200);
+		return null;
 	};
 
 	/**
@@ -654,23 +631,14 @@ public class ApiController {
 	 * Returns recommendations for the user
 	 */
 	public Route getRecommendedMovies = (request, response) -> {
-		return response;
-//		User user = authenticate(request);
-//		response.status(200);
-//
-//		PagedResponse resp = new PagedResponse();
-//		resp.setTotalPages(1);
-//		resp.setTotalResults(2L);
-//		resp.setPage(getPage(request));
-//		
-//	
-//		
-//		resp.setData(	actorService.getMoviesWithActors(userService.getFavActorsId(user.getId(),getPage(request) )));
-////		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
-////				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
-////		resp.setData(Arrays.asList(new Movie("1", "Matrix", "image.jpg", "", "", Arrays.asList("")),
-////				new Movie("2", "Back to the Future", "image.jpg", "", "", Arrays.asList(""))));
-//		return resp;
+		User user = authenticate(request);
+		response.status(200);
+		PagedResponse resp = new PagedResponse();
+		resp.setTotalPages(1);
+		resp.setTotalResults(2L);
+		resp.setPage(getPage(request));
+		resp.setData(	actorService.getMoviesWithActors(favActorService.getFavActorsId(user.getId(),getPage(request) )));
+		return resp;
 	};
 
 	/**

@@ -1,29 +1,47 @@
 package ar.com.tacs.grupo5.frba.utn.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
-import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
-import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
+import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
+import ar.com.tacs.grupo5.frba.utn.models.Movie;
+import ar.com.tacs.grupo5.frba.utn.models.User;
 
 
 @Component
 public class FavMoviesServiceImpl implements FavMoviesService {
-	@Autowired
+	
 	private FavMoviesDao favMoviesDao;
-	
-	@Autowired
 	private FavMoviesMapper favMoviesMapper;
+	private MovieMapper movieMapper;
 	
 	@Autowired
-	private MovieDao movieDao;
+	public FavMoviesServiceImpl(FavMoviesDao favMoviesDao, FavMoviesMapper favMoviesMapper, MovieMapper movieMapper) {
+		this.favMoviesDao = favMoviesDao;
+		this.favMoviesMapper = favMoviesMapper;
+		this.movieMapper = movieMapper;
+	}
 	
-	@Autowired
-	private UserDao userDao;
+	@Override
+	public FavMovies createNewFavMovieList(String title, User user) {
+		FavMovies favMovies = new FavMovies();
+		favMovies.setName(title);
+		favMovies.setUserId(user.getId());
+		FavMoviesEntity favMoviesEntity = favMoviesMapper.dtoToEntity(favMovies);
+		FavMoviesEntity createdFavMovie = favMoviesDao.saveFavMovie(favMoviesEntity);
+		favMovies = favMoviesMapper.entityToDto(createdFavMovie);
+		return favMovies;
+	}
 	
 	@Override
 	public FavMovies updateFavMovie(String newTitle, String idFavMovie) throws ResourceNotFound {
@@ -40,14 +58,12 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	}
 
 	@Override
-	public boolean deleteFavMovie(String idFavMovie) throws ResourceNotFound {
-		return false;
-//		FavMovie deletedFavMovie = favMoviesDao.getFavMovie(idFavMovie);
-//		
-//		if (deletedFavMovie == null)
-//			throw new ResourceNotFound();
-//		
-//		return userDao.deleteFavMovies(deletedFavMovie.getUserId(), deletedFavMovie.getId());
+	public void deleteFavMovie(String idFavMovie) throws ResourceNotFound {
+		FavMoviesEntity favMovieToDelete = favMoviesDao.getFavMovie(idFavMovie);
+		
+		if (favMovieToDelete == null)
+			throw new ResourceNotFound();
+		favMoviesDao.deleteFavMovies(favMovieToDelete.getUser(), favMovieToDelete.getId());
 	}
 
 	@Override
@@ -59,26 +75,20 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		
 		return returnFavMovie;
 	}
+	
+	public List<Movie> getListIntersection(String id1, String id2) throws ResourceNotFound {
+		FavMoviesEntity favMovieOne = favMoviesDao.getFavMovie(id1);
+		if(favMovieOne == null)
+			throw new ResourceNotFound("FavMovieEntity with id "+id1+" not found");
+		FavMoviesEntity favMovieTwo = favMoviesDao.getFavMovie(id2);
+		if(favMovieTwo == null)
+			throw new ResourceNotFound("FavMovieEntity with id "+id2+" not found");
+		List<MovieEntity> intersectionList = favMovieOne.getMovies().stream().filter(favMovieTwo.getMovies()::contains).collect(Collectors.toList());
+		List<Movie> movies = new ArrayList<>();
+		for (MovieEntity movieEntity : intersectionList) {
+			movies.add(movieMapper.entityToDto(movieEntity));
+		}
+		return movies;
+	}
 
-//	@Override
-//	public Movie addMovie(String idFavMovie, String movieId) throws ResourceNotFound {
-//		FavMovie favMovie = favMoviesDao.getFavMovie(idFavMovie);
-//		if(favMovie == null)
-//		{
-//			throw new ResourceNotFound();
-//		}
-//		Movie movie = new Movie();
-//		movie.setFavMovieId(idFavMovie);
-//		movie.setMovieId(movieId);
-//		return movieDao.saveMovie(movie);
-//
-//	}
-//
-//	@Override
-//	public void removeMovie(String idFavMovie, String movieId) throws ResourceNotFound {
-//		Movie movie = new Movie();
-//		movie.setFavMovieId(idFavMovie);
-//		movie.setMovieId(movieId);
-//		movieDao.deleteMovie(movie);
-//	};
 }

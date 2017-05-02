@@ -12,68 +12,49 @@ import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
-import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 
 @Repository
+@Transactional
 public class FavMoviesDaoImpl implements FavMoviesDao {
 	@Autowired
 	private EntityManager em;
 	
-	private FavMoviesRepository favMovieRepository;
+	private FavMoviesRepository favMoviesRepository;
 
-	public FavMoviesRepository getFavMovieRepository() {
-		return favMovieRepository;
-	}
-
-	public FavMoviesDaoImpl(FavMoviesRepository favMovieRepository) {
-		this.favMovieRepository = favMovieRepository;
+	@Autowired
+	public FavMoviesDaoImpl(FavMoviesRepository favMoviesRepository) {
+		this.favMoviesRepository = favMoviesRepository;
 	}
 
 	@Override
 	public FavMoviesEntity getFavMovie(String id) {
-		return favMovieRepository.findOne(id);
+		return favMoviesRepository.findOne(id);
 	}
 
 	@Override
 	public FavMoviesEntity saveFavMovie(FavMoviesEntity favMovie) {
-		FavMoviesEntity fav = favMovieRepository.save(favMovie);
+		FavMoviesEntity fav = favMoviesRepository.save(favMovie);
 		em.flush();
 		return fav; 
 	}
 
 	@Override
 	public FavMoviesEntity findOne(String id) {
-		return this.favMovieRepository.findOne(id);
+		return this.favMoviesRepository.findOne(id);
 	}
 
 	@Override
 	public HashSet<FavMoviesEntity> getFavMoviesByUser(UserEntity user) {
-		return this.favMovieRepository.findByUser(user);		
+		return this.favMoviesRepository.findByUser(user);		
 	}
 
-//	@Override
-//	@Transactional
-//	public void save(FavMoviesEntity fm) {
-//		this.favMovieRepository.save(fm);
-//	}
-
-	/*@Override
-	@Transactional
-	public boolean deleteFavMovie(FavMovie favMovie) {
-		MovieDao movDao = new MovieDaoImpl();
-		
-		for(Movie mov : favMovie.getMovies()){
-			movDao.deleteMovie(mov);
-		}
-		
-		try {
-			favMovieRepository.delete(favMovieMapper.dtoToEntity(favMovie));
-		}
-		catch(IllegalArgumentException e) {
-			return false;
-		}
-		return true;
-	}*/
+	@Override
+	public void deleteFavMovies(UserEntity user, String idFavMovies) throws ResourceNotFound {
+		FavMoviesEntity favMov = favMoviesRepository.findOne(idFavMovies);
+		if (favMov == null)
+			throw new ResourceNotFound();
+		favMoviesRepository.delete(favMov);
+	}
 
 }
