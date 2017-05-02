@@ -8,8 +8,7 @@
       "type": "actor",
       "profile_path": "/id1qIb7cZs2eQno90KsKwG8VLGN.jpg",
       "adult": false,
-      "name": "Keanu Reeves",
-      "popularity": "12.313545"
+      "name": "Keanu Reeves"
     },
     {
       "id": "444318",
@@ -21,7 +20,6 @@
       "original_title": "Keanu Reeves: Journey to Success",
       "original_language": "en",
       "title": "Keanu Reeves: Journey to Success",
-      "popularity": "1.000273",
       "vote_count": "0",
       "video": "false",
       "vote_average": "0"

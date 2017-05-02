@@ -8,7 +8,7 @@ public class User {
 	private String id;
 	private String userName;
 	private Set<FavMovies> favMovies;
-	private String pass;
+	private String password;
 	private String nivel;
 
 	public User() {
@@ -20,10 +20,10 @@ public class User {
 		this.userName = userName;
 	}
 
-	public User(String userName, String pass, String nivel) {
+	public User(String userName, String password, String nivel) {
 		super();
 		this.userName = userName;
-		this.pass = pass;
+		this.password = password;
 		this.nivel = nivel;
 		this.favMovies = new HashSet<>();
 	}
@@ -44,12 +44,12 @@ public class User {
 		this.userName = userName;
 	}
 
-	public String getPass() {
-		return pass;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPass(String pass) {
-		this.pass = pass;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getNivel() {

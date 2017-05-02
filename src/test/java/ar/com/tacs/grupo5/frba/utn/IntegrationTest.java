@@ -2,6 +2,7 @@ package ar.com.tacs.grupo5.frba.utn;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -53,6 +54,38 @@ public class IntegrationTest
 	public static SparkServer<TestContollerTestSparkApplication> testServer = new SparkServer<>(
 			IntegrationTest.TestContollerTestSparkApplication.class, 8080);
 
+	@Test
+	public void testRegister() throws Exception {
+		genericPost("/api/user/", getFile("requestLoginTemplate.json").replace("{{user_name}}", "juan")
+				.replace("{{password}}", "juan123"));
+		assertNotNull(getApiKey("juan","juan123"));
+	}
+	@Test
+	public void testLoginFailUserInexistente() throws Exception {
+		PostMethod post = testServer.post("/api/user/login/", 
+				getFile("requestLoginTemplate.json").replace("{{user_name}}", "userInexistente")
+				.replace("{{password}}", "asd321"), false);
+		HttpResponse httpResponse = testServer.execute(post);
+		assertEquals(401, httpResponse.code());
+	}
+	@Test
+	public void testLoginFailWrongPass() throws Exception {
+		PostMethod post = testServer.post("/api/user/login/", 
+				getFile("requestLoginTemplate.json").replace("{{user_name}}", "test1")
+				.replace("{{password}}", "contraseniamal"), false);
+		HttpResponse httpResponse = testServer.execute(post);
+		assertEquals(401, httpResponse.code());
+	}
+	@Test
+	public void testRegisterFail() throws Exception {
+		
+		PostMethod post = testServer.post("/api/user/", 
+				getFile("requestLoginTemplate.json").replace("{{user_name}}", "admin")
+				.replace("{{password}}", "asdasd"), false);
+
+		HttpResponse httpResponse = testServer.execute(post);
+		assertEquals(400, httpResponse.code());	
+	}
 	@Test
 	public void testDeleteFavMovies() throws Exception {
 		genericDelete("/api/favmovies/db67970a4304/");
@@ -225,7 +258,11 @@ public class IntegrationTest
 				getFile("requestLoginTemplate.json").replace("{{user_name}}", userName)
 				.replace("{{password}}", password), false);
 		HttpResponse httpResponse = testServer.execute(post);
+		if(httpResponse.code()!=200){
+			return null;
+		}
 		String json = new String(httpResponse.body());
+		
 		@SuppressWarnings("rawtypes")
 		HashMap mapa = gson.fromJson(json, HashMap.class);
 		return mapa.get("token").toString();

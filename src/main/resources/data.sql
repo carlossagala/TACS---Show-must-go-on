@@ -1,5 +1,7 @@
-insert into USER (id, user_name, pass, nivel) values (1, 'admin', 'admin1', 'admin');
-insert into USER (id, user_name, pass, nivel) values (2, 'test', 'test1', 'user');
+-- password admin1
+insert into USER (id, user_name, pass, nivel) values (1, 'admin', '$2a$12$2O2mnHcxLPtao/wVJ3vwo.pdbd13Z9WRuZ/79m8fi1eZJ2TbNPfUW', 'admin');
+-- password test1
+insert into USER (id, user_name, pass, nivel) values (2, 'test', '$2a$12$t6TyjGcTFwMn9pBk.2rwj.UfJu8lxtoaK8yo05X/lVet/Ja2OfOwq', 'user');
 insert into FAV_ACTOR (id, USER_ID, actor_id) values (1, 2, 1);
 insert into FAV_ACTOR (id, USER_ID, actor_id) values (2, 2, 2);
 insert into FAV_ACTOR (id, USER_ID, actor_id) values (3, 2, 3);

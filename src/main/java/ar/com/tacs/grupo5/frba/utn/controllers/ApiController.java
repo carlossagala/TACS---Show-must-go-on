@@ -11,7 +11,7 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
-
+import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,6 +42,7 @@ import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
+import ar.com.tacs.grupo5.frba.utn.security.SecurityService;
 import ar.com.tacs.grupo5.frba.utn.service.ActorService;
 import ar.com.tacs.grupo5.frba.utn.service.FavActorService;
 import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
@@ -59,6 +60,9 @@ public class ApiController {
 
 	@Autowired
 	ResponseTransformer responseTransformer;
+	
+	@Autowired
+	SecurityService securityService;
 	
 	@Value("${server.port}")
 	private String serverPort;
@@ -89,7 +93,7 @@ public class ApiController {
 		
 		before("/api/*", (request, response) -> {
 			String path = request.pathInfo();
-			if (!(path.equals("/api/user/login/") || path.equals("/api/user/register/"))){
+			if (!(path.equals("/api/user/login/") || (path.equals("/api/user/")&& request.requestMethod().equals("POST")))){
 				try {
 					apiController.authenticate(request);
 				} catch (Exception e) {
@@ -121,7 +125,7 @@ public class ApiController {
 				get("/ranking/actors/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
 			});
 			path("/user", () -> {
-				post("/register/",MEDIA_TYPE, apiController.registerUser,responseTransformer);
+				post("/",MEDIA_TYPE, apiController.registerUser,responseTransformer);
 				post("/login/",MEDIA_TYPE, apiController.login,responseTransformer);
 				post("/logout/",MEDIA_TYPE, apiController.logout,responseTransformer);
 			});
@@ -334,7 +338,16 @@ public class ApiController {
 		Response resp = new Response();
 		
 		User userDto = (User) gson.fromJson(request.body(), User.class);
+		if(StringUtils.isEmpty(userDto.getPassword())||StringUtils.isEmpty(userDto.getUserName())){
+			throw new BadRequest("User and Password mandatory");
+		}
+		if(userService.findByUserName(userDto.getUserName())!=null){
+			throw new BadRequest("User already exists");
+		};
+		userDto.setPassword(securityService.hashPassword(userDto.getPassword()));
+		userDto.setNivel("user");
 		resp.setData(userService.saveUser(userDto));
+		response.status(201);
 		return resp;
 	};
 
@@ -345,10 +358,14 @@ public class ApiController {
 		response.status(200);
 
 		LoginRequest req = (LoginRequest) gson.fromJson(request.body(), LoginRequest.class);
-		User user = userService.findByUserNameAndPass(req.getUserName(), req.getPassword());
+		User user = userService.findByUserName(req.getUserName());
 		if (user == null) {
 			response.status(401);
 			return null;
+		}
+		if(!securityService.checkPassword(req.getPassword(), user.getPassword())){
+			response.status(401);
+			return null;		
 		}
 		return new LoginResponse(jwtUtils.generateToken(user));
 	};
