@@ -224,7 +224,7 @@ paths:
           description: Bad input parameter
 
 # developers
-  /user/register/:
+  /user/:
     post:
       tags:
       - developers
@@ -236,11 +236,6 @@ paths:
       produces:
       - application/json
       parameters:
-      - in: header
-        name: api_key
-        description: ""
-        required: true
-        type: string
       - in: body
         name: user_credentials
         description: User to add
@@ -265,11 +260,6 @@ paths:
       produces:
       - application/json
       parameters:
-      - in: header
-        name: api_key
-        description: ""
-        required: true
-        type: string
       - in: body
         name: user_credentials
         description: Credentials to validate
@@ -862,10 +852,10 @@ definitions:
   UserRegister:
     type: object
     required:
-    - username
+    - user_name
     - password
     properties:
-      username:
+      user_name:
         type: string
         example: johndoe@gmail.com
       password:
@@ -874,10 +864,10 @@ definitions:
   UserLogin:
     type: object
     required:
-    - username
+    - user_name
     - password
     properties:
-      username:
+      user_name:
         type: string
         example: johndoe@gmail.com
       password:
