@@ -367,7 +367,7 @@ public class ApiController {
 			response.status(401);
 			return null;		
 		}
-		return new LoginResponse(jwtUtils.generateToken(user));
+		return new LoginResponse(jwtUtils.generateToken(user),user.getNivel(),user.getId());
 	};
 
 	/**

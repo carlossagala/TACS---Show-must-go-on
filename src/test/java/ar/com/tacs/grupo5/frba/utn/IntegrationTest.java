@@ -61,6 +61,16 @@ public class IntegrationTest
 		assertNotNull(getApiKey("juan","juan123"));
 	}
 	@Test
+	public void testLoginOK() throws Exception {
+		PostMethod post = testServer.post("/api/user/login/", 
+				getFile("requestLoginTemplate.json").replace("{{user_name}}", "test")
+				.replace("{{password}}", "test1"), false);
+		HttpResponse httpResponse = testServer.execute(post);
+		assertEquals(200, httpResponse.code());
+		JSONAssert.assertEquals(getFile("responseLogin.json"), new String(httpResponse.body()), false);
+
+	}
+	@Test
 	public void testLoginFailUserInexistente() throws Exception {
 		PostMethod post = testServer.post("/api/user/login/", 
 				getFile("requestLoginTemplate.json").replace("{{user_name}}", "userInexistente")
