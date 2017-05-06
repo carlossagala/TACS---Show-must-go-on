@@ -143,7 +143,7 @@ public class ServiceTest {
 	
 	@Test
 	public void getMovieSearchResultTest() {
-		Search search = searchService.searchByMovie("fight");
+		Search search = searchService.searchByMovie("The Fight");
 		Assert.assertEquals(20, search.getResult().size());
 
 		List<SearchResult> results = search.getResult();
