@@ -15,8 +15,4 @@ public interface UserDao {
 	
 	UserEntity findByUserName(String userName);
 	
-//	Page<FavActorEntity> getFavActors(String userId, int page);
-//	void addFavActor(String idUser,String idActor);
-//	void deleteFavActor(String idUser,String idActor);
-	
 }
