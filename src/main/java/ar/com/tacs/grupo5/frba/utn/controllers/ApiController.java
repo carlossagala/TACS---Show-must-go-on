@@ -540,10 +540,10 @@ public class ApiController {
 		String idFavMovie = request.params(":id");
 		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 		String movieId = (String)requestMap.get("id");
-		Movie movie = movieService.addMovie(idFavMovie, movieId);
+		movieService.addMovie(idFavMovie, movieId);
 		response.status(201);
 		Response resp = new Response();
-		resp.setData(movie);
+		resp.setData("Se agregó la película a la lista");
 		return resp;
 	};
 
