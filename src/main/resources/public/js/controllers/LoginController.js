@@ -31,8 +31,12 @@ mainApp.controller('LoginController', ['$scope', '$http', '$timeout', '$location
                 // Set api_key for logged user
                 $http.defaults.headers.common["api_key"] = login.api_key;
 
+                localStorage['token'] = login.api_key;
+
+                console.log('localStorage.getItem(token)', localStorage.getItem('token'))
+
                 //TODO: redirect to dashboard according to profile
-                $location.path("/dashboard/a");
+                $location.path("/dashboard/recommended");
                 //$location.path("/dashboard/u");
             }
             else {

@@ -1,0 +1,47 @@
+<div id="panelRight" class="col s12">
+	<div class="row list-wrapper" ng-if="!loading">
+		<div class="col s12">
+			<ul class="tabs grey darken-4">
+				<li class="tab col s4"><a class="active" href="#/dashboard/recommended">Peliculas Recomendadas</a></li>
+				<li class="tab col s4"><a href="#/dashboard/favmovies">Peliculas favoritas</a></li>
+				<li class="tab col s4"><a href="#/dashboard/favactors">Actores favoritos</a></li>
+			</ul>
+		</div>
+
+		<div id="t1" class="col s12 m12">
+			<div class="row section-wrapper">
+				<div ng-repeat="movie in movies" class="col s12 m3">
+					<div class="card horizontal">
+						<div class="card-image">
+							<img src="{{ movie.images[0].path ? movie.images[0].path : '' }}">
+						</div>
+						<div class="card-stacked">
+							<div class="card-content">
+								<h5 class="header">{{ movie.title }}</h5>
+								<p>{{ movie.description }}</p>
+							</div>
+							<div class="card-action">
+								<a href="#">Mas info...</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+ <script type="text/javascript">
+ 	/*
+  	$(document).ready(function(){
+	    setTimeout(
+	    	function(){
+	    		$(".progress-wrapper").addClass("hide")
+	    		$(".list-wrapper").removeClass("hide")
+
+	    		$('ul.tabs').tabs({
+			    	swipeable: true
+			    });
+	    	}, 2000
+	    );
+	});*/
+  </script>

@@ -7,8 +7,14 @@
     <!-- Form layout -->
     <div ng-include="'/views/user/form.html'"></div>
 
-    <!-- List layout  -->
-    <div ng-include="'views/user/list.html'"></div>
+    <!-- Loader layout  -->
+    <div ng-include="'/views/common/loader.html'" ng-if="loading"></div>
+
+    <!-- Tabs layout  -->
+    <div ng-include src="contentUrl" ng-if="tab_content"></div>
+
+    <!-- Search result layout  -->
+    <div ng-include="'/views/user/search_result.html'" ng-if="search_result"></div>
 
 </div>
 
