@@ -69,10 +69,11 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		
 		if (favMovieToDelete == null)
 			throw new ResourceNotFound();
-		favMoviesDao.deleteFavMovies(favMovieToDelete.getUser(), favMovieToDelete.getId());
+		favMoviesDao.deleteFavMovies(favMovieToDelete.getId());
 	}
 
 	@Override
+	@Transactional
 	public FavMovies getFavMovieDetail(String idFavMovie) throws ResourceNotFound {
 		FavMovies returnFavMovie = favMoviesMapper.entityToDto(favMoviesDao.getFavMovie(idFavMovie));
 		

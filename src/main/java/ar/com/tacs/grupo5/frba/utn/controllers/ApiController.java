@@ -496,9 +496,16 @@ public class ApiController {
 			response.status(400);
 			return "Bad Request: Parametro name en el body es obligatorio";
 		}
+		
+		if(name == null){
+			response.status(400);
+			return "Bad Request: Parametro name en el body es obligatorio";			
+		}
+		
 		FavMovies favMovie = favMoviesService.createNewFavMovieList(name,user);
 		if(favMovie!=null){
 			response.status(201);
+			resp.setData(favMovie);
 		}else{
 			response.status(404);
 		}
@@ -547,7 +554,12 @@ public class ApiController {
 			newTitle = (String)requestMap.get("new_title");
 		}catch(Exception e){
 			response.status(400);
-			return "Bad Request: Parametro newTitle en el body es obligatorio";
+			return "Bad Request: Parametro new_title en el body es obligatorio";
+		}
+		
+		if (newTitle == null){
+			response.status(400);
+			return "Bad Request: Parametro new_title en el body es obligatorio";			
 		}
 				
 		try
