@@ -38,7 +38,7 @@ public class UserDaoTest {
 	@Test
 	public void testRegisterUser()
 	{
-		User userDto = new User("user","user","user");
+		User userDto = new User("user","user","user","lastAccess");
 		UserEntity userToRegister = userMapper.dtoToEntity(userDto);
 		this.userDao.saveUser(userToRegister);
 		UserEntity found = this.userDao.findByUserName("user");

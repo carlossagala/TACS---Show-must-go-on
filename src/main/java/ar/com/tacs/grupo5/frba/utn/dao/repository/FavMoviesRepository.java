@@ -9,4 +9,5 @@ import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 
 public interface FavMoviesRepository extends PagingAndSortingRepository<FavMoviesEntity, String>{
 	Page<FavMoviesEntity> findByUser(UserEntity user,Pageable pageable);
+    Long countByUser(UserEntity user);
 }

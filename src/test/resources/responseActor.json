@@ -4,35 +4,23 @@
     "name": "George Lucas",
     "image": [
       {
-        "aspect_ratio": "0.666666666666667",
         "file_path": "/8qxin8urtFE0NqaZNFWOuV537bH.jpg",
         "height": 3000,
-        "vote_average": "5.36996336996337",
-        "vote_count": "2",
         "width": 2000
       },
       {
-        "aspect_ratio": "0.666666666666667",
         "file_path": "/rJ1zvSeZfge0mHtLnzJn4Mkw18S.jpg",
         "height": 1500,
-        "vote_average": "5.3125",
-        "vote_count": "1",
         "width": 1000
       },
       {
-        "aspect_ratio": "0.680272108843537",
         "file_path": "/7Q5FVw6RhI1gsr1QHmJZuwxshRF.jpg",
         "height": 735,
-        "vote_average": "0.0",
-        "vote_count": "0",
         "width": 500
       },
       {
-        "aspect_ratio": "0.666666666666667",
         "file_path": "/d8I8oke7Y5K0vlcz6LVCoFHzkxx.jpg",
         "height": 720,
-        "vote_average": "0.0",
-        "vote_count": "0",
         "width": 480
       }
     ],

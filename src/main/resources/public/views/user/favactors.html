@@ -1,0 +1,38 @@
+<div id="panelRight" class="col s12">
+	<div class="row list-wrapper" ng-if="!loading">
+		<div class="col s12">
+			<ul class="tabs grey darken-4">
+				<li class="tab col s4"><a href="#/dashboard/recommended">Peliculas Recomendadas</a></li>
+				<li class="tab col s4"><a  href="#/dashboard/favmovies">Peliculas favoritas</a></li>
+				<li class="tab col s4"><a class="active" href="#/dashboard/favactors">Actores favoritos</a></li>
+			</ul>
+		</div>
+
+		<div id="favactors" class="col s12 m6 offset-m3">
+			<div class="row section-wrapper">
+				<ul class="collection">
+					<li ng-repeat="actor in favactors" class="collection-item avatar">
+						<img src="storagePath{{actor.profile_path}}" alt="" class="circle">
+						<span class="title">Name</span>
+						<a href="#" class="secondary-content"><i class="material-icons">grade</i></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+ <script type="text/javascript">
+ 	/*
+  	$(document).ready(function(){
+	    setTimeout(
+	    	function(){
+	    		$(".progress-wrapper").addClass("hide")
+	    		$(".list-wrapper").removeClass("hide")
+
+	    		$('ul.tabs').tabs({
+			    	swipeable: true
+			    });
+	    	}, 2000
+	    );
+	});*/
+  </script>

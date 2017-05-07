@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,23 +15,27 @@ import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
+import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 
 @Component
+@Transactional
 public class FavMoviesServiceImpl implements FavMoviesService {
 	
 	private FavMoviesDao favMoviesDao;
 	private FavMoviesMapper favMoviesMapper;
 	private MovieMapper movieMapper;
+	private UserMapper userMapper;
 	
 	@Autowired
-	public FavMoviesServiceImpl(FavMoviesDao favMoviesDao, FavMoviesMapper favMoviesMapper, MovieMapper movieMapper) {
+	public FavMoviesServiceImpl(FavMoviesDao favMoviesDao, FavMoviesMapper favMoviesMapper, MovieMapper movieMapper,UserMapper userMapper) {
 		this.favMoviesDao = favMoviesDao;
 		this.favMoviesMapper = favMoviesMapper;
 		this.movieMapper = movieMapper;
+		this.userMapper = userMapper;
 	}
 	
 	@Override
@@ -89,6 +95,20 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 			movies.add(movieMapper.entityToDto(movieEntity));
 		}
 		return movies;
+	}
+
+	@Override
+	public Long countByUser(User user) {
+		return favMoviesDao.countByUser(userMapper.dtoToEntity(user));
+	}
+
+	@Override
+	public User getUserById(String id) {
+		FavMoviesEntity favMovie = favMoviesDao.getFavMovie(id);
+		if(favMovie==null){
+			return null;
+		}
+		return userMapper.entityToDto(favMovie.getUser());
 	}
 
 }

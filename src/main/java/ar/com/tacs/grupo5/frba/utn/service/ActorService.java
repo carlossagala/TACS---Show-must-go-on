@@ -16,5 +16,6 @@ public interface ActorService {
 		public List<Movie> getActorMovies(String id);
 		public Actor getDetailActor(String id);
 		public List<Movie> getMoviesWithActors(List<String> id);
+		public Actor getActor(String id);
 		
 }

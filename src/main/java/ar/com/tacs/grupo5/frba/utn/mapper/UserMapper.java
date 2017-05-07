@@ -28,6 +28,7 @@ public class UserMapper implements GenericMapper<UserEntity, User> {
 		user.setPassword(entity.getPass());
 		user.setUserName(entity.getUserName());
 		user.setFavMovies(new HashSet<>());
+		user.setLastAccess(entity.getLastAccess());
 		Set<FavMoviesEntity> favMoviesEnt = entity.getFavMovies();
 		if(favMoviesEnt != null && favMoviesEnt.size()>0)
 		{
@@ -45,6 +46,8 @@ public class UserMapper implements GenericMapper<UserEntity, User> {
 		userEnt.setNivel(dto.getNivel());
 		userEnt.setPass(dto.getPassword());
 		userEnt.setUserName(dto.getUserName());
+		userEnt.setLastAccess(dto.getLastAccess());
+
 		userEnt.setFavMovies(new HashSet<>());
 		Set<FavMovies> favMovies = dto.getFavMovies();
 		if(favMovies != null && favMovies.size()>0)

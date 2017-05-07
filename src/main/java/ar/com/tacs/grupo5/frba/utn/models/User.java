@@ -10,6 +10,7 @@ public class User {
 	private Set<FavMovies> favMovies;
 	private String password;
 	private String nivel;
+	private String lastAccess;
 
 	public User() {
 	}
@@ -20,7 +21,7 @@ public class User {
 		this.userName = userName;
 	}
 
-	public User(String userName, String password, String nivel) {
+	public User(String userName, String password, String nivel,String lastAccess) {
 		super();
 		this.userName = userName;
 		this.password = password;
@@ -66,6 +67,14 @@ public class User {
 
 	public void setFavMovies(Set<FavMovies> favMovies) {
 		this.favMovies = favMovies;
+	}
+
+	public String getLastAccess() {
+		return lastAccess;
+	}
+
+	public void setLastAccess(String lastAccess) {
+		this.lastAccess = lastAccess;
 	}
 
 }

@@ -12,8 +12,11 @@ import static spark.Spark.post;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 import org.springframework.util.StringUtils;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +39,9 @@ import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
+import ar.com.tacs.grupo5.frba.utn.models.GetUserResponse;
 import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
 import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.User;
@@ -121,7 +124,7 @@ public class ApiController {
 				get("/", MEDIA_TYPE,apiController.getUsersByPage,responseTransformer);
 				get("/:id/",MEDIA_TYPE, apiController.getUser,responseTransformer);
 				get("/:id/favmovies/",MEDIA_TYPE, apiController.getUserFavMovies,responseTransformer);
-				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
+				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getAdminListIntersection,responseTransformer);
 				get("/:id/favactors/",MEDIA_TYPE, apiController.getAdminUserFavActors,responseTransformer);
 				get("/ranking/actors/",MEDIA_TYPE, apiController.getRankingActor,responseTransformer);
 			});
@@ -224,14 +227,20 @@ public class ApiController {
 	 * Returns the user with the specified Id
 	 */
 	public Route getUser = (request, response) -> {
-		logger.info(request.pathInfo());
 
 		response.status(200);
 		Response resp = new Response();
-		
-		resp.setData(userService.getUserById(request.params(":id")));
+		User user = userService.getUserById(request.params(":id"));
+		validateUser(authenticate(request), user);
+		resp.setData(new GetUserResponse(user.getId(),user.getUserName(),favMoviesService.countByUser(user),favActorService.countByUser(user),user.getNivel(),user.getLastAccess()));
 		return resp;
 	};
+
+	private void validateUser(User userAuthenticated, User user) {
+		if(!userAuthenticated.getNivel().equals("admin")&&!userAuthenticated.getId().equals(user.getId())){
+			halt(401, "No se encuentra autenticado");
+		}
+	}
 
 	/**
 	 * Returns the user's favourite movies
@@ -239,7 +248,10 @@ public class ApiController {
 	public Route getUserFavMovies = (request, response) -> {
 		String id = request.params(":id");
 		PagedResponse resp = new PagedResponse();
-		Set<FavMovies> favMovies = userService.getUserById(id).getFavMovies();
+		User user = userService.getUserById(id);
+		validateUser(authenticate(request), user);
+		Set<FavMovies> favMovies = user.getFavMovies();
+
 		resp.setData(favMovies);
 		setPagedResults(resp, favMovies);
 		resp.setPage(getPage(request));
@@ -302,15 +314,47 @@ public class ApiController {
 	public Route getListIntersection = (request, response) -> {
 		response.status(200);
 		PagedResponse resp = new PagedResponse();
+		String id1 = request.params(":id");
+		String id2 = request.params(":id2");
+
+		User user1 = favMoviesService.getUserById(id1);
+		User user2 = favMoviesService.getUserById(id2);
+		if(user1==null||user2==null){
+			halt(404, "Not Found");
+		}
+		User userAuthenticated = authenticate(request);
+		if(!userAuthenticated.getNivel().equals("admin")){
+			if(! (userAuthenticated.getId().equals(user1.getId())
+				||userAuthenticated.getId().equals(user2.getId())
+					)){
+				halt(401, "No se encuentra autenticado");
+			}
+		}		
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
-		resp.setData(favMoviesService.getListIntersection(request.params(":id"), request.params(":id2")));
+		resp.setData(favMoviesService.getListIntersection(id1, id2));
+		return resp;
+	};
+	/**
+	 * Returns the intersection between the favourite movies from the two users
+	 */
+	public Route getAdminListIntersection = (request, response) -> {
+		validateAuthorization(authenticate(request));
+		response.status(200);
+		PagedResponse resp = new PagedResponse();
+		String id1 = request.params(":id");
+		String id2 = request.params(":id2");
+		resp.setTotalPages(1);
+		resp.setTotalResults(1L);
+		resp.setPage(getPage(request));
+		resp.setData(favMoviesService.getListIntersection(id1, id2));
 		return resp;
 	};
 	
 	
 	public Route getRankingActor = (request, response) -> {
+		validateAuthorization(authenticate(request));
 		response.status(200);
 
 		PagedResponse resp = new PagedResponse();
@@ -327,7 +371,7 @@ public class ApiController {
 		
 		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor > actores = new ArrayList<>();
 		
-		actoresId.forEach(id -> actores.add(actorService.getDetailActor(id)));
+		actoresId.forEach(id -> actores.add(actorService.getActor(id)));
 		
 		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
 		
@@ -373,7 +417,11 @@ public class ApiController {
 			response.status(401);
 			return null;		
 		}
-		return new LoginResponse(jwtUtils.generateToken(user));
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss"); 
+		Date now = new Date();
+		user.setLastAccess(dt.format(now));
+		userService.saveUser(user);
+		return new LoginResponse(jwtUtils.generateToken(user),user.getNivel(),user.getId());
 	};
 
 	/**

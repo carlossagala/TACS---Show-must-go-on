@@ -9,5 +9,6 @@ import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 
 public interface FavActorRepository extends PagingAndSortingRepository<FavActorEntity, String>{
 	Page<FavActorEntity> findByUserEntity(UserEntity UserEntity,Pageable pageable);
+    Long countByUserEntity(UserEntity userEntity);
 	void deleteByUserEntityAndActorId(UserEntity userEntity, String actorId);
 }

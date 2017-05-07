@@ -11,11 +11,37 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             templateUrl: "views/common/login.html",
             controller: "LoginController as login"
         })
-        .when("/dashboard/u", {
-            templateUrl: "views/user/dashboard.html"
+        .when("/dashboard/a", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/user/list.html",
+            controller: "DashboardController as dashboard"
+        })
+        .when("/dashboard/recommended", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/user/recommended.html",
+            controller: "DashboardController as dashboard",
+            resource: "recommended"
+        })
+        .when("/dashboard/favmovies", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/user/favmovies.html",
+            controller: "DashboardController as dashboard",
+            resource: "favmovies"
+        })
+        .when("/dashboard/favactors", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/user/favactors.html",
+            controller: "DashboardController as dashboard",
+            resource: "favactors"
+        })
+        .when("/dashboard/users", {
+            templateUrl: "views/admin/users.html",
+            contentUrl: "views/admin/users.html",
+            controller: "DashboardController as dashboard"
         })
         .when("/dashboard/a", {
             templateUrl: "views/admin/dashboard.html",
+            contentUrl: "views/user/list.html",
             controller: "DashboardController as dashboard"
         })
         .when("/logout", {

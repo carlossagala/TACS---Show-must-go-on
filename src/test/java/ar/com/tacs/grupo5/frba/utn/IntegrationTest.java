@@ -55,10 +55,55 @@ public class IntegrationTest
 			IntegrationTest.TestContollerTestSparkApplication.class, 8080);
 
 	@Test
+	public void testGetAdminIntersectFailNotAuthorized() throws Exception {
+		GetMethod get = testServer.get("/api/users/bac25bb4c3dd/intersection/838987df153f/?page=1", false);
+		get.addHeader("api_key", getApiKey("test","test1"));
+		HttpResponse httpResponse = testServer.execute(get);
+		assertEquals(401, httpResponse.code());
+	}
+	@Test
+	public void testUserFavmoviesIntersectFailNotAuthorized() throws Exception {
+		GetMethod get = testServer.get("/api/favmovies/bac25bb4c3dd/intersection/838987df153f/?page=1", false);
+		get.addHeader("api_key", getApiKey("test","test1"));
+		HttpResponse httpResponse = testServer.execute(get);
+		assertEquals(401, httpResponse.code());
+	}
+	@Test
+	public void testGetUserDetailFailNotAuthorized() throws Exception {
+		GetMethod get = testServer.get("/api/users/1/", false);
+		get.addHeader("api_key", getApiKey("test","test1"));
+		HttpResponse httpResponse = testServer.execute(get);
+		assertEquals(401, httpResponse.code());
+	}
+	@Test
+	public void testUserRankingFailNotAuthorized() throws Exception {
+		GetMethod get = testServer.get("/api/users/ranking/actors/", false);
+		get.addHeader("api_key", getApiKey("test","test1"));
+		HttpResponse httpResponse = testServer.execute(get);
+		assertEquals(401, httpResponse.code());
+	}
+	@Test
+	public void testUserFavActorFailNotAuthorized() throws Exception {
+		GetMethod get = testServer.get("/api/users/1/favactors/", false);
+		get.addHeader("api_key", getApiKey("test","test1"));
+		HttpResponse httpResponse = testServer.execute(get);
+		assertEquals(401, httpResponse.code());
+	}
+	@Test
 	public void testRegister() throws Exception {
 		genericPost("/api/user/", getFile("requestLoginTemplate.json").replace("{{user_name}}", "juan")
 				.replace("{{password}}", "juan123"));
 		assertNotNull(getApiKey("juan","juan123"));
+	}
+	@Test
+	public void testLoginOK() throws Exception {
+		PostMethod post = testServer.post("/api/user/login/", 
+				getFile("requestLoginTemplate.json").replace("{{user_name}}", "test")
+				.replace("{{password}}", "test1"), false);
+		HttpResponse httpResponse = testServer.execute(post);
+		assertEquals(200, httpResponse.code());
+		JSONAssert.assertEquals(getFile("responseLogin.json"), new String(httpResponse.body()), false);
+
 	}
 	@Test
 	public void testLoginFailUserInexistente() throws Exception {

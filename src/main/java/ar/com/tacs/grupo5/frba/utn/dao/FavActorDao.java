@@ -13,6 +13,8 @@ public interface FavActorDao {
 	void deleteFavActor(UserEntity user, String idActor) throws ResourceNotFoundException;
 
 	Page<FavActorEntity> getFavActors(UserEntity user, int page);
+
+	Long countByUser(UserEntity dtoToEntity);
 	
 	
 

@@ -48,4 +48,11 @@ public class FavActorDaoImpl implements FavActorDao{
 		return favActorRepository.findByUserEntity(user, new PageRequest(page, pageSize));
 	}
 
+
+
+	@Override
+	public Long countByUser(UserEntity userEntity) {
+		return favActorRepository.countByUserEntity(userEntity);
+	}
+
 }

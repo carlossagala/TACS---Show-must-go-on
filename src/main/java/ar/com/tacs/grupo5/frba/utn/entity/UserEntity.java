@@ -25,7 +25,8 @@ public class UserEntity {
 	private String userName;
 	private String pass;
 	private String nivel;
-	
+	private String lastAccess;
+
 	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="user")
 	private Set<FavMoviesEntity> favMovies;
 	
@@ -95,5 +96,13 @@ public class UserEntity {
 
 	public void setFavActors(Set<FavActorEntity> favActors) {
 		this.favActors = favActors;
+	}
+
+	public String getLastAccess() {
+		return lastAccess;
+	}
+
+	public void setLastAccess(String lastAccess) {
+		this.lastAccess = lastAccess;
 	}
 }
