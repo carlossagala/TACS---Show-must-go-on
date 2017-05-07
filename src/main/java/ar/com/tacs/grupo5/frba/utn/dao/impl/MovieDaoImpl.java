@@ -26,9 +26,6 @@ public class MovieDaoImpl implements MovieDao {
 	@Autowired
 	private MovieRepository movieRepository;
 	
-	@Autowired
-	private MovieMapper movieMapper;
-
 	@Override
 	public MovieEntity getMovie(String idFavMovie,String idMovie) {
 		MovieEntity movieEnt = movieRepository.findByIdMovieAndFavMovie(idMovie, favMoviesDao.findOne(idFavMovie));
@@ -36,9 +33,8 @@ public class MovieDaoImpl implements MovieDao {
 	}
 
 	@Override
-	public void saveMovie(Movie movie) {
-		MovieEntity movieEnt = movieMapper.dtoToEntity(movie);
-		movieRepository.save(movieEnt);
+	public void saveMovie(MovieEntity movieEntity) {
+		movieRepository.save(movieEntity);
 	}
 
 	@Override

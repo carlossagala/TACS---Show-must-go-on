@@ -7,7 +7,7 @@ public interface MovieDao {
 
 	MovieEntity getMovie(String idFavMovie,String idMovie);
 	
-	void saveMovie(Movie movie);
+	void saveMovie(MovieEntity movieEntity);
 
 	void deleteMovie(ar.com.tacs.grupo5.frba.utn.models.Movie movie);
 	

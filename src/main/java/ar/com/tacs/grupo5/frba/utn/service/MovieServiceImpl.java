@@ -21,8 +21,10 @@ import com.google.gson.reflect.TypeToken;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
+import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
+import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Images;
@@ -48,6 +50,9 @@ public class MovieServiceImpl implements MovieService {
 	
 	@Autowired
 	private FavMoviesDao favMoviesDao;
+	
+	@Autowired
+	private MovieMapper movieMapper;
 
 	@Autowired
 	public MovieServiceImpl() {
@@ -121,7 +126,8 @@ public class MovieServiceImpl implements MovieService {
 		ar.com.tacs.grupo5.frba.utn.models.Movie movie = new ar.com.tacs.grupo5.frba.utn.models.Movie();
 		movie.setFavMovieId(idFavMovie);
 		movie.setMovieId(movieId);
-		movieDao.saveMovie(movie);
+		MovieEntity movieEntity = movieMapper.dtoToEntity(movie);
+		movieDao.saveMovie(movieEntity);
 	}
 
 	@Override

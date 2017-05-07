@@ -21,7 +21,7 @@ public class MovieEntity {
 	@GeneratedValue(generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String id;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinColumn(name = "favmovie_id", referencedColumnName = "id")
 	private FavMoviesEntity favMovie;
 	private String idMovie;
