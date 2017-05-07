@@ -15,4 +15,6 @@ public interface FavActorService {
 
 	List<String> getFavActorsId(String userId, int page);
 
+	Long countByUser(User user);
+
 }

@@ -57,4 +57,9 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 		favMoviesRepository.delete(favMov);
 	}
 
+	@Override
+	public Long countByUser(UserEntity user) {
+		return favMoviesRepository.countByUser(user);
+	}
+
 }

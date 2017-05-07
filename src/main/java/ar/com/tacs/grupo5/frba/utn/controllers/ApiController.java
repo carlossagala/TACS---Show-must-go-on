@@ -12,8 +12,11 @@ import static spark.Spark.post;
 import static spark.Spark.put;
 import static spark.Spark.staticFiles;
 import org.springframework.util.StringUtils;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +38,9 @@ import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.NotAuthorized;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
+import ar.com.tacs.grupo5.frba.utn.models.GetUserResponse;
 import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
 import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.User;
@@ -222,8 +225,8 @@ public class ApiController {
 
 		response.status(200);
 		Response resp = new Response();
-		
-		resp.setData(userService.getUserById(request.params(":id")));
+		User user = userService.getUserById(request.params(":id"));
+		resp.setData(new GetUserResponse(user.getId(),user.getUserName(),favMoviesService.countByUser(user),favActorService.countByUser(user),user.getNivel(),user.getLastAccess()));
 		return resp;
 	};
 
@@ -367,6 +370,10 @@ public class ApiController {
 			response.status(401);
 			return null;		
 		}
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss"); 
+		Date now = new Date();
+		user.setLastAccess(dt.format(now));
+		userService.saveUser(user);
 		return new LoginResponse(jwtUtils.generateToken(user),user.getNivel(),user.getId());
 	};
 

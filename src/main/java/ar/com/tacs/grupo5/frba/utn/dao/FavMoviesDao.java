@@ -13,4 +13,5 @@ public interface FavMoviesDao {
 	FavMoviesEntity saveFavMovie(FavMoviesEntity favMovie);
 	HashSet<FavMoviesEntity> getFavMoviesByUser(UserEntity user);
 	void deleteFavMovies(UserEntity user, String idFavMovies) throws ResourceNotFound;
+	Long countByUser(UserEntity dtoToEntity);
 }

@@ -19,4 +19,6 @@ public interface FavMoviesService {
 	
 	List<Movie> getListIntersection(String id1, String id2) throws ResourceNotFound;
 
+	Long countByUser(User user);
+
 }
