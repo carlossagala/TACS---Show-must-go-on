@@ -55,7 +55,7 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 	}
 
 	@Override
-	public void deleteFavMovies(UserEntity user, String idFavMovies) throws ResourceNotFound {
+	public void deleteFavMovies(String idFavMovies) throws ResourceNotFound {
 		FavMoviesEntity favMov = favMoviesRepository.findOne(idFavMovies);
 		if (favMov == null)
 			throw new ResourceNotFound();
