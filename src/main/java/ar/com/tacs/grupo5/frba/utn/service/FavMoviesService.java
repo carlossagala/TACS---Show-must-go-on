@@ -21,4 +21,6 @@ public interface FavMoviesService {
 
 	Long countByUser(User user);
 
+	User getUserById(String id1);
+
 }

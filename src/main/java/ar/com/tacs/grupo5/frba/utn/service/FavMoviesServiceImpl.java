@@ -29,6 +29,7 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	private FavMoviesMapper favMoviesMapper;
 	private MovieMapper movieMapper;
 	private UserMapper userMapper;
+	
 	@Autowired
 	public FavMoviesServiceImpl(FavMoviesDao favMoviesDao, FavMoviesMapper favMoviesMapper, MovieMapper movieMapper,UserMapper userMapper) {
 		this.favMoviesDao = favMoviesDao;
@@ -99,6 +100,15 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	@Override
 	public Long countByUser(User user) {
 		return favMoviesDao.countByUser(userMapper.dtoToEntity(user));
+	}
+
+	@Override
+	public User getUserById(String id) {
+		FavMoviesEntity favMovie = favMoviesDao.getFavMovie(id);
+		if(favMovie==null){
+			return null;
+		}
+		return userMapper.entityToDto(favMovie.getUser());
 	}
 
 }
