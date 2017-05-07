@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import ar.com.tacs.grupo5.frba.utn.models.User;
 @EnableAutoConfiguration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
+@Transactional
 public class UserDaoTest {
 	// Mockeo Apicontroller para que no levante el servidor embebido de spark
 	@MockBean
@@ -49,6 +51,14 @@ public class UserDaoTest {
 		List<UserEntity> allUsers = this.userDao.getAllUsers();
 		Assert.assertNotNull(allUsers);
 		Assert.assertTrue(allUsers.size()==2);
+	}
+	
+	@Test
+	public void testGetAllUsersWithPage()
+	{
+		Page<UserEntity> allUsers = this.userDao.getAllUsersWithPage(0);
+		Assert.assertNotNull(allUsers);
+		Assert.assertTrue(allUsers.getContent().size()==2);
 	}
 	
 	@Test

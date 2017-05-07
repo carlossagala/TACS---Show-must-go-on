@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,7 +69,7 @@ public class ApiController {
 	private String serverPort;
 	@Value("${page.size}")
 	private int pageSize;
-	
+
 	@PostConstruct
     public void init() {
 		sparkInit(this,Integer.valueOf(serverPort),responseTransformer);
@@ -117,7 +118,7 @@ public class ApiController {
 		
 		path("/api", () -> {
 			path("/users", () -> {
-				get("/", MEDIA_TYPE,apiController.getUsers,responseTransformer);
+				get("/", MEDIA_TYPE,apiController.getUsersByPage,responseTransformer);
 				get("/:id/",MEDIA_TYPE, apiController.getUser,responseTransformer);
 				get("/:id/favmovies/",MEDIA_TYPE, apiController.getUserFavMovies,responseTransformer);
 				get("/:id/intersection/:id2/",MEDIA_TYPE, apiController.getListIntersection,responseTransformer);
@@ -200,17 +201,22 @@ public class ApiController {
 	/**
 	 * Returns all users
 	 */
-	public Route getUsers = (request, response) -> {
-		response.status(200);
-		response.type(MEDIA_TYPE);
+	
+	public Route getUsersByPage = (request, response) -> {
+		Page<User> allUsersWithPage = userService.getAllUsersWithPage(getPage(request));
 		PagedResponse resp = new PagedResponse();
-		List<User> users = new ArrayList<>();
-		users = userService.getAllUsers();
-		
+		if(allUsersWithPage.getContent().size()>0)
+		{
+			resp.setData(allUsersWithPage.getContent());
+			resp.setMessage("Users in page");
+		}
+		else
+		{
+			resp.setMessage("No users found");
+		}
 		resp.setPage(getPage(request));
-		resp.setTotalPages(1);
-		resp.setTotalResults(Long.valueOf(users.size()));
-		resp.setData(users);
+		resp.setTotalPages(allUsersWithPage.getTotalPages());
+		resp.setTotalResults(allUsersWithPage.getTotalElements());
 		return resp;
 	};
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,17 @@ public class UserServiceImpl implements UserService {
 			users.add(userMapper.entityToDto(userEntity));
 		}
 		return users;
+	}
+	
+	public Page<User> getAllUsersWithPage(int page)
+	{
+		Page<UserEntity> userEntities = userDao.getAllUsersWithPage(page-1);
+		List<User> users = new ArrayList<>();
+		for (UserEntity userEntity : userEntities.getContent()) {
+			users.add(userMapper.entityToDto(userEntity));
+		}
+		Page<User> usersPage = new PageImpl<>(users);
+		return usersPage;
 	}
 
 	@Override

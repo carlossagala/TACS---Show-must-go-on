@@ -1,10 +1,11 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
-import java.util.HashSet;
-
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,10 @@ import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 @Repository
 @Transactional
 public class FavMoviesDaoImpl implements FavMoviesDao {
+	
+	@Value("${page.size}")
+	private int pageSize;
+	
 	@Autowired
 	private EntityManager em;
 	
@@ -45,8 +50,8 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 	}
 
 	@Override
-	public HashSet<FavMoviesEntity> getFavMoviesByUser(UserEntity user) {
-		return this.favMoviesRepository.findByUser(user);		
+	public Page<FavMoviesEntity> getFavMoviesByUser(UserEntity user, int page) {
+		return this.favMoviesRepository.findByUser(user, new PageRequest(page, pageSize));		
 	}
 
 	@Override

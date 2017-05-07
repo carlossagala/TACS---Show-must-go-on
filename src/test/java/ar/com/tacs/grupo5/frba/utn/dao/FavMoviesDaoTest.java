@@ -1,5 +1,4 @@
 package ar.com.tacs.grupo5.frba.utn.dao;
-import org.hsqldb.util.DatabaseManagerSwing;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,9 +52,6 @@ public class FavMoviesDaoTest {
 	@Before
 	public void Before()
 	{
-//		DatabaseManagerSwing.main(
-//					new String[] { "--url", "jdbc:hsqldb:mem:testdb", "--user", "sa", "--password", ""});
-		
 		user = this.userDao.getUserById("2");
 	}
 
@@ -67,14 +63,14 @@ public class FavMoviesDaoTest {
 		
 		Assert.assertNotNull(savedFavMovie);
 		Assert.assertTrue(savedFavMovie.getName().equals("Mi Lista Test"));
-		Assert.assertEquals(5,favMoviesDao.getFavMoviesByUser(user).size());
+		Assert.assertEquals(5,favMoviesDao.getFavMoviesByUser(user,0).getContent().size());
 	}
 
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testGetFavMovies() {
-		Assert.assertEquals(4,favMoviesDao.getFavMoviesByUser(user).size());
+		Assert.assertEquals(4,favMoviesDao.getFavMoviesByUser(user,0).getContent().size());
 	}
 
 	@Test
@@ -91,96 +87,4 @@ public class FavMoviesDaoTest {
 		
 		Assert.assertTrue(fav2.getName() == "Nombre cambiado");
 	}
-//
-//	@Test
-//	public void testDeleteFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userrrr4", "userrrr4", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
-//		savedUser.getFavMovies().add(savedFavMovie);
-//		savedUser = this.userDao.saveUser(savedUser);
-//
-//		try {
-//			favMoviesService.deleteFavMovie(savedFavMovie.getId());
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//		Assert.assertNull(this.favMoviesDao.getFavMovie(savedFavMovie.getId()));
-//	}
-//
-//	@Test
-//	public void testDeleteFavMoviesNotFound() {
-//		User savedUser = this.userDao.saveUser(new User("userrrr5", "userrrr5", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
-//		savedUser.getFavMovies().add(savedFavMovie);
-//		savedUser = this.userDao.saveUser(savedUser);
-//
-//		try {
-//			favMoviesService.deleteFavMovie(savedFavMovie.getId());
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//		// Intento borrar la entidad una segunda vez, en caso de que haya
-//		// funcionado el primer delete,
-//		// debería tirar la excepción
-//		try {
-//			favMoviesService.deleteFavMovie(savedFavMovie.getId());
-//			fail();
-//		} catch (ResourceNotFound e) {
-//		}
-//	}
-//
-//	@Test
-//	public void testAddMovieToFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userAddMovie", "userAddMovie", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao
-//				.saveFavMovie(new FavMovie("Una lista para dias de lluvia", savedUser.getId()));
-//		String favMovieId = savedFavMovie.getId();
-//		Movie addedMovie = null;
-//		try {
-//			addedMovie = movieService.addMovie(favMovieId, "123");
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//		Assert.assertNotNull(this.movieDao.getMovie(favMovieId,"123"));
-//	}
-//
-//	@Test
-//	public void testRemoveMovieFromFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userRemoveMovie", "userRemoveMovie", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao
-//				.saveFavMovie(new FavMovie("Una lista para dias de lluvia", savedUser.getId()));
-//		String favMovieId = savedFavMovie.getId();
-//		Movie addedMovie = null;
-//		try {
-//			addedMovie = movieService.addMovie(favMovieId, "123");
-//			Assert.assertNotNull(this.movieDao.getMovie(favMovieId,"123"));
-//			this.movieService.removeMovie(favMovieId, "123");
-//			Assert.assertNull(this.movieDao.getMovie(favMovieId,"123"));
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//	}
-//
-//	@Test
-//	public void testGetFavMoviesDetail() {
-//		FavMovie getFavMovie = new FavMovie();
-//
-//		User savedUser = this.userDao.saveUser(new User("usrGetFavDetail", "usrGetFavDetail", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
-//		savedUser.getFavMovies().add(savedFavMovie);
-//		savedUser = this.userDao.saveUser(savedUser);
-//
-//		try {
-//			getFavMovie = favMoviesService.getFavMovieDetail(savedFavMovie.getId());
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//		Assert.assertTrue(getFavMovie.getName() == "Mi Primera Lista");
-//		Assert.assertTrue(getFavMovie.getUserId() == savedUser.getId());
-//		Assert.assertTrue(getFavMovie.getId() == savedFavMovie.getId());
-//	}
 }
