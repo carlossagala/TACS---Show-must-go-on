@@ -151,6 +151,15 @@ public class ActorServiceImpl implements ActorService {
 		return String.join(",", actorsId);
 	}
 
+	@Override
+	public Actor getActor(String id) {
+		String requestUrl = "https://api.themoviedb.org/3/person/" + id + "?api_key=" + appKey;
+		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		logger.info("se recibio el siguiente archivo de json" + response.getBody());
+		Actor actor = gson.fromJson(response.getBody(), Actor.class);
+		return actor;
+	}
+
 
 
 

@@ -365,7 +365,7 @@ public class ApiController {
 		
 		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor > actores = new ArrayList<>();
 		
-		actoresId.forEach(id -> actores.add(actorService.getDetailActor(id)));
+		actoresId.forEach(id -> actores.add(actorService.getActor(id)));
 		
 		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
 		
