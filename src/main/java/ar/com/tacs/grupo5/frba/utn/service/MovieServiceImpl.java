@@ -32,6 +32,7 @@ import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Reviews;
 
 @Component
+@Transactional
 public class MovieServiceImpl implements MovieService {
 
 	private static Logger logger = LoggerFactory.getLogger(MovieServiceImpl.class);
