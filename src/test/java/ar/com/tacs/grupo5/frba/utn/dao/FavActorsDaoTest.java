@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
@@ -65,7 +66,7 @@ public class FavActorsDaoTest {
 	public void testDeleteFavActor() {
 		try {
 			favActorDao.deleteFavActor(user, "10");
-		} catch (ResourceNotFoundException e) {
+		} catch (ResourceNotFound e) {
 			fail();
 		}
 
@@ -79,7 +80,7 @@ public class FavActorsDaoTest {
 		try {
 			favActorDao.deleteFavActor(user, "37");
 			fail();
-		} catch (ResourceNotFoundException e) {
+		} catch (ResourceNotFound e) {
 		}
 	}
 }

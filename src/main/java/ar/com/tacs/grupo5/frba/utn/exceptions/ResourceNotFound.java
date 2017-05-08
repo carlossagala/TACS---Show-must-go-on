@@ -1,6 +1,6 @@
 package ar.com.tacs.grupo5.frba.utn.exceptions;
 
-public class ResourceNotFound extends Exception {
+public class ResourceNotFound extends RuntimeException {
 
 	/**
 	 * 

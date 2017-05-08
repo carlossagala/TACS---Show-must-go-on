@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavActorDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavActorRepository;
@@ -39,7 +40,10 @@ public class FavActorDaoImpl implements FavActorDao{
 	}
 
 	@Override
-	public void deleteFavActor(UserEntity user, String idActor) throws ResourceNotFoundException {
+	public void deleteFavActor(UserEntity user, String idActor) throws ResourceNotFound {
+		if(favActorRepository.countByUserEntityAndActorId(user, idActor).compareTo(Long.valueOf(0L))==0){
+			throw new ResourceNotFound();
+		}
 		favActorRepository.deleteByUserEntityAndActorId(user, idActor);
 	}
 

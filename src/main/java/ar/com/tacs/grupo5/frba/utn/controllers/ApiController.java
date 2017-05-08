@@ -84,6 +84,10 @@ public class ApiController {
 			response.status(401);
 			response.body("Not Authorized");
 		});
+		exception(ResourceNotFound.class, (exception, request, response) -> {
+			response.status(404);
+			response.body("Not Found");
+		});
 		exception(BadRequest.class, (exception, request, response) -> {
 			response.status(400);
 			String message = "Bad Request";

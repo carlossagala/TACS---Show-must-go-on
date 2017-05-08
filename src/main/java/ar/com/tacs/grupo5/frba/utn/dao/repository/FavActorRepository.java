@@ -11,4 +11,5 @@ public interface FavActorRepository extends PagingAndSortingRepository<FavActorE
 	Page<FavActorEntity> findByUserEntity(UserEntity UserEntity,Pageable pageable);
     Long countByUserEntity(UserEntity userEntity);
 	void deleteByUserEntityAndActorId(UserEntity userEntity, String actorId);
+	Long countByUserEntityAndActorId(UserEntity userEntity, String actorId);
 }
