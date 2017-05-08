@@ -1,4 +1,4 @@
-package ar.com.tacs.grupo5.frba.utn;
+package ar.com.tacs.grupo5.frba.utn.dao;
 
 import java.util.List;
 

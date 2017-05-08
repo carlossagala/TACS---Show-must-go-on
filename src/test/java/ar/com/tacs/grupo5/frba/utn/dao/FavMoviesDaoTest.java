@@ -22,7 +22,6 @@ import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.service.FavMoviesService;
 
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
@@ -36,8 +35,6 @@ public class FavMoviesDaoTest {
 	private FavMoviesDao favMoviesDao;
 	@SpyBean
 	private UserDao userDao;
-	@SpyBean
-	private FavMoviesService favMoviesService;
 	
 	private UserEntity user;
 	
@@ -55,14 +52,25 @@ public class FavMoviesDaoTest {
 		
 		Assert.assertNotNull(savedFavMovie);
 		Assert.assertTrue(savedFavMovie.getName().equals("Mi Lista Test"));
-		Assert.assertEquals(5,favMoviesDao.getFavMoviesByUser(user,0).getContent().size());
+		Assert.assertEquals((long)5,(long)favMoviesDao.countByUser(user));
 	}
 
 	@Test
 	@Transactional
 	@Rollback(true)
 	public void testGetFavMovies() {
-		Assert.assertEquals(4,favMoviesDao.getFavMoviesByUser(user,0).getContent().size());
+		FavMoviesEntity getFavMovie = favMoviesDao.getFavMovie("2");
+
+		Assert.assertEquals(getFavMovie.getName(), "Mi segunda lista");
+		Assert.assertEquals(getFavMovie.getUser(), user);
+		Assert.assertTrue(getFavMovie.getId() == "2");
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testCountFavMovies() {
+		Assert.assertEquals((long)4,(long)favMoviesDao.countByUser(user));
 	}
 
 	@Test
@@ -81,92 +89,29 @@ public class FavMoviesDaoTest {
 	}
 
 	@Test
+	@Transactional
+	@Rollback(true)
 	public void testDeleteFavMovies() {
-		FavMoviesEntity fav = favMoviesDao.getFavMovie("2");
-
 		try {
-			favMoviesDao.deleteFavMovies(fav.getId());
+			favMoviesDao.deleteFavMovies("2");
 		} catch (ResourceNotFound e) {
 			fail();
 		}
 
-		Assert.assertNull(this.favMoviesDao.getFavMovie(fav.getId()));
-		Assert.assertEquals(3,favMoviesDao.getFavMoviesByUser(user, 0).getContent().size());
+		Assert.assertNull(this.favMoviesDao.getFavMovie("2"));
+		Assert.assertEquals((long)3,(long)favMoviesDao.countByUser(user));
 	}
-//
-//	@Test
-//	public void testDeleteFavMoviesNotFound() {
-//		User savedUser = this.userDao.saveUser(new User("userrrr5", "userrrr5", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
-//		savedUser.getFavMovies().add(savedFavMovie);
-//		savedUser = this.userDao.saveUser(savedUser);
-//
-//		try {
-//			favMoviesService.deleteFavMovie(savedFavMovie.getId());
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//		// Intento borrar la entidad una segunda vez, en caso de que haya
-//		// funcionado el primer delete,
-//		// debería tirar la excepción
-//		try {
-//			favMoviesService.deleteFavMovie(savedFavMovie.getId());
-//			fail();
-//		} catch (ResourceNotFound e) {
-//		}
-//	}
-//
-//	@Test
-//	public void testAddMovieToFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userAddMovie", "userAddMovie", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao
-//				.saveFavMovie(new FavMovie("Una lista para dias de lluvia", savedUser.getId()));
-//		String favMovieId = savedFavMovie.getId();
-//		Movie addedMovie = null;
-//		try {
-//			addedMovie = movieService.addMovie(favMovieId, "123");
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//		Assert.assertNotNull(this.movieDao.getMovie(favMovieId,"123"));
-//	}
-//
-//	@Test
-//	public void testRemoveMovieFromFavMovies() {
-//		User savedUser = this.userDao.saveUser(new User("userRemoveMovie", "userRemoveMovie", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao
-//				.saveFavMovie(new FavMovie("Una lista para dias de lluvia", savedUser.getId()));
-//		String favMovieId = savedFavMovie.getId();
-//		Movie addedMovie = null;
-//		try {
-//			addedMovie = movieService.addMovie(favMovieId, "123");
-//			Assert.assertNotNull(this.movieDao.getMovie(favMovieId,"123"));
-//			this.movieService.removeMovie(favMovieId, "123");
-//			Assert.assertNull(this.movieDao.getMovie(favMovieId,"123"));
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//	}
-//
-//	@Test
-//	public void testGetFavMoviesDetail() {
-//		FavMovie getFavMovie = new FavMovie();
-//
-//		User savedUser = this.userDao.saveUser(new User("usrGetFavDetail", "usrGetFavDetail", "user"));
-//		FavMovie savedFavMovie = this.favMoviesDao.saveFavMovie(new FavMovie("Mi Primera Lista", savedUser.getId()));
-//		savedUser.getFavMovies().add(savedFavMovie);
-//		savedUser = this.userDao.saveUser(savedUser);
-//
-//		try {
-//			getFavMovie = favMoviesService.getFavMovieDetail(savedFavMovie.getId());
-//		} catch (ResourceNotFound e) {
-//			fail();
-//		}
-//
-//		Assert.assertTrue(getFavMovie.getName() == "Mi Primera Lista");
-//		Assert.assertTrue(getFavMovie.getUserId() == savedUser.getId());
-//		Assert.assertTrue(getFavMovie.getId() == savedFavMovie.getId());
-//	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void testDeleteFavMoviesNotFound() {
+		try {
+			favMoviesDao.deleteFavMovies("37");
+			fail();
+		} catch (ResourceNotFound e) {
+		}
+
+     	Assert.assertEquals((long)4,(long)favMoviesDao.countByUser(user));
+	}
 }

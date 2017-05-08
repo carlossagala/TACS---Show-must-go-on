@@ -69,6 +69,7 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		
 		if (favMovieToDelete == null)
 			throw new ResourceNotFound();
+		
 		favMoviesDao.deleteFavMovies(favMovieToDelete.getId());
 	}
 
