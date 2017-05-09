@@ -269,7 +269,10 @@ public class IntegrationTest
 	public void getAdminUserFavActors() throws Exception {
 		genericAdminGetTest("/api/users/2/favactors/?page=1","resposeUserFavActors.json");
 	}
-	
+	@Test
+	public void getAdminRanking() throws Exception {
+		genericAdminGetTest("/api/users/ranking/actors/?page=1","responseRankingAdmin.json");
+	}
 	@Test
 	public void testGetUsers() throws Exception {
 		GetMethod get = testServer.get("/api/users/", false);

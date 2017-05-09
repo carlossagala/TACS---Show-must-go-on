@@ -192,19 +192,6 @@ public class ApiController {
 		this.jwtUtils = jwtUtils;
 	}
 
-		
-	public Route getGenericResponse = (request, response) -> {
-		response.status(200);
-		PagedResponse resp = new PagedResponse();
-		resp.setTotalPages(1);
-		resp.setTotalResults(1L);
-		resp.setPage(getPage(request));
-		
-		resp.setData("data");
-		ObjectMapper oMapper = new ObjectMapper();
-		return oMapper.writeValueAsBytes(resp);
-	};
-
 	/**
 	 * Returns all users
 	 */
