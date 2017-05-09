@@ -42,6 +42,7 @@ import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.GetUserResponse;
 import ar.com.tacs.grupo5.frba.utn.models.LoginRequest;
 import ar.com.tacs.grupo5.frba.utn.models.LoginResponse;
+import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Response;
 import ar.com.tacs.grupo5.frba.utn.models.User;
@@ -645,12 +646,20 @@ public class ApiController {
 		
 
 		Set<FavMovies> listOfFavMovies = user.getFavMovies(); 
-		FavMovies lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).collect(Collectors.toList()).get(0);
-		
+		FavMovies lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).findAny().orElse(null);
+		if(lista==null){
+			throw new ResourceNotFound();
+		}
 		
 		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
 		
-		lista.getMovies().forEach(m -> actores.addAll(movieService.getMovieActors(m.getId())));
+		for(Movie m:lista.getMovies()){
+			try{
+				actores.addAll(movieService.getMovieActors(m.getId()));
+			}catch(Exception e){
+				logger.error("",e);
+			}
+		}
 		
 		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
 		
