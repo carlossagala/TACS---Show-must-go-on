@@ -20,7 +20,7 @@ public class FavActorDaoImpl implements FavActorDao{
 	
 	private FavActorRepository favActorRepository;
 	
-	@Value("${page.size}")
+	@Value("${tmdb.page.size}")
 	private int pageSize;
 	
 	@Autowired
