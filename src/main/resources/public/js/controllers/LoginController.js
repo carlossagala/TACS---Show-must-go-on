@@ -51,5 +51,27 @@ mainApp.controller('LoginController', ['$scope', '$http', '$timeout', '$location
             login.loggedIn = false;
         });
     }
+    
+    login.register = function() {
+    	
+    	var user_credentials = {
+            "user_name": login.user.username,
+            "password": login.user.password
+        }
+    	
+    	$http.post('api/user/', user_credentials).success(function(data) {
+            login.loggedIn = true;
+            login.successfullRegister = true;
+            login.unsuccessfullRegister = false;
+            login.invalidInput = false;
+            login.serverError = false;
+        }).error(function (data, status) {
+            login.invalidInput = false;
+        	login.successfullRegister = false;
+        	login.unsuccessfullRegister = true;
+            login.loggedIn = false;
+        });
+    	
+    }
 
 }]);
