@@ -16,6 +16,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     $scope.movies = [];
     $scope.favmovies = [];
     $scope.favactors = [];
+    $scope.pagination_result = [];
     $scope.ranking_favactors = [];
     $scope.users = [];
     $scope.loading = true;
@@ -43,7 +44,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
                 main.getFavmovies();
                 break;
             case 'favactors':
-                main.getFavactors();
+                main.getFavactors(1);
                 break;
             case 'users':
                 main.getUsers();
@@ -69,11 +70,19 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         });
     }
 
-    main.getFavactors = function() {
+    main.getFavactors = function(page) {
+
+        console.log("main.getFavactors",page)
 
         // Get favactors via ajax
-        $http.get('/api/favactors/').success(function(data) {
+        $http.get('/api/favactors/?page=' + page).success(function(data) {
             $scope.favactors = data.data;
+            $scope.pagination_result = {
+                page: data.page,
+                page_size: 5,
+                total_results: data.total_results
+            };
+
             $.each($scope.favactors, function(idx, el) {
                 main.getActorDetails(el);
             })
@@ -206,11 +215,11 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         // Get users via ajax
         $http.post('/api/favactors/', favactor).success(function(data) {
             var user = data.data;
-            alert("El actor fue marcado como favorito!")
+            Materialize.toast("El actor fue marcado como favorito!", 1000)
 
         }).error(function (data, status) {
             console.log('Error trying to mark as fauvorite: ' + data);
-            alert("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.")
+            Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 1000)
         });
     }
 
@@ -220,13 +229,13 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $http.delete('/api/favactors/' + actorId + '/').success(function(data) {
             //TODO: modify backend showing properly message
             if(data==null) {
-                alert("El actor fue desmarcado como favorito!")
-                main.getFavactors();
+                Materialize.toast("El actor fue desmarcado como favorito!", 1000)
+                main.getFavactors(1);
             }
 
         }).error(function (data, status) {
             console.log('Error trying to mark as fauvorite: ' + data);
-            alert("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.")
+            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 1000)
         });
     }
 
@@ -242,6 +251,11 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.unmarkAsFavourite = function(actorId) {
         main.unmarkAsFavouritePost(actorId);
+    }
+
+    main.paginateFavactors = function(page) {
+        console.log("goto page:", page)
+        main.getFavactors(page);
     }
 
     $scope.$on('search_result', function(evt, data){

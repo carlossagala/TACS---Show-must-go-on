@@ -160,6 +160,18 @@ p:hover {
     font-size: 2em;
 }
 
+a.chip-modal-trigger {
+    cursor: pointer; cursor: hand;
+}
+
+a.chip-modal-trigger:hover {
+    text-decoration: underline !important;
+}
+
+.pagination li a {
+    color: white;
+}
+
 /* DARK THEME - DESKTOP - BEGIN  */
 
 .dark-theme .form-wrapper {
