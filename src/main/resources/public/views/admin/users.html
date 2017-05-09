@@ -5,9 +5,26 @@
 				<li class="collection-header"><h4>Usuarios registrados</h4></li>
 				<li ng-repeat="user in users" class="collection-item">
 					<span class="title">{{ user.user_name}} </span>
+					<a ng-click="dashboard.getDetailsUser(user.id)" class="btn secondary-content" data-target='userDetails' modal>Ver detalles</a>
 					<p>Nivel: {{ user.nivel }}</p>
 				</li>
 			</ul>
 		</div>
+	</div>
+</div>
+<!-- Modal Structure -->
+<div id="userDetails" class="modal">
+	<div class="modal-content">
+		<h4>Detalles del usuario: <span id="user-details-header-username"></h4>
+		<div id="user-details-body-wrapper">
+			<br>
+			<p>Cargando detalles del usuario...</p>
+			<div class="progress">
+				<div class="indeterminate"></div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a class=" modal-action modal-close waves-effect waves-green btn-flat">Cerrar</a>
 	</div>
 </div>

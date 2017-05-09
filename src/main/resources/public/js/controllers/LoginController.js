@@ -30,6 +30,7 @@ mainApp.controller('LoginController', ['$scope', '$http', '$timeout', '$location
                 localStorage['token']   = data.token;
                 localStorage['user_id'] = data.user_id;
                 localStorage['profile'] = data.nivel;
+                localStorage['username'] = login.user.username;
 
                 data.nivel==="admin"
                     ? $location.path("/dashboard/users")

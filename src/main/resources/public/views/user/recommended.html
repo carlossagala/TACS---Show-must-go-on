@@ -1,11 +1,10 @@
 <div id="panelRight" class="col s12">
 	<div class="row list-wrapper" ng-if="!loading">
-		<div class="col s12">
-			<ul class="tabs grey darken-4">
-				<li class="tab col s4"><a class="active" href="#/dashboard/recommended">Peliculas Recomendadas</a></li>
-				<li class="tab col s4"><a href="#/dashboard/favmovies">Peliculas favoritas</a></li>
-				<li class="tab col s4"><a href="#/dashboard/favactors">Actores favoritos</a></li>
-			</ul>
+
+		<div class="col s12 m12">
+			<h6 class="grey-text right-align">Cantidad de recomendaciones
+				<span class="new badge" data-badge-caption="registros">{{ search_items.total_results }}</span>
+			</h6>
 		</div>
 
 		<div id="t1" class="col s12 m12">

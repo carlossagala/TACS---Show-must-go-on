@@ -1,0 +1,39 @@
+<ul class="side-nav fixed" ng-if="is_admin">
+    <li>
+        <div class="userView">
+            <div class="background">
+                <img width="300" src="images/bg_user.jpg">
+            </div>
+            <a href="#/dashboard/users"><i class="medium material-icons">perm_identity</i></a>
+            <a href="#/dashboard/users"><span class="name">{{ username }}</span></a>
+            <br>
+        </div>
+    </li>
+
+    <li><a class="subheader">Dashboard admin</a></li>
+    <li><a href="#/dashboard/users">Usuarios Registrados</a></li>
+    <li><a href="#/dashboard/ranking-favactors">Ranking actores favoritos</a></li>
+
+    <li><div class="divider"></div></li>
+    <li><a class="subheader">Dashboard user</a></li>
+    <li><a class="waves-effect" href="#/dashboard/recommended">Recomendaciones</a></li>
+    <li><a class="waves-effect" href="#/dashboard/favmovies">Listas de peliculas favoritas</a></li>
+    <li><a class="waves-effect" href="#/dashboard/favactors">Lista de actores favoritos</a></li>
+</ul>
+
+<ul class="side-nav fixed" ng-if="!is_admin">
+    <li>
+        <div class="userView">
+            <div class="background">
+                <img width="300" src="images/bg_user.jpg">
+            </div>
+            <a href="#/dashboard/users"><i class="medium material-icons">perm_identity</i></a>
+            <a href="#/dashboard/users"><span class="name">{{ username }}</span></a>
+            <br>
+        </div>
+    </li>
+    <li><a class="subheader">Dashboard</a></li>
+    <li><a class="waves-effect" href="#/dashboard/recommended">Recomendaciones</a></li>
+    <li><a class="waves-effect" href="#/dashboard/favmovies">Listas de peliculas favoritas</a></li>
+    <li><a class="waves-effect" href="#/dashboard/favactors">Lista de actores favoritos</a></li>
+</ul>

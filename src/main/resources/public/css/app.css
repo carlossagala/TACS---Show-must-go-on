@@ -23,21 +23,29 @@ html {
     box-sizing: border-box;
 }
 
-body {
+main {
+    flex: 1 0 auto;
+}
+
+#main-wrapper {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
 }
 
-main {
-    flex: 1 0 auto;
-    font-family: "Cutive", serif;
-    font-size: 1rem;
-    line-height: 1.4;
-    color: #222;
-    background-color: #ededed;
-    -webkit-transition: background-color 150ms ease-out, color 150ms ease-out;
-    transition: background-color 150ms ease-out, color 150ms ease-out;
+header, main {
+    padding-left: 300px;
+}
+
+.side-nav .userView .circle {
+    height: 100px;
+    width: 100px;
+}
+
+@media only screen and (max-width : 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
 }
 
 .dark {
@@ -133,6 +141,23 @@ p:hover {
 
 .card.horizontal .card-image {
     max-width: 23.5% !important;
+}
+
+.card .card-content {
+    padding: 5px 15px;
+    border-radius: 0 0 2px 2px;
+}
+
+.card .card-content h5 {
+    font-size: 1.3rem;
+    line-height: 110%;
+    margin: .82rem 0 .656rem 0;
+}
+
+.side-nav .userView .name {
+    margin-top: 0;
+    font-weight: 500;
+    font-size: 2em;
 }
 
 /* DARK THEME - DESKTOP - BEGIN  */

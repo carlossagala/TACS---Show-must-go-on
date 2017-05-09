@@ -1,22 +1,27 @@
-<!-- Navbar layout -->
-<div ng-include="'views/user/navbar.html'"></div>
+<main>
+    <!-- Navbar layout -->
+    <div ng-include="'views/user/navbar.html'"></div>
 
-<!-- Content Layout -->
-<div id="main-wrapper" class="row grey darken-3">
+    <!-- Sidenav layout -->
+    <div ng-include="'/views/common/sidenav.html'"></div>
 
-    <!-- Form layout -->
-    <div ng-include="'/views/user/form.html'"></div>
+    <!-- Content Layout -->
+    <div id="main-wrapper" class="row grey darken-3">
 
-    <!-- Loader layout  -->
-    <div ng-include="'/views/common/loader.html'" ng-if="loading"></div>
+        <!-- Form layout -->
+        <div ng-include="'/views/user/form.html'"></div>
 
-    <!-- Tabs layout  -->
-    <div ng-include src="contentUrl" ng-if="tab_content"></div>
+        <!-- Loader layout  -->
+        <div ng-include="'/views/common/loader.html'" ng-if="loading"></div>
 
-    <!-- Search result layout  -->
-    <div ng-include="'/views/common/search_result.html'" ng-if="search_result"></div>
+        <!-- Tabs layout  -->
+        <div ng-include src="contentUrl" ng-if="tab_content"></div>
 
-</div>
+        <!-- Search result layout  -->
+        <div ng-include="'/views/common/search_result.html'" ng-if="search_result"></div>
 
-<!-- Footer layout -->
-<div ng-include="'views/common/footer.html'"></div>
+    </div>
+
+    <!-- Footer layout -->
+    <div ng-include="'views/common/footer.html'"></div>
+</main>

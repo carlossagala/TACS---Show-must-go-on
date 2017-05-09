@@ -30,10 +30,16 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             resource: "favactors"
         })
         .when("/dashboard/users", {
-            templateUrl: "views/admin/dashboard.html",
+            templateUrl: "views/user/dashboard.html",
             contentUrl: "views/admin/users.html",
             controller: "DashboardController as dashboard",
             resource: "users"
+        })
+        .when("/dashboard/ranking-favactors", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/admin/favactors.html",
+            controller: "DashboardController as dashboard",
+            resource: "ranking_favactors"
         })
         .when("/logout", {
             templateUrl: "views/common/login.html",

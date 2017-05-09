@@ -1,22 +1,17 @@
 <div id="panelRight" class="col s12">
 	<div class="row list-wrapper" ng-if="!loading">
-		<div class="col s12">
-			<ul class="tabs grey darken-4">
-				<li class="tab col s4"><a href="#/dashboard/recommended">Peliculas Recomendadas</a></li>
-				<li class="tab col s4"><a href="#/dashboard/favmovies">Listas de peliculas favoritas</a></li>
-				<li class="tab col s4"><a href="#/dashboard/favactors">Actores favoritos</a></li>
-			</ul>
-		</div>
-
 		<div class="row list-wrapper" ng-if="!loading && search_result">
-			<div class="col s12">
-				<h4 class="white-text">Resultado de la busqueda, Total: {{ search_items.total_results }} registros</h4>
+
+			<div class="col s12 m12">
+				<h6 class="grey-text right-align">Cantidad de resultados para esta busqueda
+					<span class="new badge" data-badge-caption="registros">{{ search_items.total_results }}</span>
+				</h6>
 			</div>
 
 			<div class="col s12 m12">
 				<div class="row section-wrapper">
 					<div ng-repeat="item in search_items.data">
-						<div class="col s12 m3" ng-if="item.type==='actor'">
+						<div class="col s12 m4" ng-if="item.type==='actor'">
 							<div class="card horizontal">
 								<div class="card-image">
 									<a href="#/actor/{{item.id}}"><img src="https://image.tmdb.org/t/p/w500{{ item.profile_path }}"></a>
@@ -25,6 +20,9 @@
 									<div class="card-content">
 										<h5 class="header">{{ item.name }}</h5>
 										<p>Popularidad: {{ item.popularity }}</p>
+									</div>
+									<div class="card-action">
+										<a class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Marcar como favorito!" ng-click="dashboard.markAsFavourite(item.id)"><i class="small material-icons">grade</i></a>
 									</div>
 								</div>
 							</div>
