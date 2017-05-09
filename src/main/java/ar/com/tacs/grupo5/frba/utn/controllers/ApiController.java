@@ -510,8 +510,6 @@ public class ApiController {
 	public Route getFavMovieDetail = (request, response) -> {
 		Response resp = new Response();
 		
-		User user = authenticate(request);
-		
 		String idFavMovie = request.params(":id");
 		
 		try
@@ -535,8 +533,6 @@ public class ApiController {
 	public Route updateFavMoviesDetail = (request, response) -> {
 		String newTitle;
 		Response resp = new Response();
-		
-		User user = authenticate(request);
 		
 		String idFavMovie = request.params(":id");
 		
@@ -594,11 +590,14 @@ public class ApiController {
 	 * Adds a movie to the list
 	 */
 	public Route addMovieToList = (request, response) -> {
-		User user = authenticate(request);
 		String idFavMovie = request.params(":id");
+		@SuppressWarnings("unchecked")
 		Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
+		
 		String movieId = (String)requestMap.get("id");
+		
 		movieService.addMovie(idFavMovie, movieId);
+		
 		response.status(201);
 		Response resp = new Response();
 		resp.setData("Se agregó la película a la lista");
@@ -609,7 +608,6 @@ public class ApiController {
 	 * Removes a movie from the list
 	 */
 	public Route deleteMovieFromList = (request, response) -> {
-		User user = authenticate(request);
 		String idFavMovie = request.params(":id");
 		String movieId = request.params(":movie_id");
 		movieService.removeMovie(idFavMovie, movieId);
@@ -677,6 +675,7 @@ public class ApiController {
 		User user = authenticate(request);
 		Response resp = new Response();
 		try{
+			@SuppressWarnings("unchecked")
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			id = (String)requestMap.get("id");
 		}catch(Exception e){
@@ -704,8 +703,11 @@ public class ApiController {
 	 */
 	public Route getMovieById = (request, response) -> {
 		response.status(200);
+		
 		String id = request.params(":id");
+		
 		Response resp = new Response();
+		
 		resp.setData(movieService.getMovieDetail(id));
 		return resp;
 	};

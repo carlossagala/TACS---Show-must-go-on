@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,6 @@ import ar.com.tacs.grupo5.frba.utn.models.User;
 @EnableAutoConfiguration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
-@Transactional
 public class UserDaoTest {
 	// Mockeo Apicontroller para que no levante el servidor embebido de spark
 	@MockBean
@@ -36,6 +36,8 @@ public class UserDaoTest {
 	private UserMapper userMapper;
 	
 	@Test
+	@Transactional
+	@Rollback(true)
 	public void testRegisterUser()
 	{
 		User userDto = new User("user","user","user","lastAccess");
@@ -46,6 +48,7 @@ public class UserDaoTest {
 	}
 	
 	@Test
+	@Transactional
 	public void testGetAllUsers()
 	{
 		List<UserEntity> allUsers = this.userDao.getAllUsers();
@@ -54,6 +57,7 @@ public class UserDaoTest {
 	}
 	
 	@Test
+	@Transactional
 	public void testGetAllUsersWithPage()
 	{
 		Page<UserEntity> allUsers = this.userDao.getAllUsersWithPage(0);
@@ -62,6 +66,7 @@ public class UserDaoTest {
 	}
 	
 	@Test
+	@Transactional
 	public void testGetUnexistingUserByUserName()
 	{
 		UserEntity found = this.userDao.findByUserName("AnyUser");
@@ -69,11 +74,10 @@ public class UserDaoTest {
 	}
 	
 	@Test
+	@Transactional
 	public void testGetUnexistingUserById()
 	{
 		UserEntity found = this.userDao.getUserById("300");
 		Assert.assertNull(found);
 	}
-	
-	
 }

@@ -8,9 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -22,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
+import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
@@ -106,10 +109,22 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public Movie getMovieDetail(String id) {
+	public Movie getMovieDetail(String id) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "?api_key=" + appKey + "&language=es";
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		} 
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
+		
 		Movie movie = gson.fromJson(response.getBody(), Movie.class);
 		movie.setReviews(getReviews(id));
 		movie.setImages(getImages(id));

@@ -28,8 +28,6 @@ public class FavActorDaoImpl implements FavActorDao{
 		this.favActorRepository = favActorRepository;
 	}
 	
-	
-
 	@Override
 	@Transactional
 	public void addFavActor(UserEntity user, String idActor) throws ResourceNotFoundException {

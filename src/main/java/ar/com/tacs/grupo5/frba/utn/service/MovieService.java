@@ -14,7 +14,7 @@ public interface MovieService {
 
 	public Images getImages(String id);
 
-	public Movie getMovieDetail(String id);
+	public Movie getMovieDetail(String id) throws ResourceNotFound;
 
 	public List<Actor> getMovieActors(String id);
 
