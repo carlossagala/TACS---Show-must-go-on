@@ -160,16 +160,44 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         // Get users via ajax
         $http.get('/api/users/' + userId + '/').success(function(data) {
             var user = data.data;
-            angular.element(document).find("#user-details-header-username").html(user.user_name);
-            angular.element(document).find("#user-details-body-wrapper").html('<br><p>Actores favoritos: '+ user.cant_fav_actors +'</p><p>Peliculas favoritas: '+ user.cant_fav_movies +'<p>')
-
+            angular.element(document).find("#user-details-loader").hide();
+            angular.element(document).find("#user-details-header-wrapper")
+                .html('<h4>Detalles del usuario: ' + user.user_name + '</h4>');
+            angular.element(document).find("#user-details-body-wrapper")
+                .html('<br><p>Actores favoritos: '+ user.cant_fav_actors +'</p><p>Peliculas favoritas: '+ user.cant_fav_movies +'</p>')
         }).error(function (data, status) {
             console.log('Error getting users: ' + data);
 
         });
     }
 
-     main.markAsFavouritePost = function(actorId) {
+    main.getFavmovieDetails = function(favmovie) {
+
+        angular.element(document).find("#user-details-loader").show();
+        angular.element(document).find("#user-details-body-wrapper").html('');
+
+        angular.element(document).find("#user-details-header-wrapper")
+            .html('<h4>Detalles de la lista: ' + favmovie.name + '</h4>');
+        $.each(favmovie.movies, function(idx, el) {
+            main.getMovie(el.movie_id);
+        })
+    }
+
+    main.getMovie = function(movieId) {
+
+        // Get users via ajax
+        $http.get('/api/movie/' + movieId + '/').success(function(data) {
+            var movie = data.data;
+            angular.element(document).find("#user-details-loader").hide();
+            angular.element(document).find("#user-details-body-wrapper")
+                .append('<br><div class="row"><h5>Pelicula: '+ movie.title +'</h5><p>Plot: '+ movie.overview +'</p></div>')
+        }).error(function (data, status) {
+            console.log('Error getting users: ' + data);
+
+        });
+    }
+
+    main.markAsFavouritePost = function(actorId) {
 
         var favactor = {
             "id": actorId
@@ -203,6 +231,8 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     }
 
     main.getDetailsUser = function(userId) {
+        angular.element(document).find("#user-details-loader").show();
+        angular.element(document).find("#user-details-body-wrapper").html('');
         main.getUser(userId);
     }
 
@@ -211,7 +241,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     }
 
     main.unmarkAsFavourite = function(actorId) {
-        console.log("actorId", actorId)
         main.unmarkAsFavouritePost(actorId);
     }
 
