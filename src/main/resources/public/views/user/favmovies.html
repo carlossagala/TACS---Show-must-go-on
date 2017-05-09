@@ -3,39 +3,21 @@
 		<div class="col s12">
 			<ul class="tabs grey darken-4">
 				<li class="tab col s4"><a href="#/dashboard/recommended">Peliculas Recomendadas</a></li>
-				<li class="tab col s4"><a class="active" href="#/dashboard/favmovies">Peliculas favoritas</a></li>
+				<li class="tab col s4"><a class="active" href="#/dashboard/favmovies">Listas de peliculas favoritas</a></li>
 				<li class="tab col s4"><a href="#/dashboard/favactors">Actores favoritos</a></li>
 			</ul>
 		</div>
 
-		<div id="favmovies" class="col s12 m12">
+		<div id="favmovies" class="col s12 m6 offset-m3">
 			<div class="row section-wrapper">
-				<ul class="collection">
-					<li ng-repeat="movie in favmovies" class="collection-item avatar">
-						<img src="storagePath{{movie.poster_path}}" alt="" class="circle">
-						<span class="title">Title</span>
-						<p>First Line <br>
-							Second Line
-						</p>
-						<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+				<ul class="collection with-header">
+					<li class="collection-header"><h4>Listas de peliculas favoritas</h4></li>
+					<li ng-repeat="favmovie in favmovies" class="collection-item">
+						<span class="title">{{ favmovie.name}} </span>
+						<p>Peliculas: {{ favmovie.movies.length }}</p>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 </div>
- <script type="text/javascript">
- 	/*
-  	$(document).ready(function(){
-	    setTimeout(
-	    	function(){
-	    		$(".progress-wrapper").addClass("hide")
-	    		$(".list-wrapper").removeClass("hide")
-
-	    		$('ul.tabs').tabs({
-			    	swipeable: true
-			    });
-	    	}, 2000
-	    );
-	});*/
-  </script>

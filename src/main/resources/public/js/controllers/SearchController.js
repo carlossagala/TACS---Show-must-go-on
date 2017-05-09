@@ -4,9 +4,13 @@
 
 mainApp.controller('SearchController', ['$scope', '$http', 'utilityService', function($scope, $http, utilityService) {
 
+    // Set content type for requests
     $http.defaults.headers.post["Content-Type"] = "application/json";
+    // Set api_key for logged user
+    $http.defaults.headers.common["api_key"] = localStorage.getItem('token');
 
     var search = this;
+
     search.controls = {
         type: 'full'
     }

@@ -11,11 +11,6 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             templateUrl: "views/common/login.html",
             controller: "LoginController as login"
         })
-        .when("/dashboard/a", {
-            templateUrl: "views/user/dashboard.html",
-            contentUrl: "views/user/list.html",
-            controller: "DashboardController as dashboard"
-        })
         .when("/dashboard/recommended", {
             templateUrl: "views/user/dashboard.html",
             contentUrl: "views/user/recommended.html",
@@ -35,14 +30,10 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             resource: "favactors"
         })
         .when("/dashboard/users", {
-            templateUrl: "views/admin/users.html",
-            contentUrl: "views/admin/users.html",
-            controller: "DashboardController as dashboard"
-        })
-        .when("/dashboard/a", {
             templateUrl: "views/admin/dashboard.html",
-            contentUrl: "views/user/list.html",
-            controller: "DashboardController as dashboard"
+            contentUrl: "views/admin/users.html",
+            controller: "DashboardController as dashboard",
+            resource: "users"
         })
         .when("/logout", {
             templateUrl: "views/common/login.html",

@@ -23,7 +23,14 @@ html {
     box-sizing: border-box;
 }
 
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
 main {
+    flex: 1 0 auto;
     font-family: "Cutive", serif;
     font-size: 1rem;
     line-height: 1.4;

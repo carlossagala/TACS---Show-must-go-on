@@ -22,22 +22,18 @@ mainApp.controller('LoginController', ['$scope', '$http', '$timeout', '$location
         // Login an user
         $http.post('api/user/login/', user_credentials).success(function(data) {
             if(data.token) {
-                login.api_key = data.token;
                 login.loggedIn = true;
 
                 login.invalidInput = false;
                 login.serverError = false;
 
-                // Set api_key for logged user
-                $http.defaults.headers.common["api_key"] = login.api_key;
+                localStorage['token']   = data.token;
+                localStorage['user_id'] = data.user_id;
+                localStorage['profile'] = data.nivel;
 
-                localStorage['token'] = login.api_key;
-
-                console.log('localStorage.getItem(token)', localStorage.getItem('token'))
-
-                //TODO: redirect to dashboard according to profile
-                $location.path("/dashboard/recommended");
-                //$location.path("/dashboard/u");
+                data.nivel==="admin"
+                    ? $location.path("/dashboard/users")
+                    : $location.path("/dashboard/recommended");
             }
             else {
                 login.api_key = null;
