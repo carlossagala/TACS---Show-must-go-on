@@ -2,7 +2,6 @@ package ar.com.tacs.grupo5.frba.utn;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -272,6 +271,10 @@ public class IntegrationTest
 	@Test
 	public void getAdminRanking() throws Exception {
 		genericAdminGetTest("/api/users/ranking/actors/?page=1","responseRankingAdmin.json");
+	}
+	@Test
+	public void getAdminRankingFavmovies() throws Exception {
+		genericAdminGetTest("/api/favmovies/bac25bb4c3dd/ranking/?page=1","responseRankingFavmovie.json");
 	}
 	@Test
 	public void testGetUsers() throws Exception {
