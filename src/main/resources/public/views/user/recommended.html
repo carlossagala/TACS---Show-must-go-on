@@ -6,20 +6,25 @@
 			</h6>
 		</div>
 
-		<div id="t1" class="col s12 m12">
+		<div id="recommended" class="col s12 m12">
 			<div class="row section-wrapper">
-				<div ng-repeat="movie in movies" class="col s12 m3">
+				<div ng-repeat="movie in movies" class="col s12 m6">
 					<div class="card horizontal">
-						<div class="card-image">
-							<img src="{{ movie.images[0].path ? movie.images[0].path : '' }}">
-						</div>
 						<div class="card-stacked">
 							<div class="card-content">
 								<h5 class="header">{{ movie.title }}</h5>
-								<p>{{ movie.description }}</p>
 							</div>
 							<div class="card-action">
-								<a href="#">Mas info...</a>
+								<a ng-click="dashboard.openModalMovieDetails(movie.id)">Mas info...</a>
+								<a class="dropdown-button btn right" href="javascript:void(0);" data-activates="favmoviesDropdown-{{movie.id}}" dropdown data-hover="true">
+									Agregar a la lista...
+								</a>
+								<!-- Dropdown Structure -->
+								<ul id="favmoviesDropdown-{{movie.id}}" class="dropdown-content">
+								    <li ng-repeat="favmovie in favmovies">
+								    	<a ng-click="dashboard.addMovieToFavmovie(movie.id, favmovie.id)">{{ favmovie.name }}</a>
+								    </li>
+								</ul>
 							</div>
 						</div>
 					</div>
@@ -28,3 +33,5 @@
 		</div>
 	</div>
 </div>
+
+

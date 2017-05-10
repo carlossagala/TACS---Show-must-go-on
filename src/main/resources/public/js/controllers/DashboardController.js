@@ -27,6 +27,9 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     $scope.is_admin = localStorage.getItem('profile') === "admin";
 
     main.init = function(resource) {
+        // Preload favmovies for dropdown
+        main.getFavmovies();
+        // Get data from resource navigated
         main.getData(resource);
     }
 
@@ -71,8 +74,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     }
 
     main.getFavactors = function(page) {
-
-        console.log("main.getFavactors",page)
 
         // Get favactors via ajax
         $http.get('/api/favactors/?page=' + page).success(function(data) {
@@ -132,7 +133,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         // Get recommended movies via ajax
         $http.get('/api/movies/recommended/').success(function(data) {
             $scope.movies = data.data;
-            main.allContentLoaded = true;
         }).error(function (data, status) {
             console.log('Error getting recommended movies: ' + data);
             $scope.movies = [];
@@ -256,6 +256,22 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     main.paginateFavactors = function(page) {
         console.log("goto page:", page)
         main.getFavactors(page);
+    }
+
+    main.addMovieToFavmovie = function(movieId, favMovieId) {
+        
+        var movie = {
+            "id": movieId
+        }
+
+        // Get users via ajax
+        $http.post('/api/favmovies/' + favMovieId + '/movies/', movie).success(function(data) {
+            var user = data.data;
+            Materialize.toast("Se agrego la pelicula a la lista!", 1000)
+        }).error(function (data, status) {
+            console.log('Error trying to mark as fauvorite: ' + data);
+            Materialize.toast("No se pudo agregar la pelicula a la lista, intentelo nuevamente.", 1000)
+        });
     }
 
     $scope.$on('search_result', function(evt, data){
