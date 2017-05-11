@@ -172,6 +172,11 @@ a.chip-modal-trigger:hover {
     color: white;
 }
 
+ul:not(.browser-default).inline li {
+    float: left;
+    margin-right: 10px;
+}
+
 /* DARK THEME - DESKTOP - BEGIN  */
 
 .dark-theme .form-wrapper {

@@ -67,3 +67,28 @@ mainApp.factory('utilityService', function() {
         }
     };
 })
+
+// Directives
+mainApp.directive('contentItem', function() {
+    return {
+        template: '<ng-include src="getTemplateUrl()"/>',
+        scope: {
+          content: '='
+        },
+        restrict: 'E',
+        controller: function($scope) {
+            //function used on the ng-include to resolve the template
+            $scope.getTemplateUrl = function() {
+            //basic handling
+            if ($scope.content.contentType === "movie")
+                return "views/common/movie.tpl.html";
+            }
+        }
+    };
+});
+
+mainApp.filter('unique', function() {
+    return function (arr, field) {
+        return _.uniq(arr, function(a) { return a[field]; });
+    };
+});

@@ -166,14 +166,16 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.getUser = function(userId) {
 
+        var $modal_header = angular.element(document).find("#user-details-header-wrapper");
+        var $modal_body   = angular.element(document).find("#user-details-body-wrapper");
+        var $modal_loader = angular.element(document).find("#user-details-loader");
+
         // Get users via ajax
         $http.get('/api/users/' + userId + '/').success(function(data) {
             var user = data.data;
-            angular.element(document).find("#user-details-loader").hide();
-            angular.element(document).find("#user-details-header-wrapper")
-                .html('<h4>Detalles del usuario: ' + user.user_name + '</h4>');
-            angular.element(document).find("#user-details-body-wrapper")
-                .html('<br><p>Actores favoritos: '+ user.cant_fav_actors +'</p><p>Peliculas favoritas: '+ user.cant_fav_movies +'</p>')
+            $modal_loader.hide();
+            $modal_header.html('<h4>Detalles del usuario: ' + user.user_name + '</h4>');
+            $modal_body.html('<br><p>Actores favoritos: '+ user.cant_fav_actors +'</p><p>Peliculas favoritas: '+ user.cant_fav_movies +'</p>')
         }).error(function (data, status) {
             console.log('Error getting users: ' + data);
 
@@ -182,27 +184,36 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.getFavmovieDetails = function(favmovie) {
 
-        angular.element(document).find("#user-details-loader").show();
-        angular.element(document).find("#user-details-body-wrapper").html('');
+        var $modal_header = angular.element(document).find("#user-details-header-wrapper");
+        var $modal_body   = angular.element(document).find("#user-details-body-wrapper");
+        var $modal_loader = angular.element(document).find("#user-details-loader");
 
-        angular.element(document).find("#user-details-header-wrapper")
-            .html('<h4>Detalles de la lista: ' + favmovie.name + '</h4>');
+        $modal_loader.show();
+        $modal_header.html('<h4>Detalles de la lista: ' + favmovie.name + '</h4>');
+        $modal_body.html('<content-item ng-repeat="movie_item in favmovies_details | unique" content="movie_item"></content-item>')
+
+        $scope.favmovies_details = [];
+        
         $.each(favmovie.movies, function(idx, el) {
             main.getMovie(el.movie_id);
         })
+
+        $compile($modal_body)($scope);
     }
 
     main.getMovie = function(movieId) {
 
+        var $modal_loader = angular.element(document).find("#user-details-loader");
+
         // Get users via ajax
         $http.get('/api/movie/' + movieId + '/').success(function(data) {
             var movie = data.data;
-            angular.element(document).find("#user-details-loader").hide();
-            angular.element(document).find("#user-details-body-wrapper")
-                .append('<br><div class="row"><h5>Pelicula: '+ movie.title +'</h5><p>Plot: '+ movie.overview +'</p></div>')
+            movie.contentType = 'movie';
+            $scope.favmovies_details.push(movie);
+            $modal_loader.hide();
+            
         }).error(function (data, status) {
             console.log('Error getting users: ' + data);
-
         });
     }
 
@@ -215,11 +226,11 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         // Get users via ajax
         $http.post('/api/favactors/', favactor).success(function(data) {
             var user = data.data;
-            Materialize.toast("El actor fue marcado como favorito!", 1000)
+            Materialize.toast("El actor fue marcado como favorito!", 2000, "orange")
 
         }).error(function (data, status) {
             console.log('Error trying to mark as fauvorite: ' + data);
-            Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 1000)
+            Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "orange")
         });
     }
 
@@ -229,19 +240,24 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $http.delete('/api/favactors/' + actorId + '/').success(function(data) {
             //TODO: modify backend showing properly message
             if(data==null) {
-                Materialize.toast("El actor fue desmarcado como favorito!", 1000)
+                Materialize.toast("El actor fue desmarcado como favorito!", 2000, "orange")
                 main.getFavactors(1);
             }
 
         }).error(function (data, status) {
             console.log('Error trying to mark as fauvorite: ' + data);
-            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 1000)
+            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "orange")
         });
     }
 
     main.getDetailsUser = function(userId) {
-        angular.element(document).find("#user-details-loader").show();
-        angular.element(document).find("#user-details-body-wrapper").html('');
+
+        var $modal_header = angular.element(document).find("#user-details-header-wrapper");
+        var $modal_body   = angular.element(document).find("#user-details-body-wrapper");
+        var $modal_loader = angular.element(document).find("#user-details-loader");
+
+        $modal_loader.show();
+        $modal_body.html('');
         main.getUser(userId);
     }
 
@@ -267,10 +283,10 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         // Get users via ajax
         $http.post('/api/favmovies/' + favMovieId + '/movies/', movie).success(function(data) {
             var user = data.data;
-            Materialize.toast("Se agrego la pelicula a la lista!", 1000)
+            Materialize.toast("Se agrego la pelicula a la lista!", 2000, "orange")
         }).error(function (data, status) {
             console.log('Error trying to mark as fauvorite: ' + data);
-            Materialize.toast("No se pudo agregar la pelicula a la lista, intentelo nuevamente.", 1000)
+            Materialize.toast("No se pudo agregar la pelicula a la lista, intentelo nuevamente.", 2000, "orange")
         });
     }
 
