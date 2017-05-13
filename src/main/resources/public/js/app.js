@@ -23,6 +23,12 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             controller: "DashboardController as dashboard",
             resource: "favmovies"
         })
+        .when("/dashboard/favmovies/:param", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/user/favmovie_details.html",
+            controller: "DashboardController as dashboard",
+            resource: "favmovie_details"
+        })
         .when("/dashboard/favactors", {
             templateUrl: "views/user/dashboard.html",
             contentUrl: "views/user/favactors.html",
@@ -69,11 +75,13 @@ mainApp.factory('utilityService', function() {
 })
 
 // Directives
-mainApp.directive('contentItem', function() {
+mainApp.directive('contentItem', function($compile) {
+
     return {
         template: '<ng-include src="getTemplateUrl()"/>',
         scope: {
-          content: '='
+          content: '=',
+          'remove': '&onRemove'
         },
         restrict: 'E',
         controller: function($scope) {
@@ -87,6 +95,7 @@ mainApp.directive('contentItem', function() {
     };
 });
 
+// Filters
 mainApp.filter('unique', function() {
     return function (arr, field) {
         return _.uniq(arr, function(a) { return a[field]; });

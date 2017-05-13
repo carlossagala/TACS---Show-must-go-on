@@ -1,13 +1,12 @@
 <div id="panelRight" class="col s12">
-	<div class="row list-wrapper" ng-if="!loading">
-		<div class="row list-wrapper" ng-if="!loading && search_result">
-
+	<div class="row" ng-if="!loading">
+		<div class="row" ng-if="!loading && search_result">
 			<div class="col s12 m12">
-				<h6 class="grey-text right-align">Cantidad de resultados para esta busqueda
-					<span class="new badge" data-badge-caption="registros">{{ search_items.total_results }}</span>
-				</h6>
+				<a class="btn-floating btn right red hoverable" tooltipped data-position="left" data-delay="150" data-tooltip="Ocultar resultados de la busqueda" ng-click="dashboard.hideSearchResults()">
+					<i class="large material-icons">close</i>
+				</a>
+				<h5 class="grey-text">Resultados para esta busqueda ({{ search_items.total_results }})</h5>
 			</div>
-
 			<div class="col s12 m12">
 				<div class="row section-wrapper">
 					<div ng-repeat="item in search_items.data">

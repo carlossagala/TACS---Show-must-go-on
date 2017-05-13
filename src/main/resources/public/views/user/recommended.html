@@ -1,17 +1,21 @@
 <div id="panelRight" class="col s12">
-	<div class="row list-wrapper" ng-if="!loading">
-
-		<div class="col s12 m12">
-			<h6 class="grey-text left-align">Listado de recomendaciones ({{ movies.length }})</span>
-			</h6>
+	<div class="row ng-scope" ng-if="!movies.length">
+		<div class="card-panel col m6 offset-m3 orange lighten-3">
+			<h5 class="center-align">Aun no tenes recomendaciones!</h5>
 		</div>
-
+		<!-- Tips layout -->
+		<div ng-include="'/views/user/tips.html'"></div>
+	</div>
+	<div class="row" ng-if="!loading && movies.length">
+		<div class="col s12 m12">
+			<h5 class="grey-text">Recomendaciones ({{ movies.length }})</h5>
+		</div>
 		<div id="recommended" class="col s12 m12">
 			<div class="row section-wrapper">
 				<div ng-repeat="movie in movies" class="col s12 m6">
 					<div class="card horizontal">
 						<div class="card-stacked">
-							<div class="card-content">
+							<div class="card-content card-content-compact">
 								<h5 class="header">{{ movie.title }}</h5>
 							</div>
 							<div class="card-action">

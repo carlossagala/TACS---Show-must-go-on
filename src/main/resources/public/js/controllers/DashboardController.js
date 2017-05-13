@@ -2,7 +2,7 @@
  * Dashboard Controller
  */
 
-mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$location', 'utilityService', '$route', '$compile', function($scope, $http, $timeout, $location, utilityService, $route, $compile) {
+mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$location', 'utilityService', '$route', '$compile', '$routeParams', function($scope, $http, $timeout, $location, utilityService, $route, $compile, $routeParams) {
 
     // Set content type for requests
     $http.defaults.headers.post["Content-Type"] = "application/json";
@@ -22,6 +22,8 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     $scope.loading = true;
     $scope.tab_content = false;
     $scope.search_result = false;
+
+    $scope.resourceId = $routeParams.param;
 
     $scope.username = localStorage.getItem('username');
     $scope.is_admin = localStorage.getItem('profile') === "admin";
@@ -46,6 +48,9 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             case 'favmovies':
                 main.getFavmovies();
                 break;
+            case 'favmovie_details':
+                main.getFavmovieDetails($scope.resourceId);
+                break;
             case 'favactors':
                 main.getFavactors(1);
                 break;
@@ -60,14 +65,13 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.getFavmovies = function() {
 
-        // Get favmovies via ajax
         $http.get('/api/users/' + localStorage.getItem('user_id') +'/favmovies/').success(function(data) {
             $scope.favmovies = data.data;
         }).error(function (data, status) {
-            console.log('Error getting favmovies: ' + data);
             $scope.favmovies = [];
         }).finally(function () {
-            $scope.loading = false;
+            if($route.current.$$route.resource==="favmovies")
+                $scope.loading = false;
             $scope.tab_content = true;
             $scope.search_result = false;
         });
@@ -75,7 +79,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.getFavactors = function(page) {
 
-        // Get favactors via ajax
         $http.get('/api/favactors/?page=' + page).success(function(data) {
             $scope.favactors = data.data;
             $scope.pagination_result = {
@@ -90,7 +93,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             $scope.loading = false;
             $scope.tab_content = true;
         }).error(function (data, status) {
-            console.log('Error getting favactors: ' + data);
             $scope.favactors = [];
         }).finally(function () {
             $scope.loading = false;
@@ -101,24 +103,22 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.getRankingFavactors = function() {
 
-            // Get favactors via ajax
-            $http.get('/api/users/ranking/actors/').success(function(data) {
-                $scope.ranking_favactors = data.data;
-                $scope.loading = false;
-                $scope.tab_content = true;
-            }).error(function (data, status) {
-                console.log('Error getting ranking favactors: ' + data);
-                $scope.ranking_favactors = [];
-            }).finally(function () {
-                $scope.loading = false;
-                $scope.tab_content = true;
-                $scope.search_result = false;
-            });
-        }
+        $http.get('/api/users/ranking/actors/').success(function(data) {
+            $scope.ranking_favactors = data.data;
+            $scope.loading = false;
+            $scope.tab_content = true;
+        }).error(function (data, status) {
+            console.log('Error getting ranking favactors: ' + data);
+            $scope.ranking_favactors = [];
+        }).finally(function () {
+            $scope.loading = false;
+            $scope.tab_content = true;
+            $scope.search_result = false;
+        });
+    }
 
     main.getActorDetails = function(actorId) {
 
-        // Get favactors via ajax
         $http.get('/api/actor/' + actorId + '/').success(function(data) {
             var actor_details = data.data;
             var $el = angular.element(document).find(".details-wrapper-"+ actorId).html('<img src="'+ $scope.storagePath + actor_details.image[0].file_path + '" alt="" class="circle"><span>' + actor_details.name + '</span><a tooltipped data-position="top" data-delay="150" data-tooltip="Desmarcar como favorito!" ng-click="dashboard.unmarkAsFavourite('+ actor_details.id +')" class="btn red secondary-content"><i class="material-icons">grade</i></a>')
@@ -130,11 +130,13 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.getRecommendedMovies = function() {
 
-        // Get recommended movies via ajax
+        $scope.loading = true;
+
         $http.get('/api/movies/recommended/').success(function(data) {
+            if(data === "No se encuentra autenticado")
+                $location.path("/logout");
             $scope.movies = data.data;
         }).error(function (data, status) {
-            console.log('Error getting recommended movies: ' + data);
             $scope.movies = [];
             if(status === 500)
                 $location.path("/dashboard/recommended");
@@ -149,7 +151,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     main.getUsers = function() {
 
-        // Get users via ajax
         $http.get('/api/users/').success(function(data) {
             $scope.users = data.data;
             $scope.loading = false;
@@ -170,7 +171,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         var $modal_body   = angular.element(document).find("#user-details-body-wrapper");
         var $modal_loader = angular.element(document).find("#user-details-loader");
 
-        // Get users via ajax
         $http.get('/api/users/' + userId + '/').success(function(data) {
             var user = data.data;
             $modal_loader.hide();
@@ -178,39 +178,41 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             $modal_body.html('<br><p>Actores favoritos: '+ user.cant_fav_actors +'</p><p>Peliculas favoritas: '+ user.cant_fav_movies +'</p>')
         }).error(function (data, status) {
             console.log('Error getting users: ' + data);
-
         });
     }
 
-    main.getFavmovieDetails = function(favmovie) {
+    main.getFavmovieDetails = function(favmovieId) {
 
-        var $modal_header = angular.element(document).find("#user-details-header-wrapper");
-        var $modal_body   = angular.element(document).find("#user-details-body-wrapper");
-        var $modal_loader = angular.element(document).find("#user-details-loader");
+        $http.get('/api/favmovies/' + favmovieId + '/').success(function(data) {
+            $scope.favmovie = data.data;
+            $scope.favmovies_details = [];
 
-        $modal_loader.show();
-        $modal_header.html('<h4>Detalles de la lista: ' + favmovie.name + '</h4>');
-        $modal_body.html('<content-item ng-repeat="movie_item in favmovies_details | unique" content="movie_item"></content-item>')
+            $.each($scope.favmovie.movies, function(idx, el) {
+                main.getMovie(el.movie_id);
+            })
 
-        $scope.favmovies_details = [];
-        
-        $.each(favmovie.movies, function(idx, el) {
-            main.getMovie(el.movie_id);
-        })
+            var $el = angular.element(document).find('#favmovie_details')
+            $compile($el)($scope);
 
-        $compile($modal_body)($scope);
+            $scope.loading = false;
+        }).error(function (data, status) {
+            console.log('Error getting favmovies: ' + data);
+            $scope.favmovies_details = [];
+        }).finally(function () {
+            $scope.loading = false;
+            $scope.tab_content = true;
+            $scope.search_result = false;
+        });
     }
 
     main.getMovie = function(movieId) {
 
-        var $modal_loader = angular.element(document).find("#user-details-loader");
+        $scope.loading = true;
 
-        // Get users via ajax
         $http.get('/api/movie/' + movieId + '/').success(function(data) {
             var movie = data.data;
             movie.contentType = 'movie';
             $scope.favmovies_details.push(movie);
-            $modal_loader.hide();
             
         }).error(function (data, status) {
             console.log('Error getting users: ' + data);
@@ -223,20 +225,17 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             "id": actorId
         }
 
-        // Get users via ajax
         $http.post('/api/favactors/', favactor).success(function(data) {
             var user = data.data;
             Materialize.toast("El actor fue marcado como favorito!", 2000, "orange")
 
         }).error(function (data, status) {
-            console.log('Error trying to mark as fauvorite: ' + data);
-            Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "orange")
+            Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red")
         });
     }
 
     main.unmarkAsFavouritePost = function(actorId) {
 
-        // Get users via ajax
         $http.delete('/api/favactors/' + actorId + '/').success(function(data) {
             //TODO: modify backend showing properly message
             if(data==null) {
@@ -245,8 +244,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             }
 
         }).error(function (data, status) {
-            console.log('Error trying to mark as fauvorite: ' + data);
-            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "orange")
+            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red")
         });
     }
 
@@ -274,26 +272,74 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         main.getFavactors(page);
     }
 
-    main.addMovieToFavmovie = function(movieId, favMovieId) {
+    main.addMovieToFavmovie = function(movieId, favmovieId) {
         
         var movie = {
             "id": movieId
         }
 
-        // Get users via ajax
-        $http.post('/api/favmovies/' + favMovieId + '/movies/', movie).success(function(data) {
+        $http.post('/api/favmovies/' + favmovieId + '/movies/', movie).success(function(data) {
             var user = data.data;
             Materialize.toast("Se agrego la pelicula a la lista!", 2000, "orange")
         }).error(function (data, status) {
-            console.log('Error trying to mark as fauvorite: ' + data);
-            Materialize.toast("No se pudo agregar la pelicula a la lista, intentelo nuevamente.", 2000, "orange")
+            Materialize.toast("No se pudo agregar la pelicula a la lista, intentelo nuevamente.", 2000, "red")
         });
     }
 
+    main.removeFavmovie = function(favmovieId) {
+
+        $http.delete('/api/favmovies/' + favmovieId + '/').success(function(data) {
+            //TODO: modify backend showing properly message
+            if(data.message==="ok") {
+                Materialize.toast("La lista se elimino correctamente", 2000, "orange")
+                main.getFavmovies();
+            }
+
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red")
+        });
+    }
+
+    main.addFavmovie = function() {
+
+        var favmovie = {
+            "name": main.favmovie_form.name
+        }
+
+        $http.post('/api/favmovies/', favmovie).success(function(data) {
+            $scope.favmovies.push(data.data);
+            main.favmovie_form.name = "";
+            Materialize.toast("Se creo la lista!", 2000, "orange")
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo crear la lista, intentelo nuevamente.", 2000, "red")
+        });
+    }
+
+    main.removeMovieFromFavmovie = function(movieId) {
+        $http.delete('/api/favmovies/' + $scope.resourceId + '/movies/' + movieId + '/').success(function(data) {
+            //TODO: modify backend showing properly message
+            if(data.data==="Se eliminó la pelicula de la lista") {
+                Materialize.toast("La pelicula se quito de la lista!", 2000, "orange")
+                $route.reload();
+            }
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo quitar la pelicula de la lista, intentelo nuevamente.", 2000, "red")
+        });
+    }
+
+    main.hideSearchResults = function() {
+        $scope.tab_content = true;
+        $scope.search_result = false;
+    }
+
+    $scope.$on('searching', function(evt, data){
+        $scope.loading = true;
+        $scope.tab_content = false;
+        $scope.search_result = false;
+    });
+
     $scope.$on('search_result', function(evt, data){
-
         $scope.search_items = data;
-
         $scope.loading = false;
         $scope.tab_content = false;
         $scope.search_result = true;

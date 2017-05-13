@@ -3,7 +3,7 @@
       <div class="card-stacked">
         <div class="card-content">
         	<div class="row">
-	        	<h4 class="blue-text section-wrapper">{{ content.title }}</h4>
+	        	<h4 class="blue-text">{{ content.title }}</h4>
 	        	<p>{{ content.overview }}</p>
 	        </div>
 	        <div class="divider"></div>
@@ -27,7 +27,7 @@
 		    </div>
         </div>
         <div class="card-action">
-          <a class="btn right red">Quitar esta pelicula de esta lista</a>
+          <a class="btn right red waves-effect waves-light" ng-click="remove({id: content.id})">Quitar esta pelicula de esta lista</a>
         </div>
       </div>
     </div>
