@@ -23,6 +23,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     $scope.pagination_result = [];
     $scope.ranking_favactors = [];
     $scope.users = [];
+    $scope.users_favmovies = [];
     $scope.loading = true;
     $scope.tab_content = false;
     $scope.search_result = false;
@@ -67,6 +68,9 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             case 'ranking_favmovie_actors':
                 main.getRankingFavmovieActors($scope.resourceId);
                 break;
+            case 'intersection_favmovies':
+                main.getUsersFavmovies();
+                break;
         }
     }
 
@@ -75,10 +79,8 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $http.get('/api/users/' + localStorage.getItem('user_id') +'/favmovies/').success(function(data) {
             $scope.favmovies = data.data;
             $.each($scope.favmovies, function(idx, el) {
-                console.log('id', el)
                 $scope.intersectionable[el.id] = false;
             })
-            console.log('$scope.intersectionable', $scope.intersectionable)
         }).error(function (data, status) {
             $scope.favmovies = [];
         }).finally(function () {
@@ -120,7 +122,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             $scope.loading = false;
             $scope.tab_content = true;
         }).error(function (data, status) {
-            console.log('Error getting ranking favactors: ' + data);
             $scope.ranking_favactors = [];
         }).finally(function () {
             $scope.loading = false;
@@ -177,7 +178,36 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         });
     }
 
-    main.getUser = function(userId) {
+     main.getUsersFavmovies = function() {
+
+            main.intersection_arr = [undefined, undefined];
+
+            $http.get('/api/users/').success(function(data) {
+                $scope.users_favmovies = _.reduce(
+                    data.data,
+                    function(result, el) {
+                        var _favmovie = _.map(el.fav_movies, function(element) {
+                             return _.extend({}, element, {user_name: el.user_name});
+                        })
+                        result = _.union(result, _favmovie);
+                        return result
+                    },
+                    []
+                )
+                console.log('$scope.users_favmovies', $scope.users_favmovies)
+                $scope.loading = false;
+                $scope.tab_content = true;
+            }).error(function (data, status) {
+                console.log('Error getting users: ' + data);
+                $scope.users = [];
+            }).finally(function () {
+                $scope.loading = false;
+                $scope.tab_content = true;
+                $scope.search_result = false;
+            });
+     }
+
+     main.getUser = function(userId) {
 
         var $modal_header = angular.element(document).find("#user-details-header-wrapper");
         var $modal_body   = angular.element(document).find("#user-details-body-wrapper");
