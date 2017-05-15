@@ -63,6 +63,8 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
                 break;
             case 'ranking_favactors':
                 main.getRankingFavactors();
+            case 'ranking_favmovie_actors':
+                main.getRankingFavmovieActors($scope.resourceId);
                 break;
         }
     }
@@ -221,6 +223,34 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         }).error(function (data, status) {
             console.log('Error getting users: ' + data);
         });
+    }
+
+    main.getRankingFavmovieActors = function(favmovieId) {
+
+        $scope.ranking_favmovie = {
+            items: [],
+            favmovie_name: ""
+        }
+
+        $http.get('/api/favmovies/' + favmovieId + '/').success(function(data) {
+            $scope.ranking_favmovie.favmovie_name = data.data.name;
+
+            $http.get('/api/favmovies/' + favmovieId + '/ranking/').success(function(data) {
+                $scope.ranking_favmovie.items = data.data;
+                $scope.loading = false;
+            }).error(function (data, status) {
+                $scope.ranking_favmovie.items = [];
+                Materialize.toast("No se pudo listar los actores repetidos de esta lista, intentelo nuevamente.", 2000, "red")
+            }).finally(function () {
+                $scope.loading = false;
+                $scope.tab_content = true;
+                $scope.search_result = false;
+            });
+
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo listar los actores repetidos de esta lista, intentelo nuevamente.", 2000, "red")
+        });
+
     }
 
     main.markAsFavouriteService = function(actorId) {

@@ -219,12 +219,16 @@ ul:not(.browser-default).inline li {
     margin: 30px 0px;
 }
 
-.collection-compact li {
+.collection-compact .collection-item {
     padding: 10px;
 }
 
 .collection-compact .row {
     margin-bottom: 0;
+}
+
+.toolbar .btn {
+    padding: 0 1rem;
 }
 
 /* DARK THEME - DESKTOP - BEGIN  */
