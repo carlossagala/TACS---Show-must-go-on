@@ -12,12 +12,29 @@
 		</div>
 		<div id="favmovies" class="col s12 m6">
 			<div class="row section-wrapper">
-				<ul class="collection with-header">
+				<ul class="collection collection-compact">
 					<li ng-repeat="favmovie in favmovies" class="collection-item">
-						<span class="title">{{ favmovie.name}} </span>
-						<a ng-click="dashboard.removeFavmovie(favmovie.id)" class="btn right red">Eliminar</a>&nbsp;&nbsp;
-						<a href="#/dashboard/favmovies/{{ favmovie.id }}" class="btn right">Ver</a>
-						<p>Peliculas: {{ favmovie.movies.length }}</p>
+						<div class="row">
+							<div class="col m6">
+								<span class="title">{{ favmovie.name}} </span>
+								<p>Peliculas: {{ favmovie.movies.length }}</p>
+							</div>
+							<div class="col m2">
+								<a href="#/dashboard/favmovies/{{ favmovie.id }}" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Ver detalles de la lista!">
+									<i class="material-icons">list</i>
+								</a>
+							</div>
+							<div class="col m2">
+								<a ng-click="dashboard.editFavmovie(favmovie)" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Cambiar nombre de la lista!">
+									<i class="material-icons">edit</i>
+								</a>
+							</div>
+							<div class="col m2">
+								<a ng-click="dashboard.removeFavmovie(favmovie.id)" class="btn right red" tooltipped data-position="top" data-delay="150" data-tooltip="Eliminar la lista, esta accion no puede revertirse!">
+									<i class="material-icons">delete</i>
+								</a>
+							</div>
+						</div>
 					</li>
 				</ul>
 			</div>

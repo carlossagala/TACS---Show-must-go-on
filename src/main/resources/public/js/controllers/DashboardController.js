@@ -11,6 +11,10 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
     var main = this;
 
+    main.currentFavmovie = null;
+    main.editedFavmovie = {};
+    main.editedFavmovie.title = 'Nueva lista';
+
     $scope.storagePath = 'https://image.tmdb.org/t/p/w500/';
     $scope.contentUrl = $route.current.$$route.contentUrl;
     $scope.movies = [];
@@ -219,7 +223,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         });
     }
 
-    main.markAsFavouritePost = function(actorId) {
+    main.markAsFavouriteService = function(actorId) {
 
         var favactor = {
             "id": actorId
@@ -234,7 +238,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         });
     }
 
-    main.unmarkAsFavouritePost = function(actorId) {
+    main.unmarkAsFavouriteService = function(actorId) {
 
         $http.delete('/api/favactors/' + actorId + '/').success(function(data) {
             //TODO: modify backend showing properly message
@@ -260,11 +264,11 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     }
 
     main.markAsFavourite = function(actorId) {
-        main.markAsFavouritePost(actorId);
+        main.markAsFavouriteService(actorId);
     }
 
     main.unmarkAsFavourite = function(actorId) {
-        main.unmarkAsFavouritePost(actorId);
+        main.unmarkAsFavouriteService(actorId);
     }
 
     main.paginateFavactors = function(page) {
@@ -303,15 +307,29 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     main.addFavmovie = function() {
 
         var favmovie = {
-            "name": main.favmovie_form.name
+            "name": main.editedFavmovie.name
         }
 
         $http.post('/api/favmovies/', favmovie).success(function(data) {
             $scope.favmovies.push(data.data);
-            main.favmovie_form.name = "";
-            Materialize.toast("Se creo la lista!", 2000, "orange")
+            Materialize.toast("Se creo la lista!", 2000, "orange");
+            main.resetFavmovieForm();
         }).error(function (data, status) {
             Materialize.toast("No se pudo crear la lista, intentelo nuevamente.", 2000, "red")
+        });
+    }
+
+    main.updateFavmovieService = function() {
+
+        var favmovie = {
+            "new_title": main.editedFavmovie.name
+        }
+
+        $http.put('/api/favmovies/' + main.editedFavmovie.id + '/', favmovie).success(function(data) {
+            Materialize.toast("Se actualizo la lista!", 2000, "orange");
+            main.resetFavmovieForm();
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo actualizar la lista, intentelo nuevamente.", 2000, "red")
         });
     }
 
@@ -325,6 +343,31 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         }).error(function (data, status) {
             Materialize.toast("No se pudo quitar la pelicula de la lista, intentelo nuevamente.", 2000, "red")
         });
+    }
+
+    main.editFavmovie = function(favmovie){
+        main.currentFavmovie = favmovie;
+        main.editedFavmovie = angular.copy(main.currentFavmovie);
+        main.editedFavmovie.title = 'Editar lista';
+    }
+
+    main.updateFavmovie = function() {
+        main.currentFavmovie.name = main.editedFavmovie.name;
+        main.updateFavmovieService();
+    }
+
+    main.resetFavmovieForm = function() {
+        main.currentFavmovie = null;
+        main.editedFavmovie = {};
+
+        main.favmovieForm.$setPristine();
+        main.favmovieForm.$setUntouched();
+
+        main.editedFavmovie.title = 'Nueva lista';
+    }
+
+    main.updateFavmovieCancel = function() {
+        main.resetFavmovieForm();
     }
 
     main.hideSearchResults = function() {

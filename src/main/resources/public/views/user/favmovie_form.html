@@ -1,12 +1,16 @@
 <form class="col s12" name="dashboard.favmovieForm">
     <div class="col m12 list-wrapper form-wrapper no-border">
-        <h5 class="grey-text">Nueva lista</h5>
+        <h5 class="grey-text">{{ dashboard.editedFavmovie.title }}</h5>
         <div class="input-field col s12">
-            <input id="favmovie_name" type="text" class="validate" ng-required="true" ng-model="dashboard.favmovie_form.name">
+            <input id="favmovie_name" type="text" class="validate" ng-required="true" ng-model="dashboard.editedFavmovie.name">
             <label for="favmovie_name">Nombre de la lista</label>
         </div>
-        <div class="input-field col s12">
-            <a ng-disabled="!dashboard.favmovieForm.$valid" class="waves-effect waves-light btn right" ng-click="dashboard.addFavmovie()">Guardar!</a>
+        <div class="input-field col s12" ng-if="dashboard.currentFavmovie">
+            <button class="btn grey" ng-click="dashboard.updateFavmovieCancel()">Cancelar</button>
+            <button ng-disabled="!dashboard.favmovieForm.$valid" class="waves-effect waves-light btn right" ng-click="dashboard.updateFavmovie()">Actualizar!</button>
+        </div>
+        <div class="input-field col s12" ng-if="!dashboard.currentFavmovie">
+            <button ng-disabled="!dashboard.favmovieForm.$valid" class="waves-effect waves-light btn right" ng-click="dashboard.addFavmovie()">Guardar!</button>
         </div>
     </div>
 </form>
