@@ -12,41 +12,54 @@
 		</div>
 		<div id="favmovies" class="col s12 m6">
 			<div class="row section-wrapper">
-				<ul class="collection collection-compact">
-					<li ng-repeat="favmovie in favmovies" class="collection-item">
-						<div class="row">
-							<div class="col m6">
-								<span class="title">{{ favmovie.name}} </span>
-								<p>Peliculas: {{ favmovie.movies.length }}</p>
+				<form action="#">
+					<ul class="collection with-header collection-compact">
+						<li class="collection-header" ng-if="valid_intersection">
+							<div class="row">
+								<a ng-disabled="!valid_intersection" ng-click="dashboard.intersectionFavmovies()" class="btn" tooltipped data-position="right" data-delay="150" data-tooltip="Permite ver la interseccion de peliculas entre 2 listas">Comparar!</a>
 							</div>
-							<div class="col m6 toolbar">
-								<div class="col m3">
-									<a href="#/dashboard/favmovies/{{ favmovie.id }}" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Ver detalles de la lista!">
-										<i class="material-icons">list</i>
-									</a>
+						</li>
+						<li ng-repeat="favmovie in favmovies" class="collection-item">
+							<div class="row">
+								<div class="col m6">
+									<span class="title">{{ favmovie.name}} </span>
+									<p>Peliculas: {{ favmovie.movies.length }}</p>
+									<p>
+										<input type="checkbox" class="filled-in" id="favmovie-selector-{{ favmovie.id }}" ng-model="intersectionable[favmovie.id]" ng-click="dashboard.selectFavmovie(favmovie.id)" ng-disabled="!favmovie.movies.length"/>
+										<label for="favmovie-selector-{{ favmovie.id }}">Comparar con otra lista</label>
+									</p>
 								</div>
-								<div class="col m3">
-									<a href="#/dashboard/favmovies/{{ favmovie.id }}/ranking" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Ver ranking de actores de la lista!">
-										<i class="material-icons">grade</i>
-									</a>
-								</div>
-								<div class="col m3">
-									<a ng-click="dashboard.editFavmovie(favmovie)" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Cambiar nombre de la lista!">
-										<i class="material-icons">edit</i>
-									</a>
-								</div>
-								<div class="col m3">
-									<a ng-click="dashboard.removeFavmovie(favmovie.id)" class="btn right red" tooltipped data-position="top" data-delay="150" data-tooltip="Eliminar la lista, esta accion no puede revertirse!">
-										<i class="material-icons">delete</i>
-									</a>
+								<div class="col m6 toolbar">
+									<div class="col m3">
+										<a href="#/dashboard/favmovies/{{ favmovie.id }}" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Ver detalles de la lista!" ng-disabled="!favmovie.movies.length">
+											<i class="material-icons">list</i>
+										</a>
+									</div>
+									<div class="col m3">
+										<a href="#/dashboard/favmovies/{{ favmovie.id }}/ranking" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Ver ranking de actores de la lista!" ng-disabled="!favmovie.movies.length">
+											<i class="material-icons">grade</i>
+										</a>
+									</div>
+									<div class="col m3">
+										<a ng-click="dashboard.editFavmovie(favmovie)" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Cambiar nombre de la lista!">
+											<i class="material-icons">edit</i>
+										</a>
+									</div>
+									<div class="col m3">
+										<a ng-click="dashboard.removeFavmovie(favmovie.id)" class="btn right red" tooltipped data-position="top" data-delay="150" data-tooltip="Eliminar la lista, esta accion no puede revertirse!">
+											<i class="material-icons">delete</i>
+										</a>
+									</div>
 								</div>
 							</div>
-						</div>
-					</li>
-				</ul>
+						</li>
+					</ul>
+				</form>
 			</div>
 		</div>
-		<div id="favmovies" class="col s12 m6">
+		<div id="favmovies-form-wrapper" class="col s12 m6">
+			<!-- Intersection layout -->
+			<div ng-include="'/views/user/favmovies_intersection.html'" class="section-wrapper" ng-if="intersection"></div>
 			<!-- Form layout -->
 			<div ng-include="'/views/user/favmovie_form.html'" class="section-wrapper"></div>
 		</div>

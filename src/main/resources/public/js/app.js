@@ -53,6 +53,12 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             controller: "DashboardController as dashboard",
             resource: "ranking_favmovie_actors"
         })
+        .when("/dashboard/favmovies-intersection", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/user/favmovies_intersection.html",
+            controller: "DashboardController as dashboard",
+            resource: "intersection"
+        })
         .when("/logout", {
             templateUrl: "views/common/login.html",
             controller: "LoginController as login"

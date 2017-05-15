@@ -231,6 +231,14 @@ ul:not(.browser-default).inline li {
     padding: 0 1rem;
 }
 
+.collection.with-header .collection-item {
+    padding-left: 10px;
+}
+.title-movie-wrapper {
+    font-size: 16px;
+    padding-top: 2px;
+}
+
 /* DARK THEME - DESKTOP - BEGIN  */
 
 .dark-theme .form-wrapper {

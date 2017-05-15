@@ -26,21 +26,22 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     $scope.loading = true;
     $scope.tab_content = false;
     $scope.search_result = false;
+    $scope.intersection = false;
 
     $scope.resourceId = $routeParams.param;
 
     $scope.username = localStorage.getItem('username');
     $scope.is_admin = localStorage.getItem('profile') === "admin";
 
+    $scope.valid_intersection = false;
+    $scope.intersectionable = {}
+    main.intersection_arr = [undefined, undefined];
+
     main.init = function(resource) {
         // Preload favmovies for dropdown
         main.getFavmovies();
         // Get data from resource navigated
         main.getData(resource);
-    }
-
-    main.showContent = function() {
-        $scope.loading = false;
     }
 
     main.getData = function(resource) {
@@ -73,6 +74,11 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
         $http.get('/api/users/' + localStorage.getItem('user_id') +'/favmovies/').success(function(data) {
             $scope.favmovies = data.data;
+            $.each($scope.favmovies, function(idx, el) {
+                console.log('id', el)
+                $scope.intersectionable[el.id] = false;
+            })
+            console.log('$scope.intersectionable', $scope.intersectionable)
         }).error(function (data, status) {
             $scope.favmovies = [];
         }).finally(function () {
@@ -246,9 +252,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
                 $scope.tab_content = true;
                 $scope.search_result = false;
             });
-
-        }).error(function (data, status) {
-            Materialize.toast("No se pudo listar los actores repetidos de esta lista, intentelo nuevamente.", 2000, "red")
         });
 
     }
@@ -417,6 +420,63 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $scope.tab_content = false;
         $scope.search_result = true;
     });
+
+    main.selectFavmovie = function(favmovieId) {
+
+        var key = main.intersection_arr.shift();
+
+        if(key) {
+            $scope.intersectionable[key] = false;
+        }
+
+        if(main.intersection_arr.indexOf(favmovieId) > -1) {
+            main.intersection_arr.push(undefined);
+            $scope.intersectionable[favmovieId] = false;
+        }
+        else {
+            main.intersection_arr.push(favmovieId);
+            $scope.intersectionable[favmovieId] = true;
+        }
+
+        $scope.valid_intersection = (main.intersection_arr[0]!==undefined && main.intersection_arr[1]!==undefined);
+
+    }
+
+    main.intersectionFavmovies = function() {
+
+        var values = main.intersection_arr;
+        $http.get('/api/favmovies/' + values[0] + '/intersection/' + values[1] + '/').success(function(data) {
+            $scope.favmovies_intersection = data.data;
+            $scope.intersection = true;
+
+            $.each($scope.favmovies_intersection, function(idx, el) {
+                main.getMovieDetails(el.movie_id)
+            })
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo obtener la interseccion entre las listas, intentelo nuevamente.", 2000, "red")
+            $scope.intersection = false;
+        }).finally(function () {
+            $scope.loading = false;
+            $scope.tab_content = true;
+            $scope.search_result = false;
+        });
+    }
+
+    main.getMovieDetails = function(movieId) {
+
+        $http.get('/api/movie/' + movieId + '/').success(function(data) {
+            var movie_details = data.data;
+            var $el = angular.element(document).find(".details-wrapper-movie-"+ movieId)
+                .html('<span class="col m1"><i class="material-icons">theaters</i></span><span class="col m11"><p class="title-movie-wrapper">' + movie_details.title + '</p></span>')
+            $compile($el)($scope);
+        }).error(function (data, status) {
+            angular.element(document).find(".details-wrapper-movie-"+ movieId).html("No se pudo encontrar informacion para esta pelicula")
+        });
+    }
+
+    main.hidefavmovieIntersection = function() {
+        $scope.intersection = false;
+    }
 
     main.init($route.current.$$route.resource);
 }]);
