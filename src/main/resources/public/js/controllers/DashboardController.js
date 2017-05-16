@@ -194,7 +194,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
                     },
                     []
                 )
-                console.log('$scope.users_favmovies', $scope.users_favmovies)
                 $scope.loading = false;
                 $scope.tab_content = true;
             }).error(function (data, status) {
