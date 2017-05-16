@@ -304,7 +304,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
         $http.delete('/api/favactors/' + actorId + '/').success(function(data) {
             //TODO: modify backend showing properly message
-            if(data==null) {
+            if(data) {
                 Materialize.toast("El actor fue desmarcado como favorito!", 2000, "orange")
                 main.getFavactors(1);
             }
@@ -355,11 +355,8 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     main.removeFavmovie = function(favmovieId) {
 
         $http.delete('/api/favmovies/' + favmovieId + '/').success(function(data) {
-            //TODO: modify backend showing properly message
-            if(data.message==="ok") {
-                Materialize.toast("La lista se elimino correctamente", 2000, "orange")
-                main.getFavmovies();
-            }
+            Materialize.toast(data.message, 2000, "orange")
+            main.getFavmovies();
 
         }).error(function (data, status) {
             Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red")

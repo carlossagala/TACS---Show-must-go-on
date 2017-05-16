@@ -32,7 +32,7 @@
                         </div>
                         <div class="input-field col s12 m12">
                             <i class="material-icons prefix">vpn_key</i>
-                            <input id="icon_prefix" type="password" class="validate" ng-model="login.user.password" ng-required="true">
+                            <input id="icon_prefix" type="password" class="validate" ng-model="login.user.password" ng-required="true" ng-enter="login.auth()">
                             <label for="icon_prefix">Password</label>
                         </div>
                         <div class="input-field col s12 m12 center-align">
