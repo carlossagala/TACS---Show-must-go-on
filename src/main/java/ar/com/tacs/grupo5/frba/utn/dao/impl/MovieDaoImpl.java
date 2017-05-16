@@ -11,6 +11,7 @@ import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
@@ -41,8 +42,16 @@ public class MovieDaoImpl implements MovieDao {
 	@Transactional
 	public void deleteMovie(Movie movie) {
 		FavMoviesEntity favMovieEntity = favMoviesDao.findOne(movie.getFavMovieId());
+		if(favMovieEntity==null){
+			throw new ResourceNotFound();
+		}
 		MovieEntity movieEntity = movieRepository.findByIdMovieAndFavMovie(movie.getMovieId(),favMovieEntity);
+		if(movieEntity==null){
+			throw new ResourceNotFound();
+		}
+		favMovieEntity.getMovies().remove(movieEntity);
 		movieRepository.delete(movieEntity);
+		favMoviesDao.saveFavMovie(favMovieEntity);
 		em.flush();
 	}
 	
