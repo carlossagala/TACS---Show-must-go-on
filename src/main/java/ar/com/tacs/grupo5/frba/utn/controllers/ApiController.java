@@ -409,7 +409,7 @@ public class ApiController {
 			response.status(401);
 			return null;		
 		}
-		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss"); 
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss"); 
 		Date now = new Date();
 		user.setLastAccess(dt.format(now));
 		userService.saveUser(user);
@@ -576,7 +576,7 @@ public class ApiController {
 		{
 			favMoviesService.deleteFavMovie(idFavMovie);
 			response.status(200);
-			resp.setMessage("ok");
+			resp.setMessage("Se eliminó la lista");
 		}
 		catch (ResourceNotFound e) {
 			response.status(404);
@@ -695,7 +695,9 @@ public class ApiController {
 		String id = request.params(":id");
 		favActorService.deleteFavActor(user, id);
 		response.status(200);
-		return null;
+		Response resp = new Response();
+		resp.setData("Se eliminó el actor de la lista");
+		return resp;
 	};
 
 	/**
