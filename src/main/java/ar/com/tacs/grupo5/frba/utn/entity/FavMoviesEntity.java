@@ -13,9 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name="FAV_MOVIE")
+@Document(collection="FAV_MOVIES")
 public class FavMoviesEntity {
 	@Id
 	@GeneratedValue(generator = "system-uuid")

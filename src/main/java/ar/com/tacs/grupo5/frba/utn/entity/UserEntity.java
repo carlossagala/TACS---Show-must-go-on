@@ -12,9 +12,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name="USER")
+@Document(collection="USERS")
 public class UserEntity {
 	@Id
 	@GeneratedValue(generator="system-uuid")

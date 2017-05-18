@@ -1,6 +1,6 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
-import javax.persistence.Entity;import javax.persistence.FetchType;import javax.persistence.GeneratedValue;import javax.persistence.Id;import javax.persistence.JoinColumn;import javax.persistence.ManyToOne;import javax.persistence.Table;import javax.persistence.UniqueConstraint;import org.hibernate.annotations.GenericGenerator;
-@Table(name="MOVIE", uniqueConstraints= @UniqueConstraint(columnNames={"idmovie", "favmovie_id"}))@Entitypublic class MovieEntity {	@Id	@GeneratedValue(generator = "system-uuid")	@GenericGenerator(name = "system-uuid", strategy = "uuid")	private String id;
+import javax.persistence.Entity;import javax.persistence.FetchType;import javax.persistence.GeneratedValue;import javax.persistence.Id;import javax.persistence.JoinColumn;import javax.persistence.ManyToOne;import javax.persistence.Table;import javax.persistence.UniqueConstraint;import org.hibernate.annotations.GenericGenerator;import org.springframework.data.mongodb.core.mapping.Document;
+//@Table(name="MOVIE", uniqueConstraints= @UniqueConstraint(columnNames={"idmovie", "favmovie_id"}))//@Entity@Document(collection="MOVIES")public class MovieEntity {	@Id	@GeneratedValue(generator = "system-uuid")	@GenericGenerator(name = "system-uuid", strategy = "uuid")	private String id;
 	@ManyToOne(fetch = FetchType.LAZY)	@JoinColumn(name = "favmovie_id", referencedColumnName = "id")	private FavMoviesEntity favMovie;
 	private String idMovie;
 	public MovieEntity() {		super();	}

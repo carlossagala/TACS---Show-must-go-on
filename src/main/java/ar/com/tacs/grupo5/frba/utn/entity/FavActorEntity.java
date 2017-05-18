@@ -1,17 +1,17 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
-import javax.persistence.Entity;
+
+
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name="FAV_ACTOR")
+@Document(collection="FAV_ACTORS")
 public class FavActorEntity {
 	@Id
 	@GeneratedValue(generator = "system-uuid")
