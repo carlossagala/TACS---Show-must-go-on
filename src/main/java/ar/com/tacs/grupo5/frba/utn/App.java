@@ -27,8 +27,9 @@ public class App {
 	
 	public static void main(String[] args) {
 		@SuppressWarnings("resource")
-		//AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class);
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfig.class);
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class, SpringMongoConfig.class);
+		//Comentando la de arriba y dejando la de abajo funciona joya pero no levanta el entorno spark, habría que ver como hacer para que levante todo
+		//AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(SpringMongoConfig.class);
 		Environment environment = ctx.getBean(Environment.class);
 		String port = environment.getProperty("server.port");
 		logger.info("La aplicación levantó correctamente y escucha en el puerto " + port);
