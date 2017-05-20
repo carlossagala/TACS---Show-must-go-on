@@ -29,9 +29,6 @@ import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 public class App {
 	private static Logger logger = LoggerFactory.getLogger(App.class);
 	
-	@Autowired
-	private static UserDao usrDao;
-	
 	public static void main(String[] args) {
 		@SuppressWarnings("resource")
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class, SpringMongoConfig.class);
@@ -44,8 +41,8 @@ public class App {
 		UserEntity usr = new UserEntity();
 	
 		usr.setUserName("Pepe Argento");
-			 
-		usrDao.saveUser(usr);
+			
+		mongoOperation.save(usr);
 	}
 
 	@Bean
