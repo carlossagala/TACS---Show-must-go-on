@@ -14,6 +14,11 @@
 			<div class="row section-wrapper">
 				<form action="#">
 					<ul class="collection with-header collection-compact">
+						<li class="collection-header" ng-if="!valid_intersection">
+							<div class="row">
+								<h5>Selecciona 2 listas para ver la interseccion de peliculas entre ellas</h5>
+							</div>
+						</li>
 						<li class="collection-header" ng-if="valid_intersection">
 							<div class="row">
 								<a ng-disabled="!valid_intersection" ng-click="dashboard.intersectionFavmovies()" class="btn" tooltipped data-position="right" data-delay="150" data-tooltip="Permite ver la interseccion de peliculas entre 2 listas">Comparar!</a>

@@ -239,6 +239,39 @@ ul:not(.browser-default).inline li {
     padding-top: 2px;
 }
 
+.search-result-wrapper .card.horizontal .card-image img,
+.search-result-wrapper .card.horizontal {
+    height: 120px;
+}
+
+.search-result-wrapper .card.horizontal.movie .card-image img,
+.search-result-wrapper .card.horizontal.movie {
+    height: 180px;
+}
+
+.search-result-wrapper .card.horizontal .card-stacked .card-content {
+    padding: 2px 15px;
+}
+
+.search-result-wrapper .card.horizontal .card-stacked .card-content h5 {
+    margin: .62rem 0 .656rem 0;
+}
+
+.search-result-wrapper .card.horizontal .card-stacked .card-action {
+    padding: 10px 0px;
+}
+
+.search-result-wrapper .card.horizontal .card-stacked .card-content .btn.btn-min {
+    margin: 5px 0px;
+    padding: 8px;
+    line-height: 12px;
+    height: 29px;
+}
+
+.btn-min:hover {
+    cursor: pointer;
+}
+
 /* DARK THEME - DESKTOP - BEGIN  */
 
 .dark-theme .form-wrapper {
