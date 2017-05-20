@@ -1,7 +1,5 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -22,9 +20,6 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 	@Value("${page.size}")
 	private int pageSize;
 	
-	@Autowired
-	private EntityManager em;
-	
 	private FavMoviesRepository favMoviesRepository;
 
 	@Autowired
@@ -40,7 +35,6 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 	@Override
 	public FavMoviesEntity saveFavMovie(FavMoviesEntity favMovie) {
 		FavMoviesEntity fav = favMoviesRepository.save(favMovie);
-		em.flush();
 		return fav; 
 	}
 

@@ -1,7 +1,5 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
-import javax.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +17,6 @@ import ar.com.tacs.grupo5.frba.utn.models.Movie;
 @Transactional
 public class MovieDaoImpl implements MovieDao {
 
-	@Autowired
-	private EntityManager em;
 	@Autowired
 	private FavMoviesDao favMoviesDao;
 	
@@ -52,7 +48,6 @@ public class MovieDaoImpl implements MovieDao {
 		favMovieEntity.getMovies().remove(movieEntity);
 		movieRepository.delete(movieEntity);
 		favMoviesDao.saveFavMovie(favMovieEntity);
-		em.flush();
 	}
 	
 }

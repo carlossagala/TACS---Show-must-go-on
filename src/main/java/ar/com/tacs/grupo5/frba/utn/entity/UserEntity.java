@@ -2,35 +2,30 @@ package ar.com.tacs.grupo5.frba.utn.entity;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
+import javax.annotation.Generated;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="USERS")
 public class UserEntity {
 	@Id
-	@GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid",
-	  strategy = "uuid")
+	//TODO: Ver el tema de los ids autogenerados
+	@Generated(value = { "system-uuid" })
 	private String id;
-	@Column(unique=true)
+	
+	//TODO: ver como hacer para que sea unico
 	private String userName;
 	private String pass;
 	private String nivel;
 	private String lastAccess;
 
-	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="user")
+	@DBRef
 	private Set<FavMoviesEntity> favMovies;
 	
-	@OneToMany(cascade = {CascadeType.ALL}, fetch=FetchType.LAZY,mappedBy="userEntity")
+	@DBRef
 	private Set<FavActorEntity> favActors;
 
 	public UserEntity() {

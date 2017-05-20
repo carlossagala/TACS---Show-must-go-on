@@ -3,8 +3,6 @@ package ar.com.tacs.grupo5.frba.utn.mapper;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,7 @@ public class FavMoviesMapper implements GenericMapper<FavMoviesEntity, FavMovies
 	}
 
 	@Override
-	@Transactional
+	@org.springframework.transaction.annotation.Transactional
 	public FavMovies entityToDto(FavMoviesEntity entity) {
 		if (entity == null)
 			return null;
