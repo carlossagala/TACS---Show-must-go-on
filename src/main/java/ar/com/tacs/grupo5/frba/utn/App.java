@@ -35,14 +35,6 @@ public class App {
 		Environment environment = ctx.getBean(Environment.class);
 		String port = environment.getProperty("server.port");
 		logger.info("La aplicación levantó correctamente y escucha en el puerto " + port);
-		
-		MongoOperations mongoOperation = (MongoOperations)ctx.getBean("mongoTemplate");
-		
-		UserEntity usr = new UserEntity();
-	
-		usr.setUserName("Pepe Argento");
-			
-		mongoOperation.save(usr);
 	}
 
 	@Bean
