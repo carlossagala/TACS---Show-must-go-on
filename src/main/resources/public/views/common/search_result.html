@@ -12,8 +12,11 @@
 					<div ng-repeat="item in search_items.data">
 						<div class="col s12 m4" ng-if="item.type==='actor'">
 							<div class="card horizontal">
-								<div class="card-image">
+								<div class="card-image" ng-if="item.profile_path">
 									<a href="#/actor/{{item.id}}"><img src="https://image.tmdb.org/t/p/w500{{ item.profile_path }}"></a>
+								</div>
+								<div class="card-image" ng-if="!item.profile_path">
+									<a href="#/actor/{{item.id}}"><img src="images/profile_placeholder.png"></a>
 								</div>
 								<div class="card-stacked">
 									<div class="card-content">
@@ -31,8 +34,11 @@
 						</div>
 						<div class="col s12 m6" ng-if="item.type==='movie'">
 							<div class="card horizontal movie">
-								<div class="card-image">
+								<div class="card-image" ng-if="item.poster_path">
 									<a href="#/movie/{{item.id}}"><img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"></a>
+								</div>
+								<div class="card-image" ng-if="!item.poster_path">
+									<a href="#/actor/{{item.id}}"><img src="images/poster_placeholder.png"></a>
 								</div>
 								<div class="card-stacked">
 									<div class="card-content">

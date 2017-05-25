@@ -14,6 +14,9 @@
 			<div class="row section-wrapper recommended-wrapper">
 				<div ng-repeat="movie in movies" class="col s12 m6">
 					<div class="card horizontal">
+						<div class="card-image">
+							<a href="#/actor/{{item.id}}"><img src="images/poster_placeholder.png"></a>
+						</div>
 						<div class="card-stacked">
 							<div class="card-content card-content-compact">
 								<h5 class="header">{{ movie.title }}</h5>
