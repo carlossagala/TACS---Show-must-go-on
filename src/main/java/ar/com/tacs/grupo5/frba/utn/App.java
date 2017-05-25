@@ -2,25 +2,18 @@ package ar.com.tacs.grupo5.frba.utn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.mongodb.core.MongoOperations;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ar.com.tacs.grupo5.frba.utn.config.SpringMongoConfig;
-import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
-import ar.com.tacs.grupo5.frba.utn.dao.impl.UserDaoImpl;
-import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
-import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 
 @SpringBootApplication
 @PropertySource("classpath:application.properties")

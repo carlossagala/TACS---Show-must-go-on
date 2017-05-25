@@ -4,17 +4,17 @@ package ar.com.tacs.grupo5.frba.utn.entity;
 
 import javax.annotation.Generated;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="FAV_ACTORS")
 public class FavActorEntity {
 	@Id
-	//TODO: Ver el tema de los ids autogenerados
 	@Generated(value = { "system-uuid" })
 	private String id;
 	
 	
-	//TODO: ver el tema de los lazy
+	@DBRef
 	private UserEntity userEntity;
 	private String actorId;
 

@@ -11,11 +11,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="FAV_MOVIES")
 public class FavMoviesEntity {
 	@Id
-	//TODO: Ver el tema de los ids autogenerados
 	@Generated(value = { "system-uuid" })
 	private String id;
 	private String name;
 	
+	@DBRef
 	private UserEntity user;
 	
 	@DBRef
