@@ -215,8 +215,12 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $http.get('/api/users/' + userId + '/').success(function(data) {
             var user = data.data;
             $modal_loader.hide();
-            $modal_header.html('<h4>Detalles del usuario: ' + user.user_name + '</h4>');
-            $modal_body.html('<br><p>Actores favoritos: '+ user.cant_fav_actors +'</p><p>Peliculas favoritas: '+ user.cant_fav_movies +'</p>')
+            $modal_header.html(`<h4>Detalles del usuario: ${user.user_name}</h4>`);
+            $modal_body.html(`
+                <h5>Cantidad de actores favoritos: <span class="light-blue-text">${user.cant_fav_actors}</span></h5>
+                <h5>Cantidad de listas de peliculas favoritas: <span class="light-blue-text">${user.cant_fav_movies}</span></h5>
+                <h5>Ultimo acceso: <span class="light-blue-text">${ (!_.isUndefined(user.last_access)? user.last_access : "-") }</span></h5>`
+            );
         }).error(function (data, status) {
             console.log('Error getting users: ' + data);
         });
