@@ -2,7 +2,6 @@ package ar.com.tacs.grupo5.frba.utn.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
-import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
@@ -90,11 +88,15 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		FavMoviesEntity favMovieTwo = favMoviesDao.getFavMovie(id2);
 		if(favMovieTwo == null)
 			throw new ResourceNotFound("FavMovieEntity with id "+id2+" not found");
-		List<MovieEntity> intersectionList = favMovieOne.getMovies().stream().filter(favMovieTwo.getMovies()::contains).collect(Collectors.toList());
+//		List<MovieEntity> intersectionList = favMovieOne.getMovies().stream().filter(favMovieTwo.getMovies()::contains).collect(Collectors.toList());
 		List<Movie> movies = new ArrayList<>();
-		for (MovieEntity movieEntity : intersectionList) {
-			movies.add(movieMapper.entityToDto(movieEntity));
-		}
+//		for (MovieEntity movieEntity : intersectionList) {
+//			movies.add(movieMapper.entityToDto(movieEntity));
+//		}
+		
+
+		
+		
 		return movies;
 	}
 

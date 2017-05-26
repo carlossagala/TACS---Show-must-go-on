@@ -18,9 +18,6 @@ public class FavMoviesEntity {
 	@DBRef
 	private UserEntity user;
 	
-	@DBRef
-	private Set<MovieEntity> movies;
-
 	public FavMoviesEntity() {
 		super();
 	}
@@ -36,14 +33,6 @@ public class FavMoviesEntity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Set<MovieEntity> getMovies() {
-		return movies;
-	}
-
-	public void setMovies(Set<MovieEntity> movies) {
-		this.movies = movies;
 	}
 
 	public void setId(String id) {

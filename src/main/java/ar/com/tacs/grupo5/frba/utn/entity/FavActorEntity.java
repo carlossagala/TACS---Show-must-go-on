@@ -12,8 +12,6 @@ public class FavActorEntity {
 	@Id
 	@Generated(value = { "system-uuid" })
 	private String id;
-	
-	
 	@DBRef
 	private UserEntity userEntity;
 	private String actorId;
