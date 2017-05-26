@@ -26,7 +26,7 @@
 		        </div>
 		    </div>
         </div>
-        <div class="card-action">
+        <div class="card-action" ng-if="content.can_remove">
           <a class="btn right red waves-effect waves-light" ng-click="remove({id: content.id})">Quitar esta pelicula de esta lista</a>
         </div>
       </div>

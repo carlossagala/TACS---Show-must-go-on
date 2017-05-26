@@ -28,6 +28,8 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     $scope.tab_content = false;
     $scope.search_result = false;
     $scope.intersection = false;
+    $scope.movie_item_details = [];
+    $scope.actor_item_details = [];
 
     $scope.resourceId = $routeParams.param;
 
@@ -137,7 +139,22 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             var $el = angular.element(document).find(".details-wrapper-"+ actorId).html('<img src="'+ $scope.storagePath + actor_details.image[0].file_path + '" alt="" class="circle"><span>' + actor_details.name + '</span><a tooltipped data-position="top" data-delay="150" data-tooltip="Desmarcar como favorito!" ng-click="dashboard.unmarkAsFavourite('+ actor_details.id +')" class="btn red secondary-content"><i class="material-icons">grade</i></a>')
             $compile($el)($scope);
         }).error(function (data, status) {
-            angular.element(document).find(".details-wrapper-"+ actorId).html("No se pudo encontrar informacion para este actor")
+            angular.element(document).find(".details-wrapper-"+ actorId).html("No se pudo encontrar informacion para este actor");
+        });
+    }
+
+    main.getActorDetailsModal = function(actorId) {
+
+        var $modal_loader = angular.element(document).find("#actor-details-loader");
+        $modal_loader.show();
+
+        $http.get('/api/actor/' + actorId + '/').success(function(data) {
+            $modal_loader.hide();
+            $scope.actor_item_details = data.data;
+            $scope.actor_item_details.contentType = 'actor';
+
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo encontrar informacion para este actor", 2000, "red");
         });
     }
 
@@ -212,6 +229,8 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         var $modal_body   = angular.element(document).find("#user-details-body-wrapper");
         var $modal_loader = angular.element(document).find("#user-details-loader");
 
+        $modal_loader.show();
+
         $http.get('/api/users/' + userId + '/').success(function(data) {
             var user = data.data;
             $modal_loader.hide();
@@ -257,6 +276,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $http.get('/api/movie/' + movieId + '/').success(function(data) {
             var movie = data.data;
             movie.contentType = 'movie';
+            movie.can_remove = true;
             $scope.favmovies_details.push(movie);
             
         }).error(function (data, status) {
@@ -279,7 +299,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
                 $scope.loading = false;
             }).error(function (data, status) {
                 $scope.ranking_favmovie.items = [];
-                Materialize.toast("No se pudo listar los actores repetidos de esta lista, intentelo nuevamente.", 2000, "red")
+                Materialize.toast("No se pudo listar los actores repetidos de esta lista, intentelo nuevamente.", 2000, "red");
             }).finally(function () {
                 $scope.loading = false;
                 $scope.tab_content = true;
@@ -300,7 +320,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             Materialize.toast("El actor fue marcado como favorito!", 2000, "orange")
 
         }).error(function (data, status) {
-            Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red")
+            Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red");
         });
     }
 
@@ -501,6 +521,22 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             $compile($el)($scope);
         }).error(function (data, status) {
             angular.element(document).find(".details-wrapper-movie-"+ movieId).html("No se pudo encontrar informacion para esta pelicula")
+        });
+    }
+
+    main.getMovieDetailsModal = function(movieId) {
+
+        var $modal_loader = angular.element(document).find("#movie-details-loader");
+        $modal_loader.show();
+
+        $http.get('/api/movie/' + movieId + '/').success(function(data) {
+            $modal_loader.hide();
+            $scope.movie_item_details = data.data;
+            $scope.movie_item_details.contentType = 'movie';
+            $scope.can_remove = false;
+
+        }).error(function (data, status) {
+            Materialize.toast("No se pudo encontrar informacion para este actor", 2000, "red");
         });
     }
 

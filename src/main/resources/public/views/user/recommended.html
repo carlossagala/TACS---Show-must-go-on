@@ -15,14 +15,34 @@
 				<div ng-repeat="movie in movies" class="col s12 m6">
 					<div class="card horizontal">
 						<div class="card-image">
-							<a href="#/actor/{{item.id}}"><img src="images/poster_placeholder.png"></a>
+							<a
+								ng-click="dashboard.getMovieDetailsModal(movie.id)"
+								tooltipped
+								data-position="top"
+								data-delay="150"
+								data-tooltip="Ver mas acerca de esta pelicula!"
+								data-target='movieDetails'
+								modal>
+								<img src="images/poster_placeholder.png">
+							</a>
 						</div>
 						<div class="card-stacked">
 							<div class="card-content card-content-compact">
 								<h5 class="header">{{ movie.title }}</h5>
 							</div>
 							<div class="card-action">
-								<a ng-click="dashboard.openModalMovieDetails(movie.id)">Mas info...</a>
+								<a
+									class="btn-info"
+									tooltipped
+									data-position="top"
+									data-delay="150"
+									data-tooltip="Ver mas acerca de esta pelicula!"
+									ng-click="dashboard.getMovieDetailsModal(movie.id)"
+									data-target='movieDetails'
+									modal
+								>
+									Mas info...
+								</a>
 								<a class="dropdown-button btn right" href="javascript:void(0);" data-activates="favmoviesDropdown-{{movie.id}}" dropdown data-hover="true">
 									Agregar a la lista...
 								</a>

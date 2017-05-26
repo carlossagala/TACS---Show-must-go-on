@@ -99,9 +99,13 @@ mainApp.directive('contentItem', function($compile) {
         controller: function($scope) {
             //function used on the ng-include to resolve the template
             $scope.getTemplateUrl = function() {
-            //basic handling
-            if ($scope.content.contentType === "movie")
-                return "views/common/movie.tpl.html";
+                //content-type param handling
+                if ($scope.content.contentType === "movie") {
+                    return "views/common/movie.tpl.html";
+                }
+                if ($scope.content.contentType === "actor") {
+                    return "views/common/actor.tpl.html";
+                }
             }
         }
     };
