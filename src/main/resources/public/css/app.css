@@ -257,19 +257,31 @@ ul:not(.browser-default).inline li {
     margin: .62rem 0 .656rem 0;
 }
 
-.search-result-wrapper .card.horizontal .card-stacked .card-action {
+.search-result-wrapper .card.horizontal.card-min .card-stacked .card-action {
     padding: 10px 0px;
 }
 
-.search-result-wrapper .card.horizontal .card-stacked .card-content .btn.btn-min {
+.search-result-wrapper .card.horizontal .card-stacked .card-action .btn.btn-min {
     margin: 5px 0px;
     padding: 8px;
     line-height: 12px;
     height: 29px;
 }
 
-.btn-min:hover {
+.card.horizontal.card-min .card-stacked .card-action .btn-info {
+    margin-left: 5px;
+}
+
+.card.horizontal .card-stacked .card-action .btn-info {
+    line-height: 32px
+}
+
+.btn-info:hover, .card-image a:hover {
     cursor: pointer;
+}
+
+.modal .card-content h4 {
+    margin-top: 20px;
 }
 
 /* DARK THEME - DESKTOP - BEGIN  */
