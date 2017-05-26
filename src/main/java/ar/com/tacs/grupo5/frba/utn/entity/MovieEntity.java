@@ -1,6 +1,6 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 import javax.annotation.Generated;import org.springframework.data.annotation.Id;import org.springframework.data.mongodb.core.mapping.DBRef;import org.springframework.data.mongodb.core.mapping.Document;
-//@Table(name="MOVIE", uniqueConstraints= @UniqueConstraint(columnNames={"idmovie", "favmovie_id"}))//@Entity@Document(collection="MOVIES")public class MovieEntity {	@Id	//TODO: Ver el tema de los ids autogenerados	@Generated(value = { "system-uuid" })	private String id;	@DBRef
+@Document(collection="MOVIES")public class MovieEntity {	@Id	@Generated(value = { "system-uuid" })	private String id;	@DBRef
 	private FavMoviesEntity favMovie;
 	private String idMovie;
 	public MovieEntity() {		super();	}

@@ -45,9 +45,7 @@ public class MovieDaoImpl implements MovieDao {
 		if(movieEntity==null){
 			throw new ResourceNotFound();
 		}
-		favMovieEntity.getMovies().remove(movieEntity);
 		movieRepository.delete(movieEntity);
-		favMoviesDao.saveFavMovie(favMovieEntity);
 	}
 	
 }

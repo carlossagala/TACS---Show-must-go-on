@@ -58,6 +58,5 @@ public class MovieDaoTest {
 		
 		FavMoviesEntity favMovies = favMoviesDao.getFavMovie("bac25bb4c3dd");
 
-		Assert.assertEquals(favMovies.getMovies().size(), 1);
 	}
 }

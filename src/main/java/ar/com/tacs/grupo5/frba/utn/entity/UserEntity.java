@@ -12,26 +12,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="USERS")
 public class UserEntity {
 	@Id
-	//TODO: Ver el tema de los ids autogenerados
 	@Generated(value = { "system-uuid" })
 	private String id;
 	
-	//TODO: ver como hacer para que sea unico
 	private String userName;
 	private String pass;
 	private String nivel;
 	private String lastAccess;
 
-	@DBRef
-	private Set<FavMoviesEntity> favMovies;
-	
-	@DBRef
-	private Set<FavActorEntity> favActors;
-
 	public UserEntity() {
 		super();
-		favMovies = new HashSet<FavMoviesEntity>();
-		favActors = new HashSet<FavActorEntity>();
 	}
 
 	public UserEntity(String id, String userName, String pass, String nivel) {
@@ -40,8 +30,6 @@ public class UserEntity {
 		this.userName = userName;
 		this.setPass(pass);
 		this.setNivel(nivel);
-		favMovies = new HashSet<FavMoviesEntity>();
-		favActors = new HashSet<FavActorEntity>();
 	}
 
 	public String getId() {
@@ -74,23 +62,6 @@ public class UserEntity {
 
 	public void setNivel(String nivel) {
 		this.nivel = nivel;
-	}
-
-	
-	public Set<FavMoviesEntity> getFavMovies() {
-		return this.favMovies;
-	}
-	
-	public void setFavMovies(Set<FavMoviesEntity> fav) {
-		this.favMovies = fav;
-	}
-
-	public Set<FavActorEntity> getFavActors() {
-		return favActors;
-	}
-
-	public void setFavActors(Set<FavActorEntity> favActors) {
-		this.favActors = favActors;
 	}
 
 	public String getLastAccess() {
