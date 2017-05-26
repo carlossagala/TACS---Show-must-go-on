@@ -174,7 +174,13 @@ a.chip-modal-trigger:hover {
 
 ul:not(.browser-default).inline li {
     float: left;
-    margin-right: 10px;
+    margin: 5px;
+}
+
+ul:not(.browser-default).inline li.tag {
+    padding: 1px 4px !important;
+    background-color: antiquewhite;
+    border-radius: 4px;
 }
 
 .list-wrapper {
