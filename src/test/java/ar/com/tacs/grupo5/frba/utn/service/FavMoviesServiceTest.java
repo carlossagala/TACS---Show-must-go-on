@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
+import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.dao.impl.FavMoviesDaoImpl;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
@@ -28,6 +29,7 @@ public class FavMoviesServiceTest {
 	private FavMoviesMapper favMoviesMapper = Mockito.mock(FavMoviesMapper.class);
 	private MovieMapper movieMapper = Mockito.mock(MovieMapper.class);
 	private UserMapper userMapper = Mockito.mock(UserMapper.class);
+	private UserDao userDao = Mockito.mock(UserDao.class);
 	
 	private FavMoviesService favMoviesService = null;
 	
@@ -83,7 +85,7 @@ public class FavMoviesServiceTest {
 		moviesEnt3.add(movieEnt3favMovie3);
 		moviesEnt3.add(movieEnt4favMovie3);
 		
-		favMoviesService = new FavMoviesServiceImpl(favMoviesDao, favMoviesMapper, movieMapper, userMapper);
+		favMoviesService = new FavMoviesServiceImpl(favMoviesDao, favMoviesMapper, movieMapper, userMapper, userDao);
 		
 		
 		Mockito.when(favMoviesDao.saveFavMovie(Mockito.any())).thenReturn(favMoviesEnt);
