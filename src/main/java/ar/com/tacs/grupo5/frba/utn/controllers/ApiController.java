@@ -620,7 +620,7 @@ public class ApiController {
 	private void cargarRanking(ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor actor,HashMap<String, Integer> ranking){
 		
 		if(ranking.get(actor.getName()) != null){
-			Integer count = ranking.get(actor);
+			Integer count = ranking.get(actor.getName());
 			count ++;
 			ranking.put(actor.getName(),count);
 		} else{
