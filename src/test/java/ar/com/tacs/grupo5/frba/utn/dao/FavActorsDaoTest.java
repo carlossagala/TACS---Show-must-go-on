@@ -14,9 +14,11 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.com.tacs.grupo5.frba.utn.config.SpringMongoConfig;
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
@@ -26,6 +28,7 @@ import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 @EnableAutoConfiguration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
+@ContextConfiguration(classes=SpringMongoConfig.class)
 public class FavActorsDaoTest {
 	// Mockeo Apicontroller para que no levante el servidor embebido de spark
 	@MockBean
