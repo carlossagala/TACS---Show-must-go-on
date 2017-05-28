@@ -38,7 +38,8 @@ public class UserDaoTest extends AbstractDaoTest{
 	{
 		MockitoAnnotations.initMocks(getClass());
 		insertInitialData();
-		userDao = new UserDaoImpl(userRepository,20);
+		userDao = new UserDaoImpl(userRepository);
+		userDao.setPageSize(20);
 	}
 	
 	@After

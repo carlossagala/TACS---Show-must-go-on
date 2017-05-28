@@ -23,10 +23,9 @@ public class UserDaoImpl implements UserDao{
 	private UserRepository userRepository;
 	
 	@Autowired
-	public UserDaoImpl(UserRepository userRepository, int pageSize) {
+	public UserDaoImpl(UserRepository userRepository) {
 		super();
 		this.userRepository = userRepository;
-		this.pageSize = pageSize;
 	}
 
 	@Override
@@ -61,6 +60,14 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public UserEntity findByUserName(String userName) {
 		return userRepository.findByUserName(userName);
+	}
+	
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 
 }
