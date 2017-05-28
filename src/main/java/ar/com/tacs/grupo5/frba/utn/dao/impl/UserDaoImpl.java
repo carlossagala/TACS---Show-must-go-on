@@ -1,13 +1,11 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +23,10 @@ public class UserDaoImpl implements UserDao{
 	private UserRepository userRepository;
 	
 	@Autowired
-	public UserDaoImpl(UserRepository userRepository) {
+	public UserDaoImpl(UserRepository userRepository, int pageSize) {
 		super();
 		this.userRepository = userRepository;
+		this.pageSize = pageSize;
 	}
 
 	@Override

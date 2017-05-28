@@ -2,82 +2,87 @@ package ar.com.tacs.grupo5.frba.utn.dao;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
-import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
+import ar.com.tacs.grupo5.frba.utn.dao.impl.UserDaoImpl;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.UserRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
-import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
-import ar.com.tacs.grupo5.frba.utn.models.User;
 
-@RunWith(SpringRunner.class)
-@EnableAutoConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes={MongoTestConfiguration.class})
 @PropertySource("classpath:application.properties")
-@ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
-public class UserDaoTest {
+public class UserDaoTest extends AbstractDaoTest{
 	// Mockeo Apicontroller para que no levante el servidor embebido de spark
 	@MockBean
 	ApiController apiController;
 	
-	@SpyBean
-	private UserDao userDao;
-	@SpyBean
-	private UserMapper userMapper;
+	private UserDaoImpl userDao;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Before
+	public void beforeEach()
+	{
+		MockitoAnnotations.initMocks(getClass());
+		insertInitialData();
+		userDao = new UserDaoImpl(userRepository,20);
+	}
+	
+	@After
+	public void afterEach()
+	{
+		deleteAllData();
+	}
 	
 	@Test
-	@Transactional
-	@Rollback(true)
 	public void testRegisterUser()
 	{
-		User userDto = new User("user","user","user","lastAccess");
-		UserEntity userToRegister = userMapper.dtoToEntity(userDto);
-		this.userDao.saveUser(userToRegister);
-		UserEntity found = this.userDao.findByUserName("user");
+		UserEntity userToRegister = new UserEntity("3","user3","user3","user");
+		userDao.saveUser(userToRegister);
+		UserEntity found = userDao.findByUserName("user3");
 		Assert.assertNotNull(found);
 	}
 	
 	@Test
-	@Transactional
 	public void testGetAllUsers()
 	{
-		List<UserEntity> allUsers = this.userDao.getAllUsers();
+		List<UserEntity> allUsers = userDao.getAllUsers();
 		Assert.assertNotNull(allUsers);
 		Assert.assertTrue(allUsers.size()==2);
 	}
 	
 	@Test
-	@Transactional
 	public void testGetAllUsersWithPage()
 	{
-		Page<UserEntity> allUsers = this.userDao.getAllUsersWithPage(0);
+		Page<UserEntity> allUsers = userDao.getAllUsersWithPage(0);
 		Assert.assertNotNull(allUsers);
 		Assert.assertTrue(allUsers.getContent().size()==2);
 	}
 	
 	@Test
-	@Transactional
 	public void testGetUnexistingUserByUserName()
 	{
-		UserEntity found = this.userDao.findByUserName("AnyUser");
+		UserEntity found = userDao.findByUserName("AnyUser");
 		Assert.assertNull(found);
 	}
 	
 	@Test
-	@Transactional
 	public void testGetUnexistingUserById()
 	{
-		UserEntity found = this.userDao.getUserById("300");
+		UserEntity found = userDao.getUserById("300");
 		Assert.assertNull(found);
 	}
 }

@@ -33,8 +33,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>de.flapdoodle.embed</groupId>
-			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<groupId>com.github.fakemongo</groupId>
+			<artifactId>fongo</artifactId>
+			<version>2.1.0</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -94,43 +96,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-					
-			<plugin>
-    			<groupId>com.github.joelittlejohn.embedmongo</groupId>
-    			<artifactId>embedmongo-maven-plugin</artifactId>
-     			<executions>
-        			<execution>
-            			<id>start</id>
-            			<goals>
-                			<goal>start</goal>
-            			</goals>
-            			<configuration>
-                			<port>27017</port>
-                			<databaseDirectory>${project.build.directory}/mongotest</databaseDirectory>
-                			<bindIp>127.0.0.1</bindIp>
-            			</configuration>
-        			</execution>
-        			<execution>
-      					<id>mongo-scripts</id>
-      					<goals>
-        					<goal>mongo-scripts</goal>
-      					</goals>
-      					<configuration>
-        					<scriptsDirectory>...</scriptsDirectory>
-        					<!-- a directory containing scripts to run -->
-                     
-        					<databaseName>show_must_go_on</databaseName>        
-      					</configuration>
-    				</execution>
-        			<execution>
-            			<id>stop</id>
-            			<goals>
-                			<goal>stop</goal>
-            			</goals>
-        			</execution>
-    			</executions>
-			</plugin>			
+			</plugin>									
 		</plugins>
 	</build>
 </project>
