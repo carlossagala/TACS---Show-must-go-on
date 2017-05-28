@@ -1,7 +1,5 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
-import java.util.Set;
-
 import javax.annotation.Generated;
 
 import org.springframework.data.annotation.Id;

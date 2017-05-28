@@ -23,6 +23,13 @@ public class MovieDaoImpl implements MovieDao {
 	@Autowired
 	private MovieRepository movieRepository;
 	
+	@Autowired
+	public MovieDaoImpl(MovieRepository movieRepository, FavMoviesDao favMoviesDao)
+	{
+		this.movieRepository = movieRepository;
+		this.favMoviesDao = favMoviesDao;
+	}
+	
 	@Override
 	public MovieEntity getMovie(String idFavMovie,String idMovie) {
 		MovieEntity movieEnt = movieRepository.findByIdMovieAndFavMovie(idMovie, favMoviesDao.findOne(idFavMovie));

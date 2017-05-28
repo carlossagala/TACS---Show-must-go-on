@@ -4,7 +4,7 @@ import javax.annotation.Generated;import org.springframework.data.annotation.I
 	private FavMoviesEntity favMovie;
 	private String idMovie;
 	public MovieEntity() {		super();	}
-	public MovieEntity(FavMoviesEntity favMovie)	{		this.favMovie = favMovie;	}
+	public MovieEntity(FavMoviesEntity favMovie)	{		this.favMovie = favMovie;	}		public MovieEntity(String idMovie, FavMoviesEntity favMovie)	{		this.favMovie = favMovie;	}
 	public String getId() {		return id;	}
 	public void setId(String id) {		this.id = id;	}
 	public FavMoviesEntity getFavMovie() {		return favMovie;	}

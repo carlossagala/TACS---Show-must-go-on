@@ -1,38 +1,60 @@
 package ar.com.tacs.grupo5.frba.utn.dao;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
+import ar.com.tacs.grupo5.frba.utn.dao.impl.FavMoviesDaoImpl;
+import ar.com.tacs.grupo5.frba.utn.dao.impl.MovieDaoImpl;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
+import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
-@RunWith(SpringRunner.class)
-@EnableAutoConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes={MongoTestConfiguration.class})
 @PropertySource("classpath:application.properties")
-@ComponentScan(basePackages="ar.com.tacs.grupo5.frba.utn")
-public class MovieDaoTest {
+public class MovieDaoTest extends AbstractDaoTest{
 	// Mockeo Apicontroller para que no levante el servidor embebido de spark
 	@MockBean
 	ApiController apiController;
-	@SpyBean
-	private MovieDao movieDao;
-	@SpyBean
-	private FavMoviesDao favMoviesDao;
+	
+	private MovieDaoImpl movieDao;
+	
+	private FavMoviesDaoImpl favMoviesDao;
+	
+	@Autowired
+	private MovieRepository movieRepository;
+	
+	@Autowired
+	private FavMoviesRepository favMoviesRepository;
+	
+	@Before
+	public void beforeEach()
+	{
+		MockitoAnnotations.initMocks(getClass());
+		insertInitialData();
+		favMoviesDao = new FavMoviesDaoImpl(favMoviesRepository);
+		movieDao = new MovieDaoImpl(movieRepository,favMoviesDao);
+	}
+	
+	@After
+	public void afterEach()
+	{
+		deleteAllData();
+	}
 
 	@Test
-	@Transactional
-	@Rollback(true)
 	public void testAddMovieToFavMovies() {
 		MovieEntity addedMovie = new MovieEntity();
 		
@@ -45,14 +67,12 @@ public class MovieDaoTest {
 	}
 
 	@Test
-	@Transactional
-	@Rollback(true)
 	public void testRemoveMovieFromFavMovies() {
 		Movie deletedMovie = new Movie();
 		
 		deletedMovie.setFavMovieId("bac25bb4c3dd");
 		deletedMovie.setMovieId("2");
-		deletedMovie.setId("182e1a2cbb34");
+		deletedMovie.setId("100");
 		
 		movieDao.deleteMovie(deletedMovie);
 		
