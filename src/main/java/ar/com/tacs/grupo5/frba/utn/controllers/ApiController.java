@@ -242,11 +242,12 @@ public class ApiController {
 		PagedResponse resp = new PagedResponse();
 		User user = userService.getUserById(id);
 		validateUser(authenticate(request), user);
-		Set<FavMovies> favMovies = user.getFavMovies();
-
-		resp.setData(favMovies);
-		setPagedResults(resp, favMovies);
-		resp.setPage(getPage(request));
+		favMoviesService.getFavMoviesByUser(user.getId(), getPage(request), resp);
+		if(resp.getTotalResults()==0){
+			response.status(404);
+		}else{
+			response.status(200);
+		}
 		return resp;
 	};
 

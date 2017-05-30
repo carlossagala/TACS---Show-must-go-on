@@ -1,35 +1,21 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
-import java.util.Set;
+import javax.annotation.Generated;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import org.hibernate.annotations.GenericGenerator;
-
-@Entity
-@Table(name="FAV_MOVIE")
+@Document(collection="FAV_MOVIES")
 public class FavMoviesEntity {
 	@Id
-	@GeneratedValue(generator = "system-uuid")
-	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	@Generated(value = { "system-uuid" })
 	private String id;
 	private String name;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@DBRef
 	private UserEntity user;
 	
-	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy="favMovie")
-	private Set<MovieEntity> movies;
-
 	public FavMoviesEntity() {
 		super();
 	}
@@ -45,14 +31,6 @@ public class FavMoviesEntity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Set<MovieEntity> getMovies() {
-		return movies;
-	}
-
-	public void setMovies(Set<MovieEntity> movies) {
-		this.movies = movies;
 	}
 
 	public void setId(String id) {

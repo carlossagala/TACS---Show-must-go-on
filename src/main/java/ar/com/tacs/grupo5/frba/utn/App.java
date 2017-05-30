@@ -13,6 +13,8 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import ar.com.tacs.grupo5.frba.utn.config.SpringMongoConfig;
+
 @SpringBootApplication
 @PropertySource("classpath:application.properties")
 @ComponentScan({ "ar.com.tacs.grupo5.frba.utn" })
@@ -22,7 +24,7 @@ public class App {
 	
 	public static void main(String[] args) {
 		@SuppressWarnings("resource")
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class);
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class, SpringMongoConfig.class);
 		Environment environment = ctx.getBean(Environment.class);
 		String port = environment.getProperty("server.port");
 		logger.info("La aplicación levantó correctamente y escucha en el puerto " + port);

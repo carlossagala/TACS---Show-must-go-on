@@ -3,8 +3,6 @@ package ar.com.tacs.grupo5.frba.utn.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,7 @@ import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Component
-@Transactional
+@org.springframework.transaction.annotation.Transactional
 public class FavActorServiceImpl implements FavActorService {
 	
 	private FavActorDao favActorDao;
