@@ -242,11 +242,12 @@ public class ApiController {
 		PagedResponse resp = new PagedResponse();
 		User user = userService.getUserById(id);
 		validateUser(authenticate(request), user);
-		Set<FavMovies> favMovies = user.getFavMovies();
-
-		resp.setData(favMovies);
-		setPagedResults(resp, favMovies);
-		resp.setPage(getPage(request));
+		favMoviesService.getFavMoviesByUser(user.getId(), getPage(request), resp);
+		if(resp.getTotalResults()==0){
+			response.status(404);
+		}else{
+			response.status(200);
+		}
 		return resp;
 	};
 
@@ -409,7 +410,7 @@ public class ApiController {
 			response.status(401);
 			return null;		
 		}
-		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss"); 
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss"); 
 		Date now = new Date();
 		user.setLastAccess(dt.format(now));
 		userService.saveUser(user);
@@ -576,7 +577,7 @@ public class ApiController {
 		{
 			favMoviesService.deleteFavMovie(idFavMovie);
 			response.status(200);
-			resp.setMessage("ok");
+			resp.setMessage("Se eliminó la lista");
 		}
 		catch (ResourceNotFound e) {
 			response.status(404);
@@ -620,7 +621,7 @@ public class ApiController {
 	private void cargarRanking(ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor actor,HashMap<String, Integer> ranking){
 		
 		if(ranking.get(actor.getName()) != null){
-			Integer count = ranking.get(actor);
+			Integer count = ranking.get(actor.getName());
 			count ++;
 			ranking.put(actor.getName(),count);
 		} else{
@@ -695,7 +696,9 @@ public class ApiController {
 		String id = request.params(":id");
 		favActorService.deleteFavActor(user, id);
 		response.status(200);
-		return null;
+		Response resp = new Response();
+		resp.setData("Se eliminó el actor de la lista");
+		return resp;
 	};
 
 	/**

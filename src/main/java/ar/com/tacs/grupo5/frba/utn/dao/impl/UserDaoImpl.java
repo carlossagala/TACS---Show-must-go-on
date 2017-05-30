@@ -1,14 +1,11 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +60,14 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public UserEntity findByUserName(String userName) {
 		return userRepository.findByUserName(userName);
+	}
+	
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 
 }

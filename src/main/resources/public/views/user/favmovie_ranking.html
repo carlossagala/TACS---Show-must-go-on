@@ -1,0 +1,17 @@
+<div id="panelRight" class="col s12">
+	<div class="row" ng-if="!loading">
+		<div class="col s12 m12">
+			<h5 class="grey-text">Ranking de actores repetidos en la lista: {{ ranking_favmovie.favmovie_name }}</h5>
+		</div>
+		<div id="rankactors" class="col s12 m6 offset-m3">
+			<div class="row section-wrapper">
+				<ul class="collection">
+					<li ng-repeat="(name, total) in ranking_favmovie.items" class="collection-item">
+						<span>{{ name }}</span>
+						<span class="new badge" data-badge-caption="repeticiones">{{ total }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

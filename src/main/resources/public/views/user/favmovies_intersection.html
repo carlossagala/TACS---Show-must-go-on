@@ -1,0 +1,37 @@
+<div class="col s12">
+	<div class="row ng-scope" ng-if="!favmovies_intersection.length">
+		<div class="col s12 m12">
+			<a class="btn-floating btn right red hoverable" tooltipped data-position="left" data-delay="150" data-tooltip="Ocultar interseccion" ng-click="dashboard.hidefavmovieIntersection()">
+				<i class="large material-icons">close</i>
+			</a>
+			<h5 class="grey-text">Interseccion de peliculas entre las listas seleccionadas</h5>
+		</div>
+		<div class="card-panel col m12 orange lighten-3 list-wrapper">
+			<h5 class="center-align">No hay peliculas en comun!</h5>
+		</div>
+	</div>
+	<div class="row" ng-if="!loading && favmovies_intersection.length">
+		<div class="col s12 m12">
+			<a class="btn-floating btn right red hoverable" tooltipped data-position="left" data-delay="150" data-tooltip="Ocultar interseccion" ng-click="dashboard.hidefavmovieIntersection()">
+				<i class="large material-icons">close</i>
+			</a>
+			<h5 class="grey-text">Interseccion de peliculas entre las listas seleccionadas</h5>
+		</div>
+		<div id="favmovies_intersection" class="col s12 m12">
+			<div class="row section-wrapper">
+				<form action="#">
+					<ul class="collection collection-compact">
+						<li ng-repeat="movie in favmovies_intersection" class="collection-item">
+							<div class="row details-wrapper-movie-{{ movie.movie_id }}">
+								<p>Cargando detalles de la pelicula...</p>
+								<div class="progress">
+									<div class="indeterminate"></div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

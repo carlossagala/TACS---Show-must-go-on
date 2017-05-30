@@ -83,7 +83,7 @@ public class MovieServiceImpl implements MovieService {
 	// TODO: se retornan todas las imagenes mque posee la pelicula
 	@Override
 	public Images getImages(String id) {
-		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "/images?api_key=" + appKey + "&language=es";
+		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "/images?api_key=" + appKey;
 		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Images images = gson.fromJson(response.getBody(), Images.class);
@@ -110,7 +110,7 @@ public class MovieServiceImpl implements MovieService {
 
 	@Override
 	public Movie getMovieDetail(String id) throws ResourceNotFound, BadRequest {
-		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "?api_key=" + appKey + "&language=es";
+		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "?api_key=" + appKey;
 		ResponseEntity<String> response;
 		
 		try{

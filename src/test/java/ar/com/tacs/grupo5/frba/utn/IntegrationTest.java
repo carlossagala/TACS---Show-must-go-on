@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -38,7 +39,7 @@ import spark.utils.IOUtils;
 @RunWith(SpringRunner.class)
 @Configuration
 @ComponentScan({ "ar.com.tacs.grupo5.frba.utn" })
-
+@Ignore
 public class IntegrationTest
 {
 	Gson gson = gson();

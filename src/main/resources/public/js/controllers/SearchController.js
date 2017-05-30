@@ -16,9 +16,11 @@ mainApp.controller('SearchController', ['$scope', '$http', 'utilityService', fun
     }
 
     search.search = function() {
-        var criteria = search.controls.type === 'movie'? 'movie' : search.controls.type === 'actor'? 'actor' : 'full';
+        var criteria = search.controls.type;
         var term = search.term;
         var url = 'api/search/' + criteria + '/' + term + '/';
+
+        $scope.$parent.$parent.$broadcast('searching', []);
 
         // Search for resources
         $http.get(url).success(function(data) {
@@ -26,16 +28,12 @@ mainApp.controller('SearchController', ['$scope', '$http', 'utilityService', fun
                 $scope.$parent.$parent.$broadcast('search_result', data);
             }
             else {
-                console.log('set message: no results found')
+                $scope.$parent.$parent.$broadcast('search_result', []);
                 utilityService.setMessage('No se encontraron resultados para la busqueda');
             }
         }).error(function (data, status) {
 
         });
-    }
-
-    search.showResults = function(results) {
-
     }
 
 }]);

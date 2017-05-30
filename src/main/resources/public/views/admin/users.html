@@ -1,11 +1,8 @@
 <div id="panelRight" class="col s12">
 	<div class="col s12 m12">
-		<h6 class="grey-text left-align">Listado de usuarios ({{ users.length }})</h6>
+		<h5 class="grey-text left-align">Usuarios registrados ({{ users.length }})</h5>
 	</div>
-
-	<br>
-
-	<div id="users" class="col s12 m10 offset-m1 white" style="margin-top:20px;">
+	<div id="users" class="col s12 m12 white list-wrapper">
 		<div class="row">
 			<table class="striped">
 				<thead>
@@ -13,6 +10,7 @@
 						<th>Usuario</th>
 						<th>Nivel</th>
 						<th>Listas de peliculas favoritas</th>
+						<th>Ultimo acceso</th>
 						<th>Detalles</th>
 					</tr>
 				</thead>
@@ -23,9 +21,10 @@
 						<td>{{ user.nivel }}</td>
 						<td>
 							<span class="chip" ng-repeat="fm in user.fav_movies">
-								<a ng-click="dashboard.getFavmovieDetails(fm)" data-target='userDetails' modal class="chip-modal-trigger">{{ fm.name }} ({{ fm.movies.length }})</a>
+								<a href="#/dashboard/favmovies/{{ fm.id }}" class="chip-modal-trigger">{{ fm.name }} ({{ fm.movies.length }})</a>
 							</span>
 						</td>
+						<td>{{ user.last_access? user.last_access : "-" }}</td>
 						<td>
 							<a ng-click="dashboard.getDetailsUser(user.id)" class="btn" data-target='userDetails' modal>Ver</a>
 						</td>

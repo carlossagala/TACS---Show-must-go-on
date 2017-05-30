@@ -1,9 +1,8 @@
 <!-- Modal User/Favmovie Details Structure -->
-<div id="userDetails" class="modal">
+<div id="userDetails" class="modal modal-fixed-footer">
     <div class="modal-content">
-        <div id="user-details-header-wrapper">
-
-        </div>
+        <div id="user-details-header-wrapper"></div>
+        
         <div id="user-details-loader">
             <br>
             <p>Cargando detalles...</p>
@@ -11,7 +10,45 @@
                 <div class="indeterminate"></div>
             </div>
         </div>
-        <div id="user-details-body-wrapper"></div>
+        <div id="user-details-body-wrapper" class="section-wrapper"></div>
+    </div>
+    <div class="modal-footer">
+        <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cerrar</a>
+    </div>
+</div>
+
+<!-- Modal Movie Details Structure -->
+<div id="movieDetails" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <div id="movie-details-loader">
+            <br>
+            <p>Cargando detalles...</p>
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <div id="movie-details-body-wrapper" class="section-wrapper">
+            <content-item content="movie_item_details"></content-item>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cerrar</a>
+    </div>
+</div>
+
+<!-- Modal Actor Details Structure -->
+<div id="actorDetails" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <div id="actor-details-loader">
+            <br>
+            <p>Cargando detalles...</p>
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+        <div id="actor-details-body-wrapper" class="section-wrapper">
+            <content-item content="actor_item_details"></content-item>
+        </div>
     </div>
     <div class="modal-footer">
         <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cerrar</a>

@@ -1,0 +1,51 @@
+<div id="panelRight" class="col s12">
+	<div class="row ng-scope" ng-if="!users_favmovies.length">
+		<div class="card-panel col m6 offset-m3 orange lighten-3">
+			<h5 class="center-align">Aun no existe ninguna lista de peliculas favoritas!</h5>
+		</div>
+	</div>
+	<div class="row" ng-if="!loading && users_favmovies.length">
+		<div class="col s12 m12">
+			<h5 class="grey-text">Listas de peliculas favoritas de todos los usuarios ({{ users_favmovies.length }})</h5>
+		</div>
+		<div id="favmovies_all" class="col s12 m6">
+			<div class="row section-wrapper">
+				<form action="#">
+					<ul class="collection with-header collection-compact">
+						<li class="collection-header" ng-if="!valid_intersection">
+							<div class="row">
+								<h5>Selecciona 2 listas para ver la interseccion de peliculas entre ellas</h5>
+							</div>
+						</li>
+						<li class="collection-header" ng-if="valid_intersection">
+							<div class="row">
+								<a ng-disabled="!valid_intersection" ng-click="dashboard.intersectionFavmovies()" class="btn" tooltipped data-position="right" data-delay="150" data-tooltip="Permite ver la interseccion de peliculas entre 2 listas">Comparar!</a>
+							</div>
+						</li>
+						<li ng-repeat="favmovie in users_favmovies" class="collection-item">
+							<div class="row">
+								<div class="col m12">
+									<span class="title">
+										{{ favmovie.name}}
+										<span class="chip right">
+											{{ favmovie.user_name }}
+										</span>
+									</span>
+									<p>Peliculas: {{ favmovie.movies.length }}</p>
+									<p>
+										<input type="checkbox" class="filled-in" id="favmovie-selector-{{ favmovie.id }}" ng-model="intersectionable[favmovie.id]" ng-click="dashboard.selectFavmovie(favmovie.id)" ng-disabled="!favmovie.movies.length"/>
+										<label for="favmovie-selector-{{ favmovie.id }}">Comparar con otra lista</label>
+									</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+		<div id="favmovies-intersection-wrapper" class="col s12 m6">
+			<!-- Intersection layout -->
+			<div ng-include="'/views/user/favmovies_intersection.html'" class="section-wrapper" ng-if="intersection"></div>
+		</div>
+	</div>
+</div>

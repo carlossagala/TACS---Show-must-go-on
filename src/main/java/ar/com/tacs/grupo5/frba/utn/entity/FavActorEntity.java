@@ -1,25 +1,18 @@
 package ar.com.tacs.grupo5.frba.utn.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name="FAV_ACTOR")
+import javax.annotation.Generated;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection="FAV_ACTORS")
 public class FavActorEntity {
 	@Id
-	@GeneratedValue(generator = "system-uuid")
-	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	@Generated(value = { "system-uuid" })
 	private String id;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
+	@DBRef
 	private UserEntity userEntity;
 	private String actorId;
 

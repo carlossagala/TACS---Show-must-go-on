@@ -1,0 +1,10 @@
+<div id="panelRight" class="col s12">
+    <div class="row" ng-if="!loading">
+        <div class="col s12 m12">
+            <h5 class="grey-text">Detalles de la lista: {{ favmovie.name }}</h5>
+        </div>
+        <div id="favmovie_details" class="col s12 m12 list-wrapper">
+            <content-item ng-repeat="movie_item in favmovies_details | unique" content="movie_item" on-remove="dashboard.removeMovieFromFavmovie(id)"></content-item>
+        </div>
+    </div>
+</div>
