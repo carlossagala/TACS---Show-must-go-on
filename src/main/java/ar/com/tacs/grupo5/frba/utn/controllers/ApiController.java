@@ -486,13 +486,11 @@ public class ApiController {
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			name = (String)requestMap.get("name");
 		}catch(Exception e){
-			response.status(400);
-			return "Bad Request: Parametro name en el body es obligatorio";
+			throw new BadRequest("Parametro name en el body es obligatorio");
 		}
 		
 		if(name == null){
-			response.status(400);
-			return "Bad Request: Parametro name en el body es obligatorio";			
+			throw new BadRequest("Parametro name en el body es obligatorio");			
 		}
 		
 		FavMovies favMovie = favMoviesService.createNewFavMovieList(name,user);
@@ -500,7 +498,7 @@ public class ApiController {
 			response.status(201);
 			resp.setData(favMovie);
 		}else{
-			response.status(404);
+			throw new ResourceNotFound();
 		}
 		return resp;
 	};
@@ -513,18 +511,9 @@ public class ApiController {
 		
 		String idFavMovie = request.params(":id");
 		
-		try
-		{
-			FavMovies favMovie = favMoviesService.getFavMovieDetail(idFavMovie);
-			resp.setData(favMovie);
-			response.status(200);
-			
-		}
-		catch (ResourceNotFound e) {
-			response.status(404);
-			resp.setMessage("Not Found: La lista de películas favoritas no existe");
-		}
-	
+		FavMovies favMovie = favMoviesService.getFavMovieDetail(idFavMovie);
+		resp.setData(favMovie);
+		response.status(200);
 		return resp;
 	};
 
@@ -542,27 +531,16 @@ public class ApiController {
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			newTitle = (String)requestMap.get("new_title");
 		}catch(Exception e){
-			response.status(400);
-			return "Bad Request: Parametro new_title en el body es obligatorio";
+			throw new BadRequest("Parametro new_title en el body es obligatorio") ;
 		}
 		
 		if (newTitle == null){
-			response.status(400);
-			return "Bad Request: Parametro new_title en el body es obligatorio";			
+			throw new BadRequest("Parametro new_title en el body es obligatorio");			
 		}
 				
-		try
-		{
-			FavMovies favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
-			resp.setData(favMovie);
-			response.status(200);
-			
-		}
-		catch (ResourceNotFound e) {
-			response.status(404);
-			resp.setMessage("Not Found: La lista de películas favoritas no existe");
-		}
-	
+		FavMovies favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
+		resp.setData(favMovie);
+		response.status(200);
 		return resp;
 	};
 
@@ -572,18 +550,9 @@ public class ApiController {
 	public Route deleteFavMoviesList = (request, response) -> {
 		Response resp = new Response();
 		String idFavMovie = request.params(":id");
-		
-		try
-		{
-			favMoviesService.deleteFavMovie(idFavMovie);
-			response.status(200);
-			resp.setMessage("Se eliminó la lista");
-		}
-		catch (ResourceNotFound e) {
-			response.status(404);
-			resp.setMessage("Not Found: La lista de películas favoritas no existe");
-		}
-	
+		favMoviesService.deleteFavMovie(idFavMovie);
+		response.status(200);
+		resp.setMessage("Se eliminó la lista");
 		return resp;
 	};
 
@@ -680,8 +649,7 @@ public class ApiController {
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			id = (String)requestMap.get("id");
 		}catch(Exception e){
-			response.status(400);
-			return "Bad Request: Parametro id en el body es obligatorio";
+			throw new BadRequest("Parametro id en el body es obligatorio");
 		}
 		favActorService.addFavActor(user, id);
 		response.status(201);
@@ -725,7 +693,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(2L);
 		resp.setPage(getPage(request));
-		resp.setData(	actorService.getMoviesWithActors(favActorService.getFavActorsId(user.getId(),getPage(request) )));
+		resp.setData(actorService.getMoviesWithActors(favActorService.getFavActorsId(user.getId(),getPage(request) )));
 		return resp;
 	};
 
