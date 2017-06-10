@@ -18,6 +18,14 @@ public abstract class AbstractDaoTest {
 	@Autowired
     private MongoTemplate mongoTemplate;
 	
+	public MongoTemplate getMongoTemplate() {
+		return mongoTemplate;
+	}
+
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
+
 	public void insertInitialData()
 	{
 		UserEntity adminUser = new UserEntity("1", "admin", "$2a$12$2O2mnHcxLPtao/wVJ3vwo.pdbd13Z9WRuZ/79m8fi1eZJ2TbNPfUW", "admin");
