@@ -410,7 +410,7 @@ public class ApiController {
 			response.status(401);
 			return null;		
 		}
-		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss"); 
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		Date now = new Date();
 		user.setLastAccess(dt.format(now));
 		userService.saveUser(user);
