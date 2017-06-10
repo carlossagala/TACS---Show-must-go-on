@@ -26,7 +26,7 @@ public class App {
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(App.class, SpringMongoConfig.class);
 		Environment environment = ctx.getBean(Environment.class);
 		String port = environment.getProperty("server.port");
-		logger.info("App La aplicación levantó correctamente y escucha en el puerto " + port);
+		logger.info("La aplicación levantó correctamente y escucha en el puerto " + port);
 	}
 
 	@Bean
