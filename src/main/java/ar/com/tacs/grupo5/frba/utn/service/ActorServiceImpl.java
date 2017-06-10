@@ -11,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -21,14 +23,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Image;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Movie;
-import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Reviews;
-import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
-import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResult;
-import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultActor;
-import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultMovie;
 
 @Component
 public class ActorServiceImpl implements ActorService {
@@ -49,9 +48,21 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	public List<Image> getActorImages(String id) {
+	public List<Image> getActorImages(String id) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/person/" + id + "/images?api_key=" + appKey;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 
 		JsonParser jsonParser = new JsonParser();
@@ -68,9 +79,21 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	public List<Movie> getActorMovies(String id) {
+	public List<Movie> getActorMovies(String id) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/person/" + id + "/movie_credits?api_key=" + appKey;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 
 		JsonParser jsonParser = new JsonParser();
@@ -87,9 +110,21 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	public Actor getDetailActor(String id) {
+	public Actor getDetailActor(String id) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/person/" + id + "?api_key=" + appKey;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Actor actor = gson.fromJson(response.getBody(), Actor.class);
 		actor.setImage(getActorImages(id));
@@ -126,15 +161,11 @@ public class ActorServiceImpl implements ActorService {
 	}
 	
 	private Boolean repeteableMovie(Movie movie,List<Movie> movies){
-		
 		int count = 0;
 		List<Movie> countRepeteables =  movies.stream().filter(m ->
 			m.getId().equals(movie.getId())).collect(Collectors.toList());
 		count = countRepeteables.size();
 		return (count > 1);
-		
-		
-		
 	}
 	
 	private boolean notRepeateableInList( Movie m,List<Movie> movies){
@@ -152,9 +183,21 @@ public class ActorServiceImpl implements ActorService {
 	}
 
 	@Override
-	public Actor getActor(String id) {
+	public Actor getActor(String id) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/person/" + id + "?api_key=" + appKey;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Actor actor = gson.fromJson(response.getBody(), Actor.class);
 		return actor;

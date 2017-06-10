@@ -383,7 +383,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             main.getFavmovies();
 
         }).error(function (data, status) {
-            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red")
+            Materialize.toast("No se pudo eliminar la lista de películas favoritas, intentelo nuevamente.", 2000, "red")
         });
     }
 
