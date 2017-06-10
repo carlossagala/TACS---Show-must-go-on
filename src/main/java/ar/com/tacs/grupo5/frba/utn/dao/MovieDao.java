@@ -1,7 +1,6 @@
 package ar.com.tacs.grupo5.frba.utn.dao;
 
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
-import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 public interface MovieDao {
 

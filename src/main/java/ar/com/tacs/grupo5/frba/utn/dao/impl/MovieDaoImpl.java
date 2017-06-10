@@ -10,7 +10,6 @@ import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 @Repository

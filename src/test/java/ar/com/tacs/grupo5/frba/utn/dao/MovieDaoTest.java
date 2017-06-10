@@ -17,7 +17,6 @@ import ar.com.tacs.grupo5.frba.utn.dao.impl.FavMoviesDaoImpl;
 import ar.com.tacs.grupo5.frba.utn.dao.impl.MovieDaoImpl;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
-import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
@@ -76,7 +75,6 @@ public class MovieDaoTest extends AbstractDaoTest{
 		
 		movieDao.deleteMovie(deletedMovie);
 		
-		FavMoviesEntity favMovies = favMoviesDao.getFavMovie("bac25bb4c3dd");
-
+		Assert.assertNull(movieDao.getMovie("bac25bb4c3dd", "2"));
 	}
 }

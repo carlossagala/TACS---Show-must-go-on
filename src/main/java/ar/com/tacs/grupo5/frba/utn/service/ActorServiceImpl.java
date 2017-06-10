@@ -3,8 +3,6 @@ package ar.com.tacs.grupo5.frba.utn.service;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -178,7 +176,6 @@ public class ActorServiceImpl implements ActorService {
 	
 	
 	private String convertIdsToString(List<String> actorsId) {
-		
 		return String.join(",", actorsId);
 	}
 
