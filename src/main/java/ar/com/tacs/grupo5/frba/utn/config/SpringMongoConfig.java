@@ -1,4 +1,4 @@
-package ar.com.tacs.grupo5.frba.config;
+package ar.com.tacs.grupo5.frba.utn.config;
 
 import java.util.Arrays;
 

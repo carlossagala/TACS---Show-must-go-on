@@ -14,13 +14,13 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ar.com.tacs.grupo5.frba.config.SpringMongoConfig;
+import ar.com.tacs.grupo5.frba.utn.config.SpringMongoConfig;
 import ar.com.tacs.grupo5.frba.utn.dao.MongoTestConfiguration;
 
-@SpringBootApplication
+//@SpringBootApplication
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages = {"ar.com.tacs.grupo5.frba.utn"}, excludeFilters={
-		@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value=SpringMongoConfig.class)})
+		@ComponentScan.Filter(type=FilterType.ASSIGNABLE_TYPE, value={SpringMongoConfig.class,App.class})})
 public class AppTest {
 	private static Logger logger = LoggerFactory.getLogger(AppTest.class);
 
