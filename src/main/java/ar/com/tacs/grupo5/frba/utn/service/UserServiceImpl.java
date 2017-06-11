@@ -42,7 +42,10 @@ public class UserServiceImpl implements UserService {
 		Page<UserEntity> userEntities = userDao.getAllUsersWithPage(page-1);
 		List<User> users = new ArrayList<>();
 		for (UserEntity userEntity : userEntities.getContent()) {
+		
+			if(userEntity.getNivel().equals("user")){
 			users.add(userMapper.entityToDto(userEntity));
+			}
 		}
 		Page<User> usersPage = new PageImpl<>(users);
 		return usersPage;
