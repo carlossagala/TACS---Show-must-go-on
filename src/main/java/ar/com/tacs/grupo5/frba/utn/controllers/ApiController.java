@@ -260,7 +260,12 @@ public class ApiController {
 	public Route getUserFavActors = (request, response) -> {
 		User user = authenticate(request);
 		PagedResponse resp = new PagedResponse();
-		favActorService.getFavActors(user.getId(), getPage(request), resp);
+		try{
+			int page = getPage(request);
+			favActorService.getFavActors(user.getId(),page , resp);
+		}catch(Exception e){
+			favActorService.getAllFavActors(user.getId(), resp);
+		}
 		if(resp.getTotalResults()==0){
 			response.status(404);
 		}else{

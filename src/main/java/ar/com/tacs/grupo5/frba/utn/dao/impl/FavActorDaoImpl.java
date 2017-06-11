@@ -1,5 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.config.ResourceNotFoundException;
@@ -57,6 +59,11 @@ public class FavActorDaoImpl implements FavActorDao{
 	@Override
 	public Long countByUser(UserEntity userEntity) {
 		return favActorRepository.countByUserEntity(userEntity);
+	}
+
+	@Override
+	public List<FavActorEntity> findByUserEntity(UserEntity UserEntity) {
+		return favActorRepository.findByUserEntity(UserEntity);
 	}
 
 }

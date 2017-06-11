@@ -62,7 +62,7 @@ public class FavActorsDaoTest extends AbstractDaoTest{
 
 	@Test
 	public void testSaveFavActor() {
-		this.favActorDao.addFavActor(user, "2");
+		this.favActorDao.addFavActor(user, "999");
 		Assert.assertTrue(favActorDao.countByUser(user).intValue() == 23);
 	}
 

@@ -61,6 +61,20 @@ public class FavActorServiceImpl implements FavActorService {
 	}
 	
 	@Override
+	public void getAllFavActors(String id, PagedResponse resp) {
+		UserEntity userEntity = userDao.getUserById(id);
+		List<FavActorEntity> favActors = favActorDao.findByUserEntity(userEntity);
+		if(favActors==null){
+			resp.setTotalResults(0L);
+			return;
+		}
+		resp.setData(favActors.stream().map(FavActorEntity::getActorId).collect(Collectors.toList()));
+		resp.setTotalPages(1);
+		resp.setTotalResults(Long.valueOf(favActors.size()));
+		return ;
+	}
+	
+	@Override
 	public List<String> getFavActorsId(String userId, int page) {
 		UserEntity userEntity = userDao.getUserById(userId);
 		Page<FavActorEntity> favActorsPage = favActorDao.getFavActors(userEntity,page-1);
