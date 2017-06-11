@@ -33,9 +33,8 @@
 									<span class="title" ng-if="!favmovie.movies.length">
 										{{ favmovie.name }}
 									</span>
-									<p>Peliculas: {{ favmovie.movies.length }}</p>
 									<p>
-										<input type="checkbox" class="filled-in" id="favmovie-selector-{{ favmovie.id }}" ng-model="intersectionable[favmovie.id]" ng-click="dashboard.selectFavmovie(favmovie.id)" ng-disabled="!favmovie.movies.length"/>
+										<input type="checkbox" class="filled-in" id="favmovie-selector-{{ favmovie.id }}" ng-model="intersectionable[favmovie.id]" ng-click="dashboard.selectFavmovie(favmovie.id)"/>
 										<label for="favmovie-selector-{{ favmovie.id }}">Comparar con otra lista</label>
 									</p>
 								</div>
@@ -46,7 +45,7 @@
 										</a>
 									</div>
 									<div class="col m3">
-										<a href="#/dashboard/favmovies/{{ favmovie.id }}/ranking" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Ver ranking de actores de la lista!" ng-disabled="!favmovie.movies.length">
+										<a href="#/dashboard/favmovies/{{ favmovie.id }}/ranking" class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Ver ranking de actores de la lista!">
 											<i class="material-icons">grade</i>
 										</a>
 									</div>
