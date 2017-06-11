@@ -109,7 +109,7 @@ public class IntegrationTest implements SparkApplication
 	@After
 	public void after()
 	{
-		this.testServer.getApplication().deleteAllData();;
+		this.testServer.getApplication().deleteAllData();
 	}
 	@Test
 	public void testLoginOK() throws Exception {

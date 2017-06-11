@@ -18,6 +18,7 @@ import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
+import ar.com.tacs.grupo5.frba.utn.models.GetFavMoviesResponse;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 import ar.com.tacs.grupo5.frba.utn.models.PagedResponse;
 import ar.com.tacs.grupo5.frba.utn.models.User;
@@ -130,7 +131,7 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 			resp.setTotalResults(0L);
 			return;
 		}
-		resp.setData(favMovies.getContent().stream().map(FavMoviesEntity::getId).collect(Collectors.toList()));
+		resp.setData(favMovies.getContent().stream().map(x->new GetFavMoviesResponse(x.getId(),x.getName(),x.getUser().getId())).collect(Collectors.toList()));
 		resp.setPage(page);
 		resp.setTotalPages(favMovies.getTotalPages());
 		resp.setTotalResults(favMovies.getTotalElements());
