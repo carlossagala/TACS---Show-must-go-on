@@ -475,13 +475,13 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     $scope.$on('search_result', function(evt, data){
         $http.get('/api/favactors/?page=0').success(function(data_ids) {
             $scope.favactors_ids = _.uniq(data_ids.data);
-            $scope.search_items = data;
         }).error(function (data_ids, status) {
-            $scope.favactors = [];
+            $scope.favactors_ids = [];
         }).finally(function () {
             $scope.loading = false;
             $scope.tab_content = false;
             $scope.search_result = true; 
+            $scope.search_items = data;
         });
     });
 
