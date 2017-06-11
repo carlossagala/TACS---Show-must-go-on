@@ -87,7 +87,20 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	@Override
 	@Transactional
 	public FavMovies getFavMovieDetail(String idFavMovie) throws ResourceNotFound {
-		FavMovies returnFavMovie = favMoviesMapper.entityToDto(favMoviesDao.getFavMovie(idFavMovie));
+		FavMoviesEntity favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		
+		FavMovies returnFavMovie = favMoviesMapper.entityToDto(favMovie);
+		
+		List<MovieEntity> movies = moviesDao.getMoviesByFavMovie(favMovie);
+		
+		
+		Set<Movie> returnMovies = new HashSet<>();
+		
+		movies.forEach(m->returnMovies.add(movieMapper.entityToDto(m)));
+		
+		returnFavMovie.setMovies(returnMovies);
+		
+		
 		
 		if (returnFavMovie == null)
 			throw new ResourceNotFound();
