@@ -3,20 +3,85 @@
     "id": "2",
     "title": "Ariel",
     "images": {
-      "backdrops": [],
+      "backdrops": [
+      {
+                    "aspect_ratio": "1.777777777777778",
+                    "file_path": "/z2QUexmccqrvw1kDMw3R8TxAh5E.jpg",
+                    "height": 720,
+                    "vote_average": "0.0",
+                    "vote_count": "0",
+                    "width": 1280
+                },
+                {
+                    "aspect_ratio": "1.777777777777778",
+                    "file_path": "/2c6f3KWWPNCDHnzPhiNb1IbFFHG.jpg",
+                    "height": 1080,
+                    "vote_average": "0.0",
+                    "vote_count": "0",
+                    "width": 1920
+                },
+                {
+                    "aspect_ratio": "1.777777777777778",
+                    "file_path": "/7VqciAWfFkYrFK7XlQXVjej1Fup.jpg",
+                    "height": 1080,
+                    "vote_average": "0.0",
+                    "vote_count": "0",
+                    "width": 1920
+                },
+                {
+                    "aspect_ratio": "1.777777777777778",
+                    "file_path": "/8qk8f84gfkfoD3tfBVdG8b4ZOvU.jpg",
+                    "height": 1080,
+                    "vote_average": "0.0",
+                    "vote_count": "0",
+                    "width": 1920
+                }],
       "posters": [
-        {
-          "file_path": "/8ld3BEg8gnynRsfj2AzbLocD8NR.jpg",
-          "height": 1500,
-          "iso_639_1": "es",
-          "width": 1000
-        },
-        {
-          "file_path": "/6EAwUzerd1qvZ36XxADNiSljH9g.jpg",
-          "height": 2298,
-          "iso_639_1": "es",
-          "width": 1532
-        }
+       {
+                    "aspect_ratio": "0.7066508313539193",
+                    "file_path": "/gZCJZOn4l0Zj5hAxsMbxoS6CL0u.jpg",
+                    "height": 842,
+                    "iso_639_1": "en",
+                    "vote_average": "5.3125",
+                    "vote_count": "1",
+                    "width": 595
+                },
+                {
+                    "aspect_ratio": "0.6666666666666666",
+                    "file_path": "/8ld3BEg8gnynRsfj2AzbLocD8NR.jpg",
+                    "height": 1500,
+                    "iso_639_1": "es",
+                    "vote_average": "5.3125",
+                    "vote_count": "1",
+                    "width": 1000
+                },
+                {
+                    "aspect_ratio": "0.6666666666666666",
+                    "file_path": "/w0NzAc4Lv6euPtPAmsdEf0ZCF8C.jpg",
+                    "height": 1500,
+                    "iso_639_1": "en",
+                    "vote_average": "5.287114845938375",
+                    "vote_count": "5",
+                    "width": 1000
+                },
+                {
+                    "aspect_ratio": "0.7122994652406417",
+                    "file_path": "/fELdVq2KuqW8vWEeb1vi6IfDRSO.jpg",
+                    "height": 935,
+                    "iso_639_1": "en",
+                    "vote_average": "5.245421245421245",
+                    "vote_count": "2",
+                    "width": 666
+                },
+                {
+                    "aspect_ratio": "0.6666666666666666",
+                    "file_path": "/6EAwUzerd1qvZ36XxADNiSljH9g.jpg",
+                    "height": 2298,
+                    "iso_639_1": "es",
+                    "vote_average": "0.0",
+                    "vote_count": "0",
+                    "width": 1532
+                }
       ]
     },
     "reviews": {
@@ -43,6 +108,6 @@
         "name": "Eetu Hilkamo"
       }
     ],
-    "overview": "Premiada por la Sociedad de Críticos de Estados Unidos en 1990 como la mejor película extranjera, este filme es una exploración de la realidad finlandesa: desempleo, corrupción y vigilancia policial..."
+    "overview": "Taisto Kasurinen is a Finnish coal miner whose father has just committed suicide and who is framed for a crime he did not commit. In jail, he starts to dream about leaving the country and starting a new life. He escapes from prison but things don't go as planned..."
   }
 }
