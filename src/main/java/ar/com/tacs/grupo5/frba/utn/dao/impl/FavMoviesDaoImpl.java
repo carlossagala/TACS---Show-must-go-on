@@ -1,5 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,8 @@ import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
+import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Repository
 @Transactional
@@ -59,6 +63,11 @@ public class FavMoviesDaoImpl implements FavMoviesDao {
 	@Override
 	public Long countByUser(UserEntity user) {
 		return favMoviesRepository.countByUser(user);
+	}
+
+	@Override
+	public Set<FavMoviesEntity> getFavMoviesByUser(UserEntity user) {
+		return favMoviesRepository.findByUser(user);
 	}
 
 }

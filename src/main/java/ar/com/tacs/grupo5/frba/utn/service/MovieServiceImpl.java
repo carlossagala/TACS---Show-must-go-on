@@ -23,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
@@ -190,6 +191,20 @@ public class MovieServiceImpl implements MovieService {
 		movie.setFavMovieId(idFavMovie);
 		movie.setMovieId(movieId);
 		movieDao.deleteMovie(movie);
+	}
+
+	@Override
+	public List<ar.com.tacs.grupo5.frba.utn.models.Movie> getMoviesByFavMovies(FavMovies lista) {
+		FavMoviesEntity favMovie = favMoviesDao.getFavMovie(lista.getId());
+		List<MovieEntity> moviesByFavMovie = movieDao.getMoviesByFavMovie(favMovie);
+		List<ar.com.tacs.grupo5.frba.utn.models.Movie> movies = new ArrayList<>();
+		if(moviesByFavMovie != null && !moviesByFavMovie.isEmpty())
+		{
+			for (MovieEntity movie : moviesByFavMovie) {
+				movies.add(movieMapper.entityToDto(movie));
+			}
+		}
+		return movies;
 	};
 
 	

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -611,30 +612,31 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
-		
 
-		Set<FavMovies> listOfFavMovies = user.getFavMovies(); 
+		Set<FavMovies> listOfFavMovies = favMoviesService.getFavMoviesByUser(user);
+		List<Movie> movies = new ArrayList<>();
 		FavMovies lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).findAny().orElse(null);
 		if(lista==null){
 			throw new ResourceNotFound();
-		}
-		
-		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
-		
-		for(Movie m:lista.getMovies()){
-			try{
-				actores.addAll(movieService.getMovieActors(m.getId()));
-			}catch(Exception e){
-				logger.error("",e);
+		}else{
+			movies = movieService.getMoviesByFavMovies(lista);
+			List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
+			for(Movie m:movies){
+				try{
+					actores.addAll(movieService.getMovieActors(m.getId()));
+				}catch(Exception e){
+					logger.error("",e);
+				}
 			}
+			
+			HashMap<String, Integer > ranking = new HashMap<String,Integer>();
+			
+			actores.forEach(a -> cargarRanking(a,ranking));
+
+			resp.setData(ranking);
+			return resp;
 		}
 		
-		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
-		
-		actores.forEach(a -> cargarRanking(a,ranking));
-
-		resp.setData(ranking);
-		return resp;
 	};
 
 	/**

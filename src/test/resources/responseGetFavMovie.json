@@ -2,18 +2,6 @@
   "data": {
     "id": "bac25bb4c3dd",
     "name": "Top peliculas 1",
-    "user_id": "1",
-    "movies": [
-      {
-        "id": "182e1a2cbb34",
-        "fav_movie_id": "bac25bb4c3dd",
-        "movie_id": "2"
-      },
-      {
-        "id": "b0de755ad68d",
-        "fav_movie_id": "bac25bb4c3dd",
-        "movie_id": "9"
-      }
-    ]
+    "user_id": "1"
   }
 }

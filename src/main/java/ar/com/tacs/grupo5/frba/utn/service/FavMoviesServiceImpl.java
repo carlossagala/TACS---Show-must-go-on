@@ -1,7 +1,9 @@
 package ar.com.tacs.grupo5.frba.utn.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
+import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
+import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.mapper.FavMoviesMapper;
@@ -33,14 +37,16 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	private MovieMapper movieMapper;
 	private UserMapper userMapper;
 	private UserDao userDao;
+	private MovieDao moviesDao;
 	
 	@Autowired
-	public FavMoviesServiceImpl(FavMoviesDao favMoviesDao, FavMoviesMapper favMoviesMapper, MovieMapper movieMapper,UserMapper userMapper, UserDao userDao) {
+	public FavMoviesServiceImpl(FavMoviesDao favMoviesDao, FavMoviesMapper favMoviesMapper, MovieMapper movieMapper,UserMapper userMapper, UserDao userDao, MovieDao movieDao) {
 		this.favMoviesDao = favMoviesDao;
 		this.favMoviesMapper = favMoviesMapper;
 		this.movieMapper = movieMapper;
 		this.userMapper = userMapper;
 		this.userDao = userDao;
+		this.moviesDao = movieDao;
 	}
 	
 	@Override
@@ -96,15 +102,13 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		FavMoviesEntity favMovieTwo = favMoviesDao.getFavMovie(id2);
 		if(favMovieTwo == null)
 			throw new ResourceNotFound("FavMovieEntity with id "+id2+" not found");
-//		List<MovieEntity> intersectionList = favMovieOne.getMovies().stream().filter(favMovieTwo.getMovies()::contains).collect(Collectors.toList());
+		List<MovieEntity> moviesDeUnaFavMovie = moviesDao.getMoviesByFavMovie(favMovieOne);
+		List<MovieEntity> moviesDeOtraFavMovie = moviesDao.getMoviesByFavMovie(favMovieTwo);
+		List<MovieEntity> intersectionList = moviesDeUnaFavMovie.stream().filter(moviesDeOtraFavMovie::contains).collect(Collectors.toList());
 		List<Movie> movies = new ArrayList<>();
-//		for (MovieEntity movieEntity : intersectionList) {
-//			movies.add(movieMapper.entityToDto(movieEntity));
-//		}
-		
-
-		
-		
+		for (MovieEntity movieEntity : intersectionList) {
+			movies.add(movieMapper.entityToDto(movieEntity));
+		}
 		return movies;
 	}
 
@@ -136,6 +140,20 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		resp.setTotalPages(favMovies.getTotalPages());
 		resp.setTotalResults(favMovies.getTotalElements());
 		return ;
+	}
+
+	@Override
+	public Set<FavMovies> getFavMoviesByUser(User user) {
+		UserEntity userEntity = userDao.getUserById(user.getId());
+		Set<FavMoviesEntity> favMoviesByUser = favMoviesDao.getFavMoviesByUser(userEntity);
+		Set<FavMovies> favMovies = new HashSet<>();
+		if(favMoviesByUser != null && !favMoviesByUser.isEmpty())
+		{
+			for (FavMoviesEntity favMoviesEntity : favMoviesByUser) {
+				favMovies.add(favMoviesMapper.entityToDto(favMoviesEntity));
+			}
+		}
+		return favMovies;
 	}
 
 }
