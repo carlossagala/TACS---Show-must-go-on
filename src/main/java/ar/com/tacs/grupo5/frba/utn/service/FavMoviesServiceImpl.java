@@ -88,9 +88,11 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 	@Transactional
 	public FavMovies getFavMovieDetail(String idFavMovie) throws ResourceNotFound {
 		FavMoviesEntity favMovie = favMoviesDao.getFavMovie(idFavMovie);
+		if(favMovie==null){
+			throw new ResourceNotFound();
+		}
 		
 		FavMovies returnFavMovie = favMoviesMapper.entityToDto(favMovie);
-		
 		List<MovieEntity> movies = moviesDao.getMoviesByFavMovie(favMovie);
 		
 		
@@ -98,8 +100,10 @@ public class FavMoviesServiceImpl implements FavMoviesService {
 		
 		movies.forEach(m->returnMovies.add(movieMapper.entityToDto(m)));
 		
-		returnFavMovie.setMovies(returnMovies);
 		
+		if(!(returnMovies.isEmpty())){
+		returnFavMovie.setMovies(returnMovies);
+		}
 		
 		
 		if (returnFavMovie == null)

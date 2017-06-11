@@ -74,9 +74,9 @@ public class UserServiceTest {
 		Mockito.when(userMapper.entityToDto(userEntTest2)).thenReturn(userTest2);
 		Page<User> allUsers = userService.getAllUsersWithPage(1);
 		Assert.assertNotNull(allUsers);
-		Assert.assertTrue(allUsers.getContent().size() == 3);
+		Assert.assertTrue(allUsers.getContent().size() == 2);
 		Assert.assertTrue(allUsers.getTotalPages()==1);
-		Assert.assertTrue(allUsers.getTotalElements()==3);
+		Assert.assertTrue(allUsers.getTotalElements()==2);
 	}
 	
 	@Test
