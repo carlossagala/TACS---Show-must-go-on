@@ -16,9 +16,11 @@ import org.springframework.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -370,8 +372,16 @@ public class ApiController {
 		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
 		
 		actores.forEach(a -> cargarRanking(a,ranking));
-
-		resp.setData(ranking);
+		
+		resp.setData(ranking.entrySet()
+		        .stream()
+		        .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+		        .collect(Collectors.toMap(
+		          Map.Entry::getKey, 
+		          Map.Entry::getValue, 
+		          (e1, e2) -> e1, 
+		          LinkedHashMap::new
+		        )));
 		return resp;
 	};
 
