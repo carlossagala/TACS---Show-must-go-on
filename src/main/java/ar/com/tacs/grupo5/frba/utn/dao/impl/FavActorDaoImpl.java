@@ -31,10 +31,12 @@ public class FavActorDaoImpl implements FavActorDao{
 	@Override
 	@Transactional
 	public void addFavActor(UserEntity user, String idActor) throws ResourceNotFoundException {
-		FavActorEntity entity = new FavActorEntity();
-		entity.setActorId(idActor);
-		entity.setUserEntity(user);
-		favActorRepository.save(entity);
+		if(favActorRepository.countByUserEntityAndActorId(user, idActor).compareTo(Long.valueOf(0L))==0){
+			FavActorEntity entity = new FavActorEntity();
+			entity.setActorId(idActor);
+			entity.setUserEntity(user);
+			favActorRepository.save(entity);
+		}
 	}
 
 	@Override
