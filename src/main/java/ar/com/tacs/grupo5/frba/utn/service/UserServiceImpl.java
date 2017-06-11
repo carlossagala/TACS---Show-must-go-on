@@ -2,6 +2,7 @@ package ar.com.tacs.grupo5.frba.utn.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,19 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.com.tacs.grupo5.frba.utn.dao.UserDao;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.mapper.UserMapper;
+import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.User;
+import spark.utils.CollectionUtils;
 @Component
 @Transactional
 public class UserServiceImpl implements UserService {
 	
 	private UserDao userDao;
 	private UserMapper userMapper; 
-	
+	private FavMoviesService favMoviesService;
 	@Autowired
-	public UserServiceImpl(UserDao userDao, UserMapper userMapper) {
+	public UserServiceImpl(UserDao userDao, UserMapper userMapper,FavMoviesService favMoviesService ) {
 		super();
 		this.userDao = userDao;
 		this.userMapper = userMapper;
+		this.favMoviesService = favMoviesService;
 	}
 
 	@Override
@@ -44,7 +48,12 @@ public class UserServiceImpl implements UserService {
 		for (UserEntity userEntity : userEntities.getContent()) {
 		
 			if(userEntity.getNivel().equals("user")){
-			users.add(userMapper.entityToDto(userEntity));
+				User user = userMapper.entityToDto(userEntity);
+				Set<FavMovies> listOfFavMovies = favMoviesService.getFavMoviesByUser(user);
+				if(!CollectionUtils.isEmpty(listOfFavMovies)){
+					user.setFavMovies(listOfFavMovies);
+				}
+				users.add(user);
 			}
 		}
 		Page<User> usersPage = new PageImpl<>(users);
