@@ -370,7 +370,6 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     }
 
     main.paginateFavactors = function(page) {
-        console.log("goto page:", page)
         main.getFavactors(page);
     }
 

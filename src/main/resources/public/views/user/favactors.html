@@ -13,8 +13,8 @@
 		</div>
 		<div id="favactors" class="col s12 m6 offset-m3">
 			<div class="row section-wrapper">
-				<!--<pagination
-						page="pagination_result.page"
+				<pagination
+						page="1"
 						page-size="pagination_result.page_size"
 						total="pagination_result.total_results"
 						show-prev-next="true"
@@ -23,8 +23,7 @@
 						hide-if-empty="false"
 						adjacent="2"
 						scroll-top="false"
-						pagination-action="dashboard.paginateFavactors(pagination_result.page)" />
-						-->
+						pagination-action="dashboard.paginateFavactors(page)" />
 				<ul class="collection with-header">
 					<li ng-repeat="favactor in favactors" class="collection-item avatar">
 						<div class="details-wrapper-{{ favactor }}">
