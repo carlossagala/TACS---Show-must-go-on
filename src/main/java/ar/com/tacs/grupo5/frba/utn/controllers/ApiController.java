@@ -139,7 +139,6 @@ public class ApiController {
 			path("/user", () -> {
 				post("/",MEDIA_TYPE, apiController.registerUser,responseTransformer);
 				post("/login/",MEDIA_TYPE, apiController.login,responseTransformer);
-				post("/logout/",MEDIA_TYPE, apiController.logout,responseTransformer);
 			});
 			path("/search", () -> {
 				get("/movie/:query/", MEDIA_TYPE,apiController.searchByMovie,responseTransformer);
@@ -433,18 +432,7 @@ public class ApiController {
 		return new LoginResponse(jwtUtils.generateToken(user),user.getNivel(),user.getId());
 	};
 
-	/**
-	 * Logout
-	 */
-	public Route logout = (request, response) -> {
-		response.status(200);
-
-		Response resp = new Response();
-		
-		resp.setData(new User("1", "Kun"));
-		return resp;
-	};
-
+	
 	/**
 	 * Search for a movie
 	 */
