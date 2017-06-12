@@ -39,7 +39,10 @@ public class MovieDaoImpl implements MovieDao {
 
 	@Override
 	public void saveMovie(MovieEntity movieEntity) {
-		movieRepository.save(movieEntity);
+		MovieEntity movieEntityExistente = movieRepository.findByIdMovieAndFavMovie(movieEntity.getIdMovie(),movieEntity.getFavMovie());
+		if(movieEntityExistente==null){
+			movieRepository.save(movieEntity);
+		}
 	}
 
 	@Override
