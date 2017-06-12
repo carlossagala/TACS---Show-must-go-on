@@ -62,6 +62,13 @@ public class SearchServiceImpl implements SearchService {
 			else
 				throw new BadRequest(e.getStatusText());
 		}
+		catch(Exception e)
+		{
+			logger.error("Actor not found: "+query);
+			Search emptySearch = new Search();
+			emptySearch.setResult(null);
+			return emptySearch;
+		}
 		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Search search = gson.fromJson(response.getBody(), Search.class);
@@ -91,6 +98,13 @@ public class SearchServiceImpl implements SearchService {
 			else
 				throw new BadRequest(e.getStatusText());
 		}
+		catch(Exception e)
+		{
+			logger.error("Actor not found: "+query);
+			Search emptySearch = new Search();
+			emptySearch.setResult(null);
+			return emptySearch;
+		}
 
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Search search = gson.fromJson(response.getBody(), Search.class);
@@ -112,9 +126,11 @@ public class SearchServiceImpl implements SearchService {
 		Search searchByActor = searchByActor(query);
 		Search searchByMovie = searchByMovie(query);
 		
-		List<SearchResult> results;
-		results= searchByActor.getResult();
-		results.addAll(searchByMovie.getResult());
+		List<SearchResult> results = new ArrayList<>();
+		if(searchByActor.getResult() != null)
+			results.addAll(searchByActor.getResult());
+		if(searchByMovie.getResult() != null)
+			results.addAll(searchByMovie.getResult());
 		Search search= new Search();
 		
 		search.setResult(results);
