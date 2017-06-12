@@ -290,8 +290,8 @@ public class IntegrationTest implements SparkApplication
 		genericAdminGetTest("/api/users/ranking/actors/?page=1","responseRankingAdmin.json");
 	}
 	@Test
-	public void getAdminRankingFavmovies() throws Exception {
-		genericAdminGetTest("/api/favmovies/bac25bb4c3dd/ranking/?page=1","responseRankingFavmovie.json");
+	public void getRankingFavmovies() throws Exception {
+		genericGetTest("/api/favmovies/bac25bb4c3dd/ranking/?page=1","responseRankingFavmovie.json");
 	}
 	@Test
 	public void testGetUsers() throws Exception {
