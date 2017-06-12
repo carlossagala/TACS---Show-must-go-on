@@ -608,38 +608,45 @@ public class ApiController {
 	 * Returns a ranking based on a list
 	 */
 	public Route getRankingFromList = (request, response) -> {
-		User user = authenticate(request);
+		authenticate(request);
 		response.status(200);
 		String idList = request.params(":id");
 		PagedResponse resp = new PagedResponse();
 		resp.setTotalPages(1);
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
-
-		Set<FavMovies> listOfFavMovies = favMoviesService.getFavMoviesByUser(user);
-		List<Movie> movies = new ArrayList<>();
-		FavMovies lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).findAny().orElse(null);
-		if(lista==null){
+		
+		FavMovies lista = favMoviesService.getFavMovieDetail(idList);
+		
+		if (lista == null) {
 			throw new ResourceNotFound();
-		}else{
-			movies = movieService.getMoviesByFavMovies(lista);
-			List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
-			for(Movie m:movies){
-				try{
-					actores.addAll(movieService.getMovieActors(m.getId()));
-				}catch(Exception e){
-					logger.error("",e);
-				}
-			}
-			
-			HashMap<String, Integer > ranking = new HashMap<String,Integer>();
-			
-			actores.forEach(a -> cargarRanking(a,ranking));
-
-			resp.setData(ranking);
-			return resp;
 		}
 		
+		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
+		
+		for(Movie m: lista.getMovies()){
+			try{
+				actores.addAll(movieService.getMovieActors(m.getMovieId()));
+			}catch(Exception e){
+				logger.error("",e);
+			}
+		}
+			
+		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
+			
+		actores.forEach(a -> cargarRanking(a,ranking));
+
+		resp.setData(ranking.entrySet()
+		        .stream()
+		        .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+		        .collect(Collectors.toMap(
+		          Map.Entry::getKey, 
+		          Map.Entry::getValue, 
+		          (e1, e2) -> e1, 
+		          LinkedHashMap::new
+		        )));
+		
+		return resp;
 	};
 
 	/**
