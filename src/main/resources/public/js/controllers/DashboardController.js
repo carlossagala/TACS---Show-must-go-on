@@ -318,7 +318,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $http.post('/api/favactors/', favactor).success(function(data) {
             var user = data.data;
             Materialize.toast("El actor fue marcado como favorito!", 2000, "orange");
-
+            main.refreshSearchResults();
         }).error(function (data, status) {
             Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red");
         });
@@ -353,12 +353,20 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         main.markAsFavouriteService(actorId);
     }
 
+    main.refreshSearchResults = function() {
+        $scope.$parent.$broadcast('search_result', $scope.search_items);
+    }
+
     main.unmarkAsFavouriteAndRefresh = function(actorId) {
-        main.unmarkAsFavouriteService(actorId, function() { console.log('reload search?') });
+        main.unmarkAsFavouriteService(actorId, function() { 
+            main.refreshSearchResults();
+        });
     }
 
     main.unmarkAsFavouriteAndReload = function(actorId) {
-        main.unmarkAsFavouriteService(actorId, function() { main.getFavactors(1); });
+        main.unmarkAsFavouriteService(actorId, function() { 
+            main.getFavactors(1); 
+        });
     }
 
     main.paginateFavactors = function(page) {
