@@ -11,6 +11,10 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             templateUrl: "views/common/login.html",
             controller: "LoginController as login"
         })
+        .when("/register", {
+            templateUrl: "views/common/register.html",
+            controller: "LoginController as login"
+        })
         .when("/dashboard/recommended", {
             templateUrl: "views/user/dashboard.html",
             contentUrl: "views/user/recommended.html",

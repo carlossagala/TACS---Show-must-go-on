@@ -65,6 +65,8 @@ mainApp.controller('LoginController', ['$scope', '$http', '$timeout', '$location
             login.unsuccessfullRegister = false;
             login.invalidInput = false;
             login.serverError = false;
+            //automatic login
+            setTimeout(login.auth, 2000);
         }).error(function (data, status) {
             login.invalidInput = false;
         	login.successfullRegister = false;
