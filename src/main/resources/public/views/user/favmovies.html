@@ -27,12 +27,9 @@
 						<li ng-repeat="favmovie in favmovies" class="collection-item">
 							<div class="row">
 								<div class="col m6">
-									<span class="title" ng-if="favmovie.movies.length">
-										<a href="#/dashboard/favmovies/{{ favmovie.id }}">{{ favmovie.name }}</a>
-									</span>
-									<span class="title" ng-if="!favmovie.movies.length">
+									<h5 class="title light-blue-text" ng-if="!favmovie.movies.length">
 										{{ favmovie.name }}
-									</span>
+									</h5>
 									<p>
 										<input type="checkbox" class="filled-in" id="favmovie-selector-{{ favmovie.id }}" ng-model="intersectionable[favmovie.id]" ng-click="dashboard.selectFavmovie(favmovie.id)"/>
 										<label for="favmovie-selector-{{ favmovie.id }}">Comparar con otra lista</label>
