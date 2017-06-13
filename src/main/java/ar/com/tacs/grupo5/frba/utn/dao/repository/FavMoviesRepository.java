@@ -8,8 +8,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
-import ar.com.tacs.grupo5.frba.utn.models.User;
 
 public interface FavMoviesRepository extends PagingAndSortingRepository<FavMoviesEntity, String>{
 	Page<FavMoviesEntity> findByUser(UserEntity user,Pageable pageable);

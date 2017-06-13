@@ -14,8 +14,6 @@ import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
-import ar.com.tacs.grupo5.frba.utn.models.User;
 
 @Repository
 @Transactional

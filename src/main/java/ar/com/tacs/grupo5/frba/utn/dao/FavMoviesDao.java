@@ -1,7 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn.dao;
 
 import java.util.Set;import org.springframework.data.domain.Page;
-import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;import ar.com.tacs.grupo5.frba.utn.models.FavMovies;import ar.com.tacs.grupo5.frba.utn.models.User;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;import ar.com.tacs.grupo5.frba.utn.entity.UserEntity;import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 
 public interface FavMoviesDao {	FavMoviesEntity findOne(String id);
 	FavMoviesEntity getFavMovie(String id);
