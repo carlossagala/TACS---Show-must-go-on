@@ -1,8 +1,6 @@
 package ar.com.tacs.grupo5.frba.utn.service;
 
 import java.util.List;
-import java.util.Set;
-
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.FavMovies;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor;
