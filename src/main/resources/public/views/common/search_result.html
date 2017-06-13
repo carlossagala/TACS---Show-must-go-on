@@ -11,7 +11,7 @@
 				<div class="row section-wrapper search-result-wrapper">
 					<div ng-repeat="item in search_items.data">
 						<div class="col s12 m4" ng-if="item.type==='actor'">
-							<div ng-class="dashboard.isFavactor(item.id)? 'card horizontal card-min teal lighten-3' : 'card horizontal card-min'">
+							<div ng-class="dashboard.isFavactor(item.id)? 'card horizontal card-min blue lighten-4' : 'card horizontal card-min'">
 								<div class="card-image" ng-if="item.profile_path">
 									<a
 											class="btn-info"
@@ -41,6 +41,27 @@
 									</a>
 								</div>
 								<div class="card-stacked">
+									<span ng-if="!dashboard.isFavactor(item.id)" class="entypo-heart" style="
+									    position: absolute;
+									    top: 7px;
+									    right: 9px;
+									    text-align: center;
+									    color: grey;
+									    padding: 2px 9px;
+									    border-radius: 50%;
+									    background-color: #e3f2fd;
+									" tooltipped data-position="top" data-delay="150" data-tooltip="Marcar como favorito!" ng-click="dashboard.markAsFavourite(item.id)">
+									</span>
+									<span ng-if="dashboard.isFavactor(item.id)" class="entypo-heart" style="
+									    position: absolute;
+									    top: 7px;
+									    right: 9px;
+									    text-align: center;
+									    color: red;
+									    padding: 2px 9px;
+									    border-radius: 50%;
+									    background-color: #e3f2fd;
+									" tooltipped data-position="top" data-delay="150" data-tooltip="Desmarcar como favorito!" ng-click="dashboard.unmarkAsFavouriteAndRefresh(item.id)"></span>
 									<div class="card-content">
 										<h5 class="header">{{ item.name }}</h5>
 										<p>Popularidad: {{ item.popularity }}</p>
@@ -48,7 +69,7 @@
 									<div class="card-action">
 										<span class="col m6">
 											<a
-												class="btn-info"
+												ng-class="dashboard.isFavactor(item.id)? 'btn-info blue-text' : 'btn-info'"
 												tooltipped
 												data-position="top"
 												data-delay="150"
@@ -59,12 +80,6 @@
 											>
 												Mas info....
 											</a>
-										</span>
-										<span class="col m6" ng-if="!dashboard.isFavactor(item.id)">
-											<a class="btn right" tooltipped data-position="top" data-delay="150" data-tooltip="Marcar como favorito!" ng-click="dashboard.markAsFavourite(item.id)"><i class="small material-icons">grade</i></a>
-										</span>
-										<span class="col m6" ng-if="dashboard.isFavactor(item.id)">
-											<a class="btn right red" tooltipped data-position="top" data-delay="150" data-tooltip="Desmarcar como favorito!" ng-click="dashboard.unmarkAsFavouriteAndRefresh(item.id)"><i class="small material-icons">grade</i></a>
 										</span>
 									</div>
 								</div>
