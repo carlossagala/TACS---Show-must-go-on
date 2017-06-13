@@ -132,14 +132,53 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         });
     }
 
+    main.getActorDetailsDelayed = function(actorId) {
+        var $el = angular.element(document).find(".details-wrapper-"+ actorId).html(
+            `<div class="collection-favactors-loader-wrapper">
+                <p>Cargando detalles del actor...</p>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+            `
+        );
+        main.getActorDetails(actorId)
+    }
+
     main.getActorDetails = function(actorId) {
 
         $http.get('/api/actor/' + actorId + '/').success(function(data) {
             var actor_details = data.data;
-            var $el = angular.element(document).find(".details-wrapper-"+ actorId).html('<img src="'+ $scope.storagePath + actor_details.image[0].file_path + '" alt="" class="circle"><span>' + actor_details.name + '</span><a tooltipped data-position="top" data-delay="150" data-tooltip="Desmarcar como favorito!" ng-click="dashboard.unmarkAsFavouriteAndReload('+ actor_details.id +')" class="btn red secondary-content"><i class="material-icons">grade</i></a>')
+            var imagePath = actor_details.image.length > 0 ? $scope.storagePath + actor_details.image[0].file_path : 'images/profile_placeholder.png';
+            var $el = angular.element(document).find(".details-wrapper-"+ actorId).html(
+                `<div class="collection-favactors-img-wrapper">
+                    <img src="${imagePath}" width="60" height="90">
+                </div>
+                <div class="collection-favactors-content-wrapper">
+                    <span class="entypo-heart right" style="
+                        position: relative;
+                        top: 7px;
+                        right: 9px;
+                        text-align: center;
+                        color: red;
+                        padding: 6px 9px;
+                        font-size: 24px;
+                        border-radius: 50%;
+                        background-color: #e3f2fd;" 
+                        tooltipped data-position="top" 
+                        data-delay="150" data-tooltip="Desmarcar como favorito!" 
+                        ng-click="dashboard.unmarkAsFavouriteAndReload(${actor_details.id})"></span>
+                    <h5>${actor_details.name}</h5>
+                </div>`)
             $compile($el)($scope);
         }).error(function (data, status) {
-            angular.element(document).find(".details-wrapper-"+ actorId).html("No se pudo encontrar informacion para este actor");
+            var $el = angular.element(document).find(".details-wrapper-"+ actorId);
+            angular.element(document).find(".details-wrapper-"+ actorId).html(
+                `<div class='collection-favactors-loader-wrapper'>
+                    No se pudo encontrar informacion para este actor <a ng-click='dashboard.getActorDetailsDelayed(${actorId})' class='btn right'>Reintentar</a>
+                </div>`
+            );
+            $compile($el)($scope);
         });
     }
 

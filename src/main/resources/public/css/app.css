@@ -361,3 +361,29 @@ ul:not(.browser-default).inline li.tag {
   cursor: pointer;
   font-size: 20px;
 }
+
+.collection-favactors-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.collection-favactors {
+    padding: 0px !important;
+}
+
+.collection-favactors-loader-wrapper {
+    padding: 10px;
+    width: 100%;
+}
+
+.collection-favactors-img-wrapper {
+    width: 12%;
+}
+
+.collection-favactors-content-wrapper {
+    width: 88%;    
+}
+
+.collection-favactors-content-wrapper h5 {
+    text-indent: 10px;
+}

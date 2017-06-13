@@ -9,10 +9,10 @@
 	</div>
 	<div class="row" ng-if="!loading && favactors.length">
 		<div class="col s12 m12">
-			<h5 class="grey-text">Actores favoritos ({{ favactors.length }})</h5>
+			<h5 class="grey-text">Actores favoritos ({{ pagination_result.total_results }})</h5>
 		</div>
 		<div id="favactors" class="col s12 m6 offset-m3">
-			<div class="row section-wrapper">
+			<div class="row">
 				<pagination
 						page="1"
 						page-size="pagination_result.page_size"
@@ -24,13 +24,14 @@
 						adjacent="2"
 						scroll-top="false"
 						pagination-action="dashboard.paginateFavactors(page)" />
-				<ul class="collection with-header">
-					<li ng-repeat="favactor in favactors" class="collection-item avatar">
-						<div class="details-wrapper-{{ favactor }}">
-							<br>
-							<p>Cargando detalles del actor...</p>
-							<div class="progress">
-								<div class="indeterminate"></div>
+				<ul class="collection">
+					<li ng-repeat="favactor in favactors" class="collection-item collection-favactors">
+						<div class="details-wrapper-{{ favactor }} collection-favactors-container">
+							<div class="collection-favactors-loader-wrapper">
+								<p>Cargando detalles del actor...</p>
+								<div class="progress">
+									<div class="indeterminate"></div>
+								</div>
 							</div>
 						</div>
 					</li>
