@@ -17,4 +17,7 @@ public interface FavActorService {
 
 	Long countByUser(User user);
 	void getAllFavActors(String id, PagedResponse resp);
+	
+	List<String> getFavActorsIds(String userId);
+	
 }

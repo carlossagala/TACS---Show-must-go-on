@@ -705,7 +705,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(2L);
 		resp.setPage(getPage(request));
-		resp.setData(actorService.getMoviesWithActors(favActorService.getFavActorsId(user.getId(),getPage(request) )));
+		resp.setData(actorService.getMoviesWithActors(favActorService.getFavActorsIds(user.getId() )));
 		return resp;
 	};
 

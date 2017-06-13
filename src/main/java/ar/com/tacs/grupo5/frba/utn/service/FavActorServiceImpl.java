@@ -88,5 +88,12 @@ public class FavActorServiceImpl implements FavActorService {
 		return favActorDao.countByUser(userMapper.dtoToEntity(user));
 	}
 
+	@Override
+	public List<String> getFavActorsIds(String userId) {
+		UserEntity userEntity = userDao.getUserById(userId);
+		List<FavActorEntity> favActors = favActorDao.findByUserEntity(userEntity);
+		return favActors.stream().map(FavActorEntity::getActorId).collect(Collectors.toList());
+	}
+
 
 }
