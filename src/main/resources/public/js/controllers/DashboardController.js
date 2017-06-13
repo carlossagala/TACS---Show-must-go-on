@@ -96,7 +96,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     main.getFavactors = function(page) {
 
         $http.get('/api/favactors/?page=' + page).success(function(data) {
-            $scope.favactors = data.data;
+            $scope.favactors = _.uniq(data.data);
             $scope.pagination_result = {
                 page: data.page,
                 page_size: 5,
@@ -132,14 +132,53 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         });
     }
 
+    main.getActorDetailsDelayed = function(actorId) {
+        var $el = angular.element(document).find(".details-wrapper-"+ actorId).html(
+            `<div class="collection-favactors-loader-wrapper">
+                <p>Cargando detalles del actor...</p>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+            `
+        );
+        main.getActorDetails(actorId)
+    }
+
     main.getActorDetails = function(actorId) {
 
         $http.get('/api/actor/' + actorId + '/').success(function(data) {
             var actor_details = data.data;
-            var $el = angular.element(document).find(".details-wrapper-"+ actorId).html('<img src="'+ $scope.storagePath + actor_details.image[0].file_path + '" alt="" class="circle"><span>' + actor_details.name + '</span><a tooltipped data-position="top" data-delay="150" data-tooltip="Desmarcar como favorito!" ng-click="dashboard.unmarkAsFavourite('+ actor_details.id +')" class="btn red secondary-content"><i class="material-icons">grade</i></a>')
+            var imagePath = actor_details.image.length > 0 ? $scope.storagePath + actor_details.image[0].file_path : 'images/profile_placeholder.png';
+            var $el = angular.element(document).find(".details-wrapper-"+ actorId).html(
+                `<div class="collection-favactors-img-wrapper">
+                    <img src="${imagePath}" width="60" height="90">
+                </div>
+                <div class="collection-favactors-content-wrapper">
+                    <span class="entypo-heart right" style="
+                        position: relative;
+                        top: 7px;
+                        right: 9px;
+                        text-align: center;
+                        color: red;
+                        padding: 6px 9px;
+                        font-size: 24px;
+                        border-radius: 50%;
+                        background-color: #e3f2fd;" 
+                        tooltipped data-position="top" 
+                        data-delay="150" data-tooltip="Desmarcar como favorito!" 
+                        ng-click="dashboard.unmarkAsFavouriteAndReload(${actor_details.id})"></span>
+                    <h5>${actor_details.name}</h5>
+                </div>`)
             $compile($el)($scope);
         }).error(function (data, status) {
-            angular.element(document).find(".details-wrapper-"+ actorId).html("No se pudo encontrar informacion para este actor");
+            var $el = angular.element(document).find(".details-wrapper-"+ actorId);
+            angular.element(document).find(".details-wrapper-"+ actorId).html(
+                `<div class='collection-favactors-loader-wrapper'>
+                    No se pudo encontrar informacion para este actor <a ng-click='dashboard.getActorDetailsDelayed(${actorId})' class='btn right'>Reintentar</a>
+                </div>`
+            );
+            $compile($el)($scope);
         });
     }
 
@@ -317,20 +356,20 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
 
         $http.post('/api/favactors/', favactor).success(function(data) {
             var user = data.data;
-            Materialize.toast("El actor fue marcado como favorito!", 2000, "orange")
-
+            Materialize.toast("El actor fue marcado como favorito!", 2000, "orange");
+            main.refreshSearchResults();
         }).error(function (data, status) {
             Materialize.toast("No se pudo marcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red");
         });
     }
 
-    main.unmarkAsFavouriteService = function(actorId) {
+    main.unmarkAsFavouriteService = function(actorId, callback) {
 
         $http.delete('/api/favactors/' + actorId + '/').success(function(data) {
             //TODO: modify backend showing properly message
             if(data) {
                 Materialize.toast("El actor fue desmarcado como favorito!", 2000, "orange")
-                main.getFavactors(1);
+                callback();
             }
 
         }).error(function (data, status) {
@@ -353,12 +392,23 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         main.markAsFavouriteService(actorId);
     }
 
-    main.unmarkAsFavourite = function(actorId) {
-        main.unmarkAsFavouriteService(actorId);
+    main.refreshSearchResults = function() {
+        $scope.$parent.$broadcast('search_result', $scope.search_items);
+    }
+
+    main.unmarkAsFavouriteAndRefresh = function(actorId) {
+        main.unmarkAsFavouriteService(actorId, function() { 
+            main.refreshSearchResults();
+        });
+    }
+
+    main.unmarkAsFavouriteAndReload = function(actorId) {
+        main.unmarkAsFavouriteService(actorId, function() { 
+            main.getFavactors(1); 
+        });
     }
 
     main.paginateFavactors = function(page) {
-        console.log("goto page:", page)
         main.getFavactors(page);
     }
 
@@ -383,7 +433,7 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
             main.getFavmovies();
 
         }).error(function (data, status) {
-            Materialize.toast("No se pudo desmarcar el actor fue marcado como favorito, intentelo nuevamente.", 2000, "red")
+            Materialize.toast("No se pudo eliminar la lista de películas favoritas, intentelo nuevamente.", 2000, "red")
         });
     }
 
@@ -457,6 +507,10 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
         $scope.tab_content = true;
         $scope.search_result = false;
     }
+ 
+    main.isFavactor = function(actorId) {
+        return $scope.favactors_ids.indexOf(actorId) > -1;
+    }    
 
     $scope.$on('searching', function(evt, data){
         $scope.loading = true;
@@ -465,10 +519,16 @@ mainApp.controller('DashboardController', ['$scope', '$http', '$timeout', '$loca
     });
 
     $scope.$on('search_result', function(evt, data){
-        $scope.search_items = data;
-        $scope.loading = false;
-        $scope.tab_content = false;
-        $scope.search_result = true;
+        $http.get('/api/favactors/?page=0').success(function(data_ids) {
+            $scope.favactors_ids = _.uniq(data_ids.data);
+        }).error(function (data_ids, status) {
+            $scope.favactors_ids = [];
+        }).finally(function () {
+            $scope.loading = false;
+            $scope.tab_content = false;
+            $scope.search_result = true; 
+            $scope.search_items = data;
+        });
     });
 
     main.selectFavmovie = function(favmovieId) {

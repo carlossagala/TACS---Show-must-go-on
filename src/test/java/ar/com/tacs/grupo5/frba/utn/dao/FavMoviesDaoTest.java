@@ -11,13 +11,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
-
 import ar.com.tacs.grupo5.frba.utn.controllers.ApiController;
-import ar.com.tacs.grupo5.frba.utn.dao.impl.FavActorDaoImpl;
 import ar.com.tacs.grupo5.frba.utn.dao.impl.FavMoviesDaoImpl;
 import ar.com.tacs.grupo5.frba.utn.dao.impl.UserDaoImpl;
 import ar.com.tacs.grupo5.frba.utn.dao.repository.FavMoviesRepository;

@@ -25,15 +25,14 @@
 						<li ng-repeat="favmovie in users_favmovies" class="collection-item">
 							<div class="row">
 								<div class="col m12">
-									<span class="title">
-										{{ favmovie.name}}
+									<h5 class="title light-blue-text">
+										{{ favmovie.name }}
 										<span class="chip right">
 											{{ favmovie.user_name }}
 										</span>
-									</span>
-									<p>Peliculas: {{ favmovie.movies.length }}</p>
+									</h5>
 									<p>
-										<input type="checkbox" class="filled-in" id="favmovie-selector-{{ favmovie.id }}" ng-model="intersectionable[favmovie.id]" ng-click="dashboard.selectFavmovie(favmovie.id)" ng-disabled="!favmovie.movies.length"/>
+										<input type="checkbox" class="filled-in" id="favmovie-selector-{{ favmovie.id }}" ng-model="intersectionable[favmovie.id]" ng-click="dashboard.selectFavmovie(favmovie.id)"/>
 										<label for="favmovie-selector-{{ favmovie.id }}">Comparar con otra lista</label>
 									</p>
 								</div>

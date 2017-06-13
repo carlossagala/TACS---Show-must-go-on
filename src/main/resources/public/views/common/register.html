@@ -6,14 +6,20 @@
         <div class="row grey darken-3 form-wrapper">
             <div class="col m10 offset-m1 login-wrapper">
                 <div class="section">
-                    <h5 class="center-align blue-text">Login</h5>
-                    <p class="center-align">Inicia sesion para poder acceder a tus peliculas y actores favoritos!</p>
+                    <h5 class="center-align blue-text">Registro</h5>
+                    <p class="center-align">Registrate para poder acceder a tus peliculas y actores favoritos!</p>
                 </div>
                 <div class="card-panel card-message red lighten-1 white-text" ng-show="login.invalidInput">
                     <p class="center-align">Error en los datos ingresados</p>
                 </div>
                 <div class="card-panel card-message red lighten-1 white-text" ng-show="login.serverError">
                     <p class="center-align">Error al procesar la solicitud</p>
+                </div>
+                <div class="card-panel card-message green lighten-1 white-text" ng-show="login.successfullRegister">
+                    <p class="center-align">Usuario registrado con &eacute;xito! Iniciando sesion...</p>
+                </div>
+                <div class="card-panel card-message red lighten-1 white-text" ng-show="login.unsuccessfullRegister">
+                    <p class="center-align">Usuario ya existente</p>
                 </div>
                 <div class="section-wrapper">
                     <form id="login-form" name="login.loginForm">
@@ -25,11 +31,11 @@
                             </div>
                             <div class="input-field col s12 m12">
                                 <i class="material-icons prefix">vpn_key</i>
-                                <input id="icon_prefix" type="password" class="validate" ng-model="login.user.password" ng-required="true" ng-enter="login.auth()">
+                                <input id="icon_prefix" type="password" class="validate" ng-model="login.user.password" ng-required="true" ng-enter="login.register()">
                                 <label for="icon_prefix">Password</label>
                             </div>
                             <div class="input-field col s12 m12 center-align">
-                                <a class="waves-effect waves-light btn" ng-click="login.auth()" ng-disabled="!login.loginForm.$valid">Iniciar sesion!</a>
+                                <a class="waves-effect waves-light btn" ng-click="login.register()" ng-disabled="!login.loginForm.$valid">Registrarme!</a>
                             </div>
                         </div>
                     </form>
@@ -38,9 +44,9 @@
         </div>
     </div>
     <div class="input-field col s12 m12 center-align">
-        <p class="center-align">&iquest;Todav&iacute;a no ten&eacute;s cuenta?  Registrate!</p>
+        <p class="center-align">Ya tengo cuenta!</p>
         <p class="center-align">
-            <a href="#/register"  class="waves-effect waves-teal btn-flat blue-text">Registrarse</a>
+            <a href="#/" class="waves-effect waves-teal btn-flat blue-text">Iniciar sesion</a>
         </p>
     </div>
 </div>

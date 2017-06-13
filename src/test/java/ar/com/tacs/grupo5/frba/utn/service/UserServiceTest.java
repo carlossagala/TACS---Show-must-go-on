@@ -19,7 +19,7 @@ public class UserServiceTest {
 	
 	private UserDao userDao = Mockito.mock(UserDaoImpl.class);
 	private UserMapper userMapper = Mockito.mock(UserMapper.class);
-	
+	private FavMoviesService favMoviesService = Mockito.mock(FavMoviesService.class);
 	UserService userService = null;
 	
 	private UserEntity userEntAdmin = null;
@@ -37,7 +37,7 @@ public class UserServiceTest {
 		userTest1 = new User("2", "test1");
 		userEntTest2 = new UserEntity("3", "test2", "test2", "user");
 		userTest2 = new User("2", "test2");
-		userService = new UserServiceImpl(userDao, userMapper);
+		userService = new UserServiceImpl(userDao, userMapper,favMoviesService);
 	}
 	
 	@Test
@@ -74,9 +74,9 @@ public class UserServiceTest {
 		Mockito.when(userMapper.entityToDto(userEntTest2)).thenReturn(userTest2);
 		Page<User> allUsers = userService.getAllUsersWithPage(1);
 		Assert.assertNotNull(allUsers);
-		Assert.assertTrue(allUsers.getContent().size() == 3);
+		Assert.assertTrue(allUsers.getContent().size() == 2);
 		Assert.assertTrue(allUsers.getTotalPages()==1);
-		Assert.assertTrue(allUsers.getTotalElements()==3);
+		Assert.assertTrue(allUsers.getTotalElements()==2);
 	}
 	
 	@Test

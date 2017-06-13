@@ -12,12 +12,12 @@ public class MongoTestConfiguration extends AbstractMongoConfiguration{
 
 	@Override
 	protected String getDatabaseName() {
-		return "testdb";
+		return "showmustgoon";
 	}
 
 	@Override
 	public Mongo mongo() throws Exception {
-		Fongo f = new Fongo("testdb");
+		Fongo f = new Fongo("showmustgoon");
 		return f.getMongo();
 	}
 	

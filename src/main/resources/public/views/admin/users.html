@@ -21,7 +21,7 @@
 						<td>{{ user.nivel }}</td>
 						<td>
 							<span class="chip" ng-repeat="fm in user.fav_movies">
-								<a href="#/dashboard/favmovies/{{ fm.id }}" class="chip-modal-trigger">{{ fm.name }} ({{ fm.movies.length }})</a>
+								<a href="#/dashboard/favmovies/{{ fm.id }}" class="chip-modal-trigger">{{ fm.name }}</a>
 							</span>
 						</td>
 						<td>{{ user.last_access? user.last_access : "-" }}</td>

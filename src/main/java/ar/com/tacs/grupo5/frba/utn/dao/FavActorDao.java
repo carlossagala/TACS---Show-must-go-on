@@ -1,5 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn.dao;
 
+import java.util.List;
+
 import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 
@@ -17,6 +19,7 @@ public interface FavActorDao {
 
 	Long countByUser(UserEntity dtoToEntity);
 	
-	
+	List<FavActorEntity> findByUserEntity(UserEntity UserEntity);
+
 
 }

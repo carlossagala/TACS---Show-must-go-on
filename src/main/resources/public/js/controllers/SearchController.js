@@ -2,7 +2,7 @@
  * Search Controller
  */
 
-mainApp.controller('SearchController', ['$scope', '$http', 'utilityService', function($scope, $http, utilityService) {
+mainApp.controller('SearchController', ['$scope', '$http', 'utilityService', '$location', function($scope, $http, utilityService, $location) {
 
     // Set content type for requests
     $http.defaults.headers.post["Content-Type"] = "application/json";
@@ -31,6 +31,7 @@ mainApp.controller('SearchController', ['$scope', '$http', 'utilityService', fun
                 $scope.$parent.$parent.$broadcast('search_result', []);
                 utilityService.setMessage('No se encontraron resultados para la busqueda');
             }
+            $location.path('/dashboard/search/' + term, false);
         }).error(function (data, status) {
 
         });

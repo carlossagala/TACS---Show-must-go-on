@@ -16,8 +16,11 @@ import org.springframework.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -136,7 +139,6 @@ public class ApiController {
 			path("/user", () -> {
 				post("/",MEDIA_TYPE, apiController.registerUser,responseTransformer);
 				post("/login/",MEDIA_TYPE, apiController.login,responseTransformer);
-				post("/logout/",MEDIA_TYPE, apiController.logout,responseTransformer);
 			});
 			path("/search", () -> {
 				get("/movie/:query/", MEDIA_TYPE,apiController.searchByMovie,responseTransformer);
@@ -257,7 +259,12 @@ public class ApiController {
 	public Route getUserFavActors = (request, response) -> {
 		User user = authenticate(request);
 		PagedResponse resp = new PagedResponse();
-		favActorService.getFavActors(user.getId(), getPage(request), resp);
+		try{
+			int page = getPage(request);
+			favActorService.getFavActors(user.getId(),page , resp);
+		}catch(Exception e){
+			favActorService.getAllFavActors(user.getId(), resp);
+		}
 		if(resp.getTotalResults()==0){
 			response.status(404);
 		}else{
@@ -369,8 +376,16 @@ public class ApiController {
 		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
 		
 		actores.forEach(a -> cargarRanking(a,ranking));
-
-		resp.setData(ranking);
+		
+		resp.setData(ranking.entrySet()
+		        .stream()
+		        .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+		        .collect(Collectors.toMap(
+		          Map.Entry::getKey, 
+		          Map.Entry::getValue, 
+		          (e1, e2) -> e1, 
+		          LinkedHashMap::new
+		        )));
 		return resp;
 	};
 
@@ -410,25 +425,14 @@ public class ApiController {
 			response.status(401);
 			return null;		
 		}
-		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss"); 
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		Date now = new Date();
 		user.setLastAccess(dt.format(now));
 		userService.saveUser(user);
 		return new LoginResponse(jwtUtils.generateToken(user),user.getNivel(),user.getId());
 	};
 
-	/**
-	 * Logout
-	 */
-	public Route logout = (request, response) -> {
-		response.status(200);
-
-		Response resp = new Response();
-		
-		resp.setData(new User("1", "Kun"));
-		return resp;
-	};
-
+	
 	/**
 	 * Search for a movie
 	 */
@@ -486,13 +490,11 @@ public class ApiController {
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			name = (String)requestMap.get("name");
 		}catch(Exception e){
-			response.status(400);
-			return "Bad Request: Parametro name en el body es obligatorio";
+			throw new BadRequest("Parametro name en el body es obligatorio");
 		}
 		
 		if(name == null){
-			response.status(400);
-			return "Bad Request: Parametro name en el body es obligatorio";			
+			throw new BadRequest("Parametro name en el body es obligatorio");			
 		}
 		
 		FavMovies favMovie = favMoviesService.createNewFavMovieList(name,user);
@@ -500,7 +502,7 @@ public class ApiController {
 			response.status(201);
 			resp.setData(favMovie);
 		}else{
-			response.status(404);
+			throw new ResourceNotFound();
 		}
 		return resp;
 	};
@@ -513,18 +515,9 @@ public class ApiController {
 		
 		String idFavMovie = request.params(":id");
 		
-		try
-		{
-			FavMovies favMovie = favMoviesService.getFavMovieDetail(idFavMovie);
-			resp.setData(favMovie);
-			response.status(200);
-			
-		}
-		catch (ResourceNotFound e) {
-			response.status(404);
-			resp.setMessage("Not Found: La lista de películas favoritas no existe");
-		}
-	
+		FavMovies favMovie = favMoviesService.getFavMovieDetail(idFavMovie);
+		resp.setData(favMovie);
+		response.status(200);
 		return resp;
 	};
 
@@ -542,27 +535,16 @@ public class ApiController {
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			newTitle = (String)requestMap.get("new_title");
 		}catch(Exception e){
-			response.status(400);
-			return "Bad Request: Parametro new_title en el body es obligatorio";
+			throw new BadRequest("Parametro new_title en el body es obligatorio") ;
 		}
 		
 		if (newTitle == null){
-			response.status(400);
-			return "Bad Request: Parametro new_title en el body es obligatorio";			
+			throw new BadRequest("Parametro new_title en el body es obligatorio");			
 		}
 				
-		try
-		{
-			FavMovies favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
-			resp.setData(favMovie);
-			response.status(200);
-			
-		}
-		catch (ResourceNotFound e) {
-			response.status(404);
-			resp.setMessage("Not Found: La lista de películas favoritas no existe");
-		}
-	
+		FavMovies favMovie = favMoviesService.updateFavMovie(newTitle,idFavMovie);
+		resp.setData(favMovie);
+		response.status(200);
 		return resp;
 	};
 
@@ -572,18 +554,9 @@ public class ApiController {
 	public Route deleteFavMoviesList = (request, response) -> {
 		Response resp = new Response();
 		String idFavMovie = request.params(":id");
-		
-		try
-		{
-			favMoviesService.deleteFavMovie(idFavMovie);
-			response.status(200);
-			resp.setMessage("Se eliminó la lista");
-		}
-		catch (ResourceNotFound e) {
-			response.status(404);
-			resp.setMessage("Not Found: La lista de películas favoritas no existe");
-		}
-	
+		favMoviesService.deleteFavMovie(idFavMovie);
+		response.status(200);
+		resp.setMessage("Se eliminó la lista");
 		return resp;
 	};
 
@@ -635,7 +608,7 @@ public class ApiController {
 	 * Returns a ranking based on a list
 	 */
 	public Route getRankingFromList = (request, response) -> {
-		User user = authenticate(request);
+		authenticate(request);
 		response.status(200);
 		String idList = request.params(":id");
 		PagedResponse resp = new PagedResponse();
@@ -643,28 +616,36 @@ public class ApiController {
 		resp.setTotalResults(1L);
 		resp.setPage(getPage(request));
 		
-
-		Set<FavMovies> listOfFavMovies = user.getFavMovies(); 
-		FavMovies lista = listOfFavMovies.stream().filter(m ->  m.getId().equals(idList)).findAny().orElse(null);
-		if(lista==null){
+		FavMovies lista = favMoviesService.getFavMovieDetail(idList);
+		
+		if (lista == null) {
 			throw new ResourceNotFound();
 		}
 		
 		List<ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Actor> actores = new ArrayList<>();
 		
-		for(Movie m:lista.getMovies()){
+		for(Movie m: lista.getMovies()){
 			try{
-				actores.addAll(movieService.getMovieActors(m.getId()));
+				actores.addAll(movieService.getMovieActors(m.getMovieId()));
 			}catch(Exception e){
 				logger.error("",e);
 			}
 		}
-		
+			
 		HashMap<String, Integer > ranking = new HashMap<String,Integer>();
-		
+			
 		actores.forEach(a -> cargarRanking(a,ranking));
 
-		resp.setData(ranking);
+		resp.setData(ranking.entrySet()
+		        .stream()
+		        .sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+		        .collect(Collectors.toMap(
+		          Map.Entry::getKey, 
+		          Map.Entry::getValue, 
+		          (e1, e2) -> e1, 
+		          LinkedHashMap::new
+		        )));
+		
 		return resp;
 	};
 
@@ -680,8 +661,7 @@ public class ApiController {
 			Map<String,Object> requestMap = gson.fromJson(request.body(), HashMap.class);
 			id = (String)requestMap.get("id");
 		}catch(Exception e){
-			response.status(400);
-			return "Bad Request: Parametro id en el body es obligatorio";
+			throw new BadRequest("Parametro id en el body es obligatorio");
 		}
 		favActorService.addFavActor(user, id);
 		response.status(201);
@@ -725,7 +705,7 @@ public class ApiController {
 		resp.setTotalPages(1);
 		resp.setTotalResults(2L);
 		resp.setPage(getPage(request));
-		resp.setData(	actorService.getMoviesWithActors(favActorService.getFavActorsId(user.getId(),getPage(request) )));
+		resp.setData(actorService.getMoviesWithActors(favActorService.getFavActorsIds(user.getId() )));
 		return resp;
 	};
 

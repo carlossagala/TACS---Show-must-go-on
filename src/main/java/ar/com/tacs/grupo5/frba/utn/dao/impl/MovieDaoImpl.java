@@ -1,5 +1,7 @@
 package ar.com.tacs.grupo5.frba.utn.dao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +12,6 @@ import ar.com.tacs.grupo5.frba.utn.dao.repository.MovieRepository;
 import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
-import ar.com.tacs.grupo5.frba.utn.mapper.MovieMapper;
 import ar.com.tacs.grupo5.frba.utn.models.Movie;
 
 @Repository
@@ -38,7 +39,10 @@ public class MovieDaoImpl implements MovieDao {
 
 	@Override
 	public void saveMovie(MovieEntity movieEntity) {
-		movieRepository.save(movieEntity);
+		MovieEntity movieEntityExistente = movieRepository.findByIdMovieAndFavMovie(movieEntity.getIdMovie(),movieEntity.getFavMovie());
+		if(movieEntityExistente==null){
+			movieRepository.save(movieEntity);
+		}
 	}
 
 	@Override
@@ -53,6 +57,12 @@ public class MovieDaoImpl implements MovieDao {
 			throw new ResourceNotFound();
 		}
 		movieRepository.delete(movieEntity);
+	}
+
+	@Override
+	public List<MovieEntity> getMoviesByFavMovie(FavMoviesEntity favMovie) {
+		List<MovieEntity> findByFavMovie = movieRepository.findByFavMovie(favMovie);
+		return findByFavMovie;
 	}
 	
 }

@@ -8,8 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -18,6 +20,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
+import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.Search;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResult;
 import ar.com.tacs.grupo5.frba.utn.models.modelsTMDB.SearchResultActor;
@@ -44,9 +48,28 @@ public class SearchServiceImpl implements SearchService {
 	
 	
 	@Override
-	public Search searchByActor(String query) {
+	public Search searchByActor(String query) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/search/person?api_key=" + appKey + "&language=es&page=1&query="+ query;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		catch(Exception e)
+		{
+			logger.error("Actor not found: "+query);
+			Search emptySearch = new Search();
+			emptySearch.setResult(null);
+			return emptySearch;
+		}
+		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Search search = gson.fromJson(response.getBody(), Search.class);
 		
@@ -61,11 +84,28 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
-	public Search searchByMovie(String query) {
-		
-		
+	public Search searchByMovie(String query) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/search/movie?api_key=" + appKey + "&language=es&page=1&query="+ query;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		catch(Exception e)
+		{
+			logger.error("Actor not found: "+query);
+			Search emptySearch = new Search();
+			emptySearch.setResult(null);
+			return emptySearch;
+		}
+
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Search search = gson.fromJson(response.getBody(), Search.class);
 		
@@ -80,25 +120,23 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 
-	//TODO
 	@Override
 	public Search searchMulti(String query) {
 		
 		Search searchByActor = searchByActor(query);
 		Search searchByMovie = searchByMovie(query);
 		
-		
-		List<SearchResult> results;
-		results= searchByActor.getResult();
-		results.addAll(searchByMovie.getResult());
+		List<SearchResult> results = new ArrayList<>();
+		if(searchByActor.getResult() != null)
+			results.addAll(searchByActor.getResult());
+		if(searchByMovie.getResult() != null)
+			results.addAll(searchByMovie.getResult());
 		Search search= new Search();
 		
 		search.setResult(results);
 		search.setPage(1);
 		search.setTotal_results(searchByActor.getTotal_results()+searchByMovie.getTotal_results());
-		
-		
-		
+				
 		return search;
 	}
 	

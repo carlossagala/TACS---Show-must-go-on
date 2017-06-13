@@ -27,4 +27,6 @@ public interface FavMoviesService {
 	
 	void getFavMoviesByUser(String userId, int page, PagedResponse resp);
 
+	Set<FavMovies> getFavMoviesByUser(User user);
+
 }

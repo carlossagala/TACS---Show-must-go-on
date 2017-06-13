@@ -23,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 
 import ar.com.tacs.grupo5.frba.utn.dao.FavMoviesDao;
 import ar.com.tacs.grupo5.frba.utn.dao.MovieDao;
+import ar.com.tacs.grupo5.frba.utn.entity.FavMoviesEntity;
 import ar.com.tacs.grupo5.frba.utn.entity.MovieEntity;
 import ar.com.tacs.grupo5.frba.utn.exceptions.BadRequest;
 import ar.com.tacs.grupo5.frba.utn.exceptions.ResourceNotFound;
@@ -69,10 +70,21 @@ public class MovieServiceImpl implements MovieService {
 	// TODO: ver si lo hacemos solo que muestre contenido en español o tambien
 	// en otro idioma
 	@Override
-	public Reviews getReviews(String id) {
-
+	public Reviews getReviews(String id) throws ResourceNotFound, BadRequest{
 		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "/reviews?api_key=" + appKey;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Reviews reviews = gson.fromJson(response.getBody(), Reviews.class);
 
@@ -82,9 +94,20 @@ public class MovieServiceImpl implements MovieService {
 
 	// TODO: se retornan todas las imagenes mque posee la pelicula
 	@Override
-	public Images getImages(String id) {
+	public Images getImages(String id) throws ResourceNotFound, BadRequest{
 		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "/images?api_key=" + appKey;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+		
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
 		Images images = gson.fromJson(response.getBody(), Images.class);
 
@@ -92,14 +115,24 @@ public class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public List<Actor> getMovieActors(String id) {
+	public List<Actor> getMovieActors(String id) throws ResourceNotFound, BadRequest {
 		String requestUrl = "https://api.themoviedb.org/3/movie/" + id + "/credits?api_key=" + appKey;
-		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		ResponseEntity<String> response;
+		
+		try{
+			response = restTemplate.exchange(requestUrl, HttpMethod.GET, null, String.class);
+		}
+		catch (HttpClientErrorException e) {
+			if (e.getStatusCode() == HttpStatus.NOT_FOUND)
+				throw new ResourceNotFound();
+			else
+				throw new BadRequest(e.getStatusText());
+		}
+					
 		logger.info("se recibio el siguiente archivo de json" + response.getBody());
+		
 		JsonParser jsonParser = new JsonParser();
-
 		JsonObject jsonObject = jsonParser.parse(response.getBody()).getAsJsonObject();
-
 		JsonElement cast = jsonObject.get("cast");
 
 		Type listType = new TypeToken<ArrayList<Actor>>() {
@@ -158,6 +191,20 @@ public class MovieServiceImpl implements MovieService {
 		movie.setFavMovieId(idFavMovie);
 		movie.setMovieId(movieId);
 		movieDao.deleteMovie(movie);
+	}
+
+	@Override
+	public List<ar.com.tacs.grupo5.frba.utn.models.Movie> getMoviesByFavMovies(FavMovies lista) {
+		FavMoviesEntity favMovie = favMoviesDao.getFavMovie(lista.getId());
+		List<MovieEntity> moviesByFavMovie = movieDao.getMoviesByFavMovie(favMovie);
+		List<ar.com.tacs.grupo5.frba.utn.models.Movie> movies = new ArrayList<>();
+		if(moviesByFavMovie != null && !moviesByFavMovie.isEmpty())
+		{
+			for (MovieEntity movie : moviesByFavMovie) {
+				movies.add(movieMapper.entityToDto(movie));
+			}
+		}
+		return movies;
 	};
 
 	

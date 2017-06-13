@@ -11,6 +11,10 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             templateUrl: "views/common/login.html",
             controller: "LoginController as login"
         })
+        .when("/register", {
+            templateUrl: "views/common/register.html",
+            controller: "LoginController as login"
+        })
         .when("/dashboard/recommended", {
             templateUrl: "views/user/dashboard.html",
             contentUrl: "views/user/recommended.html",
@@ -58,6 +62,12 @@ mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $ht
             contentUrl: "views/admin/intersection_favmovies.html",
             controller: "DashboardController as dashboard",
             resource: "intersection_favmovies"
+        })
+        .when("/dashboard/search/:param", {
+            templateUrl: "views/user/dashboard.html",
+            contentUrl: "views/user/recommended.html",
+            controller: "DashboardController as dashboard",
+            resource: "recommended"
         })
         .when("/logout", {
             templateUrl: "views/common/login.html",
@@ -131,3 +141,17 @@ mainApp.filter('unique', function() {
         return _.uniq(arr, function(a) { return a[field]; });
     };
 });
+
+mainApp.run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
+}])

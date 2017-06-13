@@ -61,6 +61,20 @@ public class FavActorServiceImpl implements FavActorService {
 	}
 	
 	@Override
+	public void getAllFavActors(String id, PagedResponse resp) {
+		UserEntity userEntity = userDao.getUserById(id);
+		List<FavActorEntity> favActors = favActorDao.findByUserEntity(userEntity);
+		if(favActors==null){
+			resp.setTotalResults(0L);
+			return;
+		}
+		resp.setData(favActors.stream().map(FavActorEntity::getActorId).collect(Collectors.toList()));
+		resp.setTotalPages(1);
+		resp.setTotalResults(Long.valueOf(favActors.size()));
+		return ;
+	}
+	
+	@Override
 	public List<String> getFavActorsId(String userId, int page) {
 		UserEntity userEntity = userDao.getUserById(userId);
 		Page<FavActorEntity> favActorsPage = favActorDao.getFavActors(userEntity,page-1);
@@ -72,6 +86,13 @@ public class FavActorServiceImpl implements FavActorService {
 	@Override
 	public Long countByUser(User user) {
 		return favActorDao.countByUser(userMapper.dtoToEntity(user));
+	}
+
+	@Override
+	public List<String> getFavActorsIds(String userId) {
+		UserEntity userEntity = userDao.getUserById(userId);
+		List<FavActorEntity> favActors = favActorDao.findByUserEntity(userEntity);
+		return favActors.stream().map(FavActorEntity::getActorId).collect(Collectors.toList());
 	}
 
 

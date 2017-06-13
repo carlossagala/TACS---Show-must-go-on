@@ -4,7 +4,6 @@ html {
 	font-family: 'Titillium web', Roboto;
 }
 
-
 *,
 *:before,
 *:after {
@@ -128,7 +127,7 @@ p:hover {
 
 .login-container .form-wrapper > .col {
     padding: 0 !important;
-    height: 456px;
+    height: 486px;
 }
 
 .login-container .form-wrapper > .col.login-wrapper {
@@ -252,7 +251,7 @@ ul:not(.browser-default).inline li.tag {
 
 .search-result-wrapper .card.horizontal.movie .card-image img,
 .search-result-wrapper .card.horizontal.movie {
-    height: 180px;
+    height: 220px;
 }
 
 .search-result-wrapper .card.horizontal .card-stacked .card-content {
@@ -346,4 +345,45 @@ ul:not(.browser-default).inline li.tag {
         height: 450px;
         padding: 10% 0 !important;
     }
+}
+
+@font-face {
+  font-family: 'entypo';
+  src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-90/entypo.woff') format('woff');
+}
+
+.entypo-heart:before{
+  content:"\2665";
+}
+
+[class*="entypo-"]:before {
+  font-family: 'entypo', sans-serif;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.collection-favactors-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.collection-favactors {
+    padding: 0px !important;
+}
+
+.collection-favactors-loader-wrapper {
+    padding: 10px;
+    width: 100%;
+}
+
+.collection-favactors-img-wrapper {
+    width: 12%;
+}
+
+.collection-favactors-content-wrapper {
+    width: 88%;    
+}
+
+.collection-favactors-content-wrapper h5 {
+    text-indent: 10px;
 }
